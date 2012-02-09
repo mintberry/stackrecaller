@@ -111,9 +111,7 @@
     </COMReference>
   </ItemGroup>
   <ItemGroup>
-    <Content Include="..\..\..\Addins\MyAddin1 - For Testing.AddIn">
-      <Link>MyAddin1 - For Testing.AddIn</Link>
-    </Content>
+    <Content Include="MyAddin1 - For Testing.AddIn" />
     <Content Include="MyAddin1.AddIn" />
   </ItemGroup>
   <Import Project="$(MSBuildBinPath)\Microsoft.CSHARP.Targets" />
