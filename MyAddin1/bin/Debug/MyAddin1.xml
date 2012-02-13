@@ -39,5 +39,15 @@
             <param term='custom'>Array of parameters that are host application specific.</param>
             <seealso class='IDTExtensibility2' />
         </member>
+        <member name="M:MyAddin1.Connect.QueryStatus(System.String,EnvDTE.vsCommandStatusTextWanted,EnvDTE.vsCommandStatus@,System.Object@)">
+            <summary></summary>
+            <param term=''></param>
+            <seealso class='IDTCommandTarget' />
+        </member>
+        <member name="M:MyAddin1.Connect.Exec(System.String,EnvDTE.vsCommandExecOption,System.Object@,System.Object@,System.Boolean@)">
+            <summary></summary>
+            <param term=''></param>
+            <seealso class='IDTCommandTarget' />
+        </member>
     </members>
 </doc>
