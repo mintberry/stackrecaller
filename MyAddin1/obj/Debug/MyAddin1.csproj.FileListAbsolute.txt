@@ -12,3 +12,10 @@ C:\Users\t_qix\Documents\Visual Studio 2010\Projects\MyAddin1\stack-recaller\MyA
 C:\Users\t_qix\Documents\Visual Studio 2010\Projects\MyAddin1\stack-recaller\MyAddin1\obj\Debug\MyAddin1.csproj.ResolveComReference.cache
 C:\Users\t_qix\Documents\Visual Studio 2010\Projects\MyAddin1\stack-recaller\MyAddin1\obj\Debug\MyAddin1.dll
 C:\Users\t_qix\Documents\Visual Studio 2010\Projects\MyAddin1\stack-recaller\MyAddin1\obj\Debug\MyAddin1.pdb
+S:\cpp projects\stack-recaller\MyAddin1\bin\Debug\MyAddin1.dll
+S:\cpp projects\stack-recaller\MyAddin1\bin\Debug\MyAddin1.pdb
+S:\cpp projects\stack-recaller\MyAddin1\bin\Debug\MyAddin1.xml
+S:\cpp projects\stack-recaller\MyAddin1\obj\Debug\ResolveAssemblyReference.cache
+S:\cpp projects\stack-recaller\MyAddin1\obj\Debug\MyAddin1.csproj.ResolveComReference.cache
+S:\cpp projects\stack-recaller\MyAddin1\obj\Debug\MyAddin1.dll
+S:\cpp projects\stack-recaller\MyAddin1\obj\Debug\MyAddin1.pdb
