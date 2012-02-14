@@ -1,0 +1,6 @@
+syntax: glob
+MyAddin1/obj/Debug/ResolveAssemblyReference.cache
+MyAddin1/obj/Debug/MyAddin1.pdb
+MyAddin1/bin/Debug/MyAddin1.dll
+MyAddin1/obj/Debug/MyAddin1.dll
+MyAddin1/bin/Debug/MyAddin1.pdb
