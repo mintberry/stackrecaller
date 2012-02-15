@@ -17,7 +17,7 @@ namespace MyAddin1
         public AboutBochs()
         {
             InitializeComponent();
-            
+            this.ShowInTaskbar = false;
         }
 
         public DTE2 DTEObject {
@@ -25,11 +25,16 @@ namespace MyAddin1
         }
 
         public DialogResult testDialog() {
-            this.label1.Text = _applicationObject.Commands.ToString();
+            this.label1.Text = "copyright (c) 2012 Ne Qi";
             return ShowDialog();
         }
 
         private DTE2 _applicationObject;
+
+        private void button1_Click(object sender, EventArgs e)
+        {
+            this.Close();
+        }
     }
 
 }
