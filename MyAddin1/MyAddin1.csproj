@@ -119,7 +119,9 @@
     </COMReference>
   </ItemGroup>
   <ItemGroup>
-    <Content Include="MyAddin1.AddIn" />
+    <Content Include="MyAddin1.AddIn">
+      <SubType>Designer</SubType>
+    </Content>
   </ItemGroup>
   <ItemGroup>
     <EmbeddedResource Include="UserControl1.resx">
