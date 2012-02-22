@@ -14,3 +14,9 @@ TestMargin/TestMargin/obj/Debug/TestMargin.csproj.FileListAbsolute.txt
 TestMargin/TestMargin/obj/Debug/TestMargin.dll
 TestMargin/TestMargin/obj/Debug/TestMargin.csproj.VsixDeployedFileListAbsolute.txt
 TestMargin/TestMargin/obj/Debug/TestMargin.pdb
+TestAdorn/obj/Debug/DesignTimeResolveAssemblyReferencesInput.cache
+TestAdorn/obj/Debug/TestAdorn.csproj.FileListAbsolute.txt
+TestAdorn/obj/Debug/TestAdorn.csproj.VsixDeployedFileListAbsolute.txt
+TestAdorn/obj/Debug/TestAdorn.dll
+TestAdorn/obj/Debug/extension.vsixmanifest
+TestAdorn/obj/Debug/TestAdorn.pdb
