@@ -20,3 +20,11 @@ TestAdorn/obj/Debug/TestAdorn.csproj.VsixDeployedFileListAbsolute.txt
 TestAdorn/obj/Debug/TestAdorn.dll
 TestAdorn/obj/Debug/extension.vsixmanifest
 TestAdorn/obj/Debug/TestAdorn.pdb
+TestMargin/TestMargin.sln.docstates.suo
+TestMargin/TestMargin/obj/Debug/DesignTimeResolveAssemblyReferences.cache
+TestMargin/TestMargin/obj/Debug/TestMargin_MarkupCompile.cache
+TestMargin/TestMargin/obj/Debug/TestMargin_MarkupCompile.i.cache
+TestMargin/TestMargin/obj/Debug/TestMargin.g.resources
+TestMargin/TestMargin/obj/Debug/ovCode.baml
+TestMargin/TestMargin/obj/Debug/ovCode.g.cs
+TestMargin/TestMargin/obj/Debug/ovCode.g.i.cs

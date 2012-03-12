@@ -14,6 +14,8 @@ namespace TestMargin
         private IWpfTextView _textView;
         private bool _isDisposed = false;
 
+        private ovCode _overviewport = null;  //the wpf control to display the overview
+
         /// <summary>
         /// Creates a <see cref="TestMargin"/> for a given <see cref="IWpfTextView"/>.
         /// </summary>
@@ -26,12 +28,26 @@ namespace TestMargin
             this.ClipToBounds = true;
             this.Background = new SolidColorBrush(Colors.LightGreen);
 
-            // Add a green colored label that says "Hello World!"
-            Label label = new Label();
-            label.Background = new SolidColorBrush(Colors.LightGreen);
-            label.Content = "Hello world!";
-            this.Children.Add(label);
+            _textView.LayoutChanged += new EventHandler<TextViewLayoutChangedEventArgs>(_textView_LayoutChanged);
 
+            // Add a green colored label that says "Hello World!"
+            //Label label = new Label();
+            //label.Background = new SolidColorBrush(Colors.LightGreen);
+            //label.Content = "Hello world!";
+            //this.Children.Add(label);
+            _overviewport = new ovCode(_textView);
+
+            this.Children.Add(_overviewport);
+
+        }
+
+        void _textView_LayoutChanged(object sender, TextViewLayoutChangedEventArgs e)
+        {
+            //throw new NotImplementedException();
+            if (_overviewport != null)
+            {
+                _overviewport.UpdateOV();
+            }
         }
 
         private void ThrowIfDisposed()
@@ -101,5 +117,7 @@ namespace TestMargin
             }
         }
         #endregion
+
+        
     }
 }
