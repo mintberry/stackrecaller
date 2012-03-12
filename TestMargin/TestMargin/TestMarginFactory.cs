@@ -4,6 +4,7 @@ using Microsoft.VisualStudio.Utilities;
 
 namespace TestMargin
 {
+    
     #region TestMargin Factory
     /// <summary>
     /// Export a <see cref="IWpfTextViewMarginProvider"/>, which returns an instance of the margin for the editor
@@ -11,16 +12,26 @@ namespace TestMargin
     /// </summary>
     [Export(typeof(IWpfTextViewMarginProvider))]
     [Name(TestMargin.MarginName)]
-    [Order(Before = PredefinedMarginNames.VerticalScrollBar)] //Ensure that the margin occurs below the horizontal scrollbar
+    [Order(Before = /*"Wpf Vertical Scrollbar"*/PredefinedMarginNames.VerticalScrollBar)] //Ensure that the margin occurs below the horizontal scrollbar
     [MarginContainer(PredefinedMarginNames.VerticalScrollBarContainer)] //Set the container to the bottom of the editor window
-    [ContentType("text")] //Show this margin for all text-based types
+    //before RightControl in Right or before Scrollbar in Scrollbar Container
+    [ContentType("C/C++")] //Show this margin for all text-based types
     [TextViewRole(PredefinedTextViewRoles.Interactive)]
     internal sealed class MarginFactory : IWpfTextViewMarginProvider
     {
+        [Import]
+        internal IContentTypeRegistryService ContentTypeRegistryService { get; set; }
+        
         public IWpfTextViewMargin CreateMargin(IWpfTextViewHost textViewHost, IWpfTextViewMargin containerMargin)
         {
+            _contentTypeRegistryService = ContentTypeRegistryService;
+            
             return new TestMargin(textViewHost.TextView);
         }
+
+        private IContentTypeRegistryService _contentTypeRegistryService;
     }
     #endregion
+
+    
 }
