@@ -31,7 +31,7 @@ namespace TestMargin
         {
             _wtv = wtv;
             InitializeComponent();
-            label1.Content = "test";
+            
         }
 
         public void UpdateOV() 
