@@ -221,9 +221,9 @@ let result_12 = //76576500
             [1..(num2 / 2)] |> List.fold (fun acc x -> if num2 % x = 0 then acc + 1
                                                        else acc) 1
     let triNum = Seq.unfold (fun x -> if ((divisorCount x) * (divisorCount (x + 1))) > 500 then None
-                                      else Some(x, x + 1)) 500
-    printfn "%d" (Seq.length triNum)
-    Seq.nth (Seq.length triNum - 1) triNum 
+                                      else Some(x, x + 1)) 1//or bigger is okay
+    let factor = (Seq.nth (Seq.length triNum - 1) triNum) + 1
+    (factor + 1) * factor / 2
 
 let result_p13 = //5537376230
     let strNum = ["37107287533902102798797998220837590246510135740250";
