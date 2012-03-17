@@ -31,13 +31,15 @@ namespace TestMargin
             _contentTypeRegistryService = ContentTypeRegistryService;
             _textBufferFactoryService = TextBufferFactoryService;
 
-            System.Diagnostics.Trace.WriteLine(":" + _textBufferFactoryService.TextContentType.ToString());
+            //System.Diagnostics.Trace.WriteLine(":" + _textBufferFactoryService.TextContentType.ToString());
+            _curTextBuf = _textBufferFactoryService.CreateTextBuffer("test", _textBufferFactoryService.TextContentType);
             
             return new TestMargin(textViewHost.TextView);
         }
 
         private IContentTypeRegistryService _contentTypeRegistryService;
         private ITextBufferFactoryService _textBufferFactoryService;
+        private ITextBuffer _curTextBuf;
     }
     #endregion
 
