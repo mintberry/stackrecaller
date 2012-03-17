@@ -2,14 +2,20 @@
 using System.Windows.Controls;
 using System.Windows.Media;
 using Microsoft.VisualStudio.Text.Editor;
+using Microsoft.VisualStudio.Text;
 
 namespace TestMargin
 {
+
     /// <summary>
     /// A class detailing the margin's visual definition including both size and content.
     /// </summary>
     class TestMargin : Canvas, IWpfTextViewMargin
     {
+
+        //[Import]
+        //internal ITextBufferFactoryService TextBufferFactoryService;
+
         public const string MarginName = "TestMargin";
         private IWpfTextView _textView;
         private bool _isDisposed = false;
