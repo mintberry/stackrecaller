@@ -1,6 +1,7 @@
 ﻿using System.ComponentModel.Composition;
 using Microsoft.VisualStudio.Text.Editor;
 using Microsoft.VisualStudio.Utilities;
+using Microsoft.VisualStudio.Text;
 
 namespace TestMargin
 {
@@ -20,16 +21,23 @@ namespace TestMargin
     internal sealed class MarginFactory : IWpfTextViewMarginProvider
     {
         [Import]
-        internal IContentTypeRegistryService ContentTypeRegistryService { get; set; }
+        internal IContentTypeRegistryService ContentTypeRegistryService { get; set; }   //just a test
+
+        [Import]
+        internal ITextBufferFactoryService TextBufferFactoryService = null;
         
         public IWpfTextViewMargin CreateMargin(IWpfTextViewHost textViewHost, IWpfTextViewMargin containerMargin)
         {
             _contentTypeRegistryService = ContentTypeRegistryService;
+            _textBufferFactoryService = TextBufferFactoryService;
+
+            System.Diagnostics.Trace.WriteLine(":" + _textBufferFactoryService.TextContentType.ToString());
             
             return new TestMargin(textViewHost.TextView);
         }
 
         private IContentTypeRegistryService _contentTypeRegistryService;
+        private ITextBufferFactoryService _textBufferFactoryService;
     }
     #endregion
 
