@@ -32,7 +32,7 @@ namespace TestMargin
             _textBufferFactoryService = TextBufferFactoryService;
 
             //System.Diagnostics.Trace.WriteLine(":" + _textBufferFactoryService.TextContentType.ToString());
-            _curTextBuf = _textBufferFactoryService.CreateTextBuffer("test", _textBufferFactoryService.TextContentType);
+            _curTextBuf = _textBufferFactoryService.CreateTextBuffer("test", _textBufferFactoryService.PlaintextContentType);
             
             return new TestMargin(textViewHost.TextView);
         }

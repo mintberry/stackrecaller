@@ -30,6 +30,8 @@ namespace TestMargin
         {
             _textView = textView;
 
+            System.Diagnostics.Trace.WriteLine("linecount:" + _textView.TextSnapshot.GetLineFromLineNumber(0).GetText());
+
             this.Width = 100;
             this.ClipToBounds = true;
             this.Background = new SolidColorBrush(Colors.LightGreen);
