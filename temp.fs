@@ -364,6 +364,17 @@ let result_p13 = //5537376230
     printfn "%A" reslist
 
 let result_p14 = 
+    let seql = 
+        let seqi = Seq.unfold (fun x -> if x <= 1L then None
+                                        elif ((x - 1L) % 3L = 0L && ((x - 1L) / 3L % 2L <> 0L) && ((x - 1L) % 9L <> 0L)) then Some(x, (x - 1L) / 3L)
+                                        else Some(x, x * 2L)) 8L
+        let less = seqi |> Seq.filter (fun x -> if x > 10L then false
+                                                else true)
+        //printfn "%d" (Seq.length less)
+        //Seq.nth (Seq.length less - 1) less
+        printfn "%d" (Seq.nth 68 seqi)
+        //printfn "%A" seqi
+    printfn "%d" 1
     
 
 

@@ -3,6 +3,7 @@ using System.Windows.Controls;
 using System.Windows.Media;
 using Microsoft.VisualStudio.Text.Editor;
 using Microsoft.VisualStudio.Text;
+using Microsoft.VisualStudio.VCCodeModel;
 
 namespace TestMargin
 {
@@ -12,15 +13,11 @@ namespace TestMargin
     /// </summary>
     class TestMargin : Canvas, IWpfTextViewMargin
     {
-
-        //[Import]
-        //internal ITextBufferFactoryService TextBufferFactoryService;
-
         public const string MarginName = "TestMargin";
         private IWpfTextView _textView;
         private bool _isDisposed = false;
 
-        private ovCode _overviewport = null;  //the wpf control to display the overview
+        private ovCode _overviewport = null;                                 //the wpf control to display the overview
 
         /// <summary>
         /// Creates a <see cref="TestMargin"/> for a given <see cref="IWpfTextView"/>.
@@ -30,13 +27,16 @@ namespace TestMargin
         {
             _textView = textView;
 
-            System.Diagnostics.Trace.WriteLine("linecount:" + _textView.TextSnapshot.GetLineFromLineNumber(0).GetText());
-
             this.Width = 100;
             this.ClipToBounds = true;
             this.Background = new SolidColorBrush(Colors.LightGreen);
 
             _textView.LayoutChanged += new EventHandler<TextViewLayoutChangedEventArgs>(_textView_LayoutChanged);
+
+            _textView.Caret.PositionChanged += new EventHandler<CaretPositionChangedEventArgs>(Caret_PositionChanged);
+
+            //System.Diagnostics.Trace.WriteLine("###         ViewPostHeight:" + _textView.ViewportHeight);
+            
 
             // Add a green colored label that says "Hello World!"
             //Label label = new Label();
@@ -49,12 +49,21 @@ namespace TestMargin
 
         }
 
+        void Caret_PositionChanged(object sender, CaretPositionChangedEventArgs e)
+        {
+            int linecount = _textView.TextSnapshot.LineCount;
+            //throw new NotImplementedException();
+            System.Diagnostics.Trace.WriteLine("CaretPostitionChanged:" + _textView.TextSnapshot.GetLineNumberFromPosition(_textView.Caret.Position.BufferPosition));
+        }
+
         void _textView_LayoutChanged(object sender, TextViewLayoutChangedEventArgs e)
         {
+            System.Diagnostics.Trace.WriteLine("###         FirstVisibleLine: " + _textView.TextSnapshot.GetLineNumberFromPosition(_textView.TextViewLines.FirstVisibleLine.Start));
+            
             //throw new NotImplementedException();
             if (_overviewport != null)
             {
-                _overviewport.UpdateOV();
+                _overviewport.UpdateOV();                         //update the overview accroding to the change of main text area
             }
         }
 
