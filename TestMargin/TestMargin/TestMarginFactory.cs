@@ -2,6 +2,9 @@
 using Microsoft.VisualStudio.Text.Editor;
 using Microsoft.VisualStudio.Utilities;
 using Microsoft.VisualStudio.Text;
+using EnvDTE;
+using EnvDTE80;
+using Microsoft.VisualStudio.Shell;
 
 namespace TestMargin
 {
@@ -25,16 +28,21 @@ namespace TestMargin
 
         [Import]
         internal ITextBufferFactoryService TextBufferFactoryService = null;
+
+        [Import]
+        internal SVsServiceProvider serviceProvider = null;
         
         public IWpfTextViewMargin CreateMargin(IWpfTextViewHost textViewHost, IWpfTextViewMargin containerMargin)
         {
             _contentTypeRegistryService = ContentTypeRegistryService;
             _textBufferFactoryService = TextBufferFactoryService;
 
+            DTE2 dte = (DTE2)serviceProvider.GetService(typeof(DTE));
+
             //System.Diagnostics.Trace.WriteLine(":" + _textBufferFactoryService.TextContentType.ToString());
             _curTextBuf = _textBufferFactoryService.CreateTextBuffer("test", _textBufferFactoryService.PlaintextContentType);
             
-            return new TestMargin(textViewHost.TextView);
+            return new TestMargin(textViewHost.TextView, dte);
         }
 
         private IContentTypeRegistryService _contentTypeRegistryService;

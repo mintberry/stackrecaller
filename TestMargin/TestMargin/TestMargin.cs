@@ -4,6 +4,8 @@ using System.Windows.Media;
 using Microsoft.VisualStudio.Text.Editor;
 using Microsoft.VisualStudio.Text;
 using Microsoft.VisualStudio.VCCodeModel;
+using EnvDTE;
+using EnvDTE80;
 
 namespace TestMargin
 {
@@ -17,15 +19,18 @@ namespace TestMargin
         private IWpfTextView _textView;
         private bool _isDisposed = false;
 
+        private DTE2 _dte;
+
         private ovCode _overviewport = null;                                 //the wpf control to display the overview
 
         /// <summary>
         /// Creates a <see cref="TestMargin"/> for a given <see cref="IWpfTextView"/>.
         /// </summary>
         /// <param name="textView">The <see cref="IWpfTextView"/> to attach the margin to.</param>
-        public TestMargin(IWpfTextView textView)
+        public TestMargin(IWpfTextView textView, DTE2 dte)
         {
             _textView = textView;
+            _dte = dte;
 
             this.Width = 100;
             this.ClipToBounds = true;
@@ -35,7 +40,7 @@ namespace TestMargin
 
             _textView.Caret.PositionChanged += new EventHandler<CaretPositionChangedEventArgs>(Caret_PositionChanged);
 
-            //System.Diagnostics.Trace.WriteLine("###         ViewPostHeight:" + _textView.ViewportHeight);
+            System.Diagnostics.Trace.WriteLine("###         DTEDocument:" + _dte.Solution.Item(1).CodeModel.Language);  //always fail with dte
             
 
             // Add a green colored label that says "Hello World!"

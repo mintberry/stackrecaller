@@ -363,18 +363,28 @@ let result_p13 = //5537376230
     //printfn "%d" sumten
     printfn "%A" reslist
 
-let result_p14 = 
-    let seql = 
-        let seqi = Seq.unfold (fun x -> if x <= 1L then None
-                                        elif ((x - 1L) % 3L = 0L && ((x - 1L) / 3L % 2L <> 0L) && ((x - 1L) % 9L <> 0L)) then Some(x, (x - 1L) / 3L)
-                                        else Some(x, x * 2L)) 8L
-        let less = seqi |> Seq.filter (fun x -> if x > 10L then false
-                                                else true)
-        //printfn "%d" (Seq.length less)
-        //Seq.nth (Seq.length less - 1) less
-        printfn "%d" (Seq.nth 68 seqi)
-        //printfn "%A" seqi
-    printfn "%d" 1
+let result_p14 = //again, must use 64bit int, 837799 length 525
+    let lowb = 10000L
+    let hib = 999999L
+    let ValueArr = Array.init ((int hib) - (int lowb)) (fun i -> lowb + (int64 i))
+    let seql start = 
+        let seqi = Seq.unfold (fun x -> if x < hib && x >= lowb && x <> start then ValueArr.[(int x) - (int lowb)] <- -1L //add this value to a set to filter
+                                        if x = 1L then None
+                                        elif x % 2L = 0L then Some(x, x / 2L)
+                                        else Some(x, x * 3L + 1L)) start
+        ValueArr.[(int start) - (int lowb)] <- (int64 (Seq.length seqi)) + 1L
+    ValueArr |> Array.iter (fun x ->   if x = -1L then ()
+                                       else seql x)
+    let longest = ValueArr |> Array.max
+    let longind = ValueArr |> Array.findIndex (fun x -> x = longest)
+    printfn "%d :: %d" longest (longind + (int lowb))
+
+let result_p15 = //137846528820, cannot calc this with f#, use Python instead
+    let foldmul s e = [e..s] |> List.fold (fun acc x -> acc * x) 1L
+    let C p1 p2 = (foldmul p2 (p2 - p1 + 1L)) / (foldmul p1 1L)
+    C 20L 40L
+
+let result_p16 = 
     
 
 
