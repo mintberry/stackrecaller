@@ -38,7 +38,7 @@ namespace TestMargin
             _textBufferFactoryService = TextBufferFactoryService;
 
             DTE2 dte = (DTE2)serviceProvider.GetService(typeof(DTE));
-
+            
             //System.Diagnostics.Trace.WriteLine(":" + _textBufferFactoryService.TextContentType.ToString());
             _curTextBuf = _textBufferFactoryService.CreateTextBuffer("test", _textBufferFactoryService.PlaintextContentType);
             

@@ -20,6 +20,8 @@ namespace TestMargin
         private bool _isDisposed = false;
 
         private DTE2 _dte;
+        private Document _doc;
+        private VCFileCodeModel _vccm;
 
         private ovCode _overviewport = null;                                 //the wpf control to display the overview
 
@@ -40,8 +42,18 @@ namespace TestMargin
 
             _textView.Caret.PositionChanged += new EventHandler<CaretPositionChangedEventArgs>(Caret_PositionChanged);
 
-            System.Diagnostics.Trace.WriteLine("###         DTEDocument:" + _dte.Solution.Item(1).CodeModel.Language);  //always fail with dte
-            
+            //Document d = _dte.ActiveDocument;
+
+            //try
+            //{
+            //    VCCodeModel cm = (VCCodeModel)_dte.Solution.Item(1);
+            //    System.Diagnostics.Trace.WriteLine("###         DTEDocument:" + cm.Language);  //always fail with dte
+            //}
+            //catch (Exception e)
+            //{
+            //    System.Diagnostics.Trace.WriteLine("@@@         Exception:" + e.ToString());
+            //}
+
 
             // Add a green colored label that says "Hello World!"
             //Label label = new Label();
@@ -59,12 +71,28 @@ namespace TestMargin
             int linecount = _textView.TextSnapshot.LineCount;
             //throw new NotImplementedException();
             System.Diagnostics.Trace.WriteLine("CaretPostitionChanged:" + _textView.TextSnapshot.GetLineNumberFromPosition(_textView.Caret.Position.BufferPosition));
+
         }
 
         void _textView_LayoutChanged(object sender, TextViewLayoutChangedEventArgs e)
         {
-            System.Diagnostics.Trace.WriteLine("###         FirstVisibleLine: " + _textView.TextSnapshot.GetLineNumberFromPosition(_textView.TextViewLines.FirstVisibleLine.Start));
+            //System.Diagnostics.Trace.WriteLine("###         FirstVisibleLine: " + _textView.TextSnapshot.GetLineNumberFromPosition(_textView.TextViewLines.FirstVisibleLine.Start));
+
+            //_doc = _dte.ActiveDocument;
             
+            try
+            {
+                _vccm = _dte.ActiveDocument.ProjectItem.FileCodeModel as VCFileCodeModel;
+                System.Diagnostics.Trace.WriteLine("{{{");
+                foreach (CodeElement ce in _vccm.Functions)
+                {
+                    System.Diagnostics.Trace.WriteLine("###         DTEDocument:" + ce.Kind + " : " + ce.StartPoint.Line);
+                }
+            }
+            catch (Exception e1)
+            {
+                System.Diagnostics.Trace.WriteLine("@@@         Exception:" + e1.ToString());
+            }
             //throw new NotImplementedException();
             if (_overviewport != null)
             {
@@ -140,6 +168,6 @@ namespace TestMargin
         }
         #endregion
 
-        
+
     }
 }
