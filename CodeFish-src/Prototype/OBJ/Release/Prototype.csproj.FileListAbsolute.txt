@@ -1,0 +1,74 @@
+C:\Users\t_qix\Downloads\dissert\CodeFish-src\Prototype\bin\Release\Prototype.exe.config
+C:\Users\t_qix\Downloads\dissert\CodeFish-src\Prototype\obj\Release\ResolveAssemblyReference.cache
+C:\Users\t_qix\Downloads\dissert\CodeFish-src\Prototype\obj\Release\Prototype.Experiment.ExperimentPanel.resources
+C:\Users\t_qix\Downloads\dissert\CodeFish-src\Prototype\obj\Release\Prototype.DXLayoutControl.resources
+C:\Users\t_qix\Downloads\dissert\CodeFish-src\Prototype\obj\Release\Prototype.CodeviewControl.resources
+C:\Users\t_qix\Downloads\dissert\CodeFish-src\Prototype\obj\Release\Prototype.ScrollableDX.resources
+C:\Users\t_qix\Downloads\dissert\CodeFish-src\Prototype\obj\Release\Prototype.MainForm.resources
+C:\Users\t_qix\Downloads\dissert\CodeFish-src\Prototype\obj\Release\Prototype.OptionsDialog.resources
+C:\Users\t_qix\Downloads\dissert\CodeFish-src\Prototype\obj\Release\Prototype.Properties.Resources.resources
+C:\Users\t_qix\Downloads\dissert\CodeFish-src\Prototype\obj\Release\Prototype.SearchDialog.resources
+C:\Users\t_qix\Downloads\dissert\CodeFish-src\Prototype\obj\Release\ResGen.read.1.tlog
+C:\Users\t_qix\Downloads\dissert\CodeFish-src\Prototype\obj\Release\ResGen.write.1.tlog
+C:\Users\t_qix\Downloads\dissert\CodeFish-src\Prototype\bin\Release\Experiment\Sources\Cell.cs
+C:\Users\t_qix\Downloads\dissert\CodeFish-src\Prototype\bin\Release\Experiment\Sources\Graph.cs
+C:\Users\t_qix\Downloads\dissert\CodeFish-src\Prototype\bin\Release\Experiment\Sources\MonthCalendarPlusBase.cs
+C:\Users\t_qix\Downloads\dissert\CodeFish-src\Prototype\bin\Release\Experiment\Sources\MonthCalendarPlusBase.designer.cs
+C:\Users\t_qix\Downloads\dissert\CodeFish-src\Prototype\bin\Release\Experiment\Sources\MoveNubRenderer.cs
+C:\Users\t_qix\Downloads\dissert\CodeFish-src\Prototype\bin\Release\Experiment\Sources\Sheet.cs
+C:\Users\t_qix\Downloads\dissert\CodeFish-src\Prototype\bin\Release\Experiment\Sources\Graph.resx
+C:\Users\t_qix\Downloads\dissert\CodeFish-src\Prototype\bin\Release\Experiment\CodeFish-Plan.jpg
+C:\Users\t_qix\Downloads\dissert\CodeFish-src\Prototype\bin\Release\Experiment\CodeFish-Things.jpg
+C:\Users\t_qix\Downloads\dissert\CodeFish-src\Prototype\bin\Release\Experiment\Introduction.htm
+C:\Users\t_qix\Downloads\dissert\CodeFish-src\Prototype\bin\Release\Experiment\Tasks\Cell1.txt
+C:\Users\t_qix\Downloads\dissert\CodeFish-src\Prototype\bin\Release\Experiment\Tasks\Cell2.txt
+C:\Users\t_qix\Downloads\dissert\CodeFish-src\Prototype\bin\Release\Experiment\Tasks\Graph1.txt
+C:\Users\t_qix\Downloads\dissert\CodeFish-src\Prototype\bin\Release\Experiment\Tasks\Graph2.txt
+C:\Users\t_qix\Downloads\dissert\CodeFish-src\Prototype\bin\Release\Experiment\Tasks\MulticastClient1.txt
+C:\Users\t_qix\Downloads\dissert\CodeFish-src\Prototype\bin\Release\Experiment\Tasks\MulticastClient2.txt
+C:\Users\t_qix\Downloads\dissert\CodeFish-src\Prototype\bin\Release\Experiment\Tasks\Sheet1.txt
+C:\Users\t_qix\Downloads\dissert\CodeFish-src\Prototype\bin\Release\Experiment\Tasks\Sheet2.txt
+C:\Users\t_qix\Downloads\dissert\CodeFish-src\Prototype\bin\Release\FisheyeView\CodeviewControl.resx
+C:\Users\t_qix\Downloads\dissert\CodeFish-src\Prototype\bin\Release\FisheyeView\CodeviewControl.cs
+C:\Users\t_qix\Downloads\dissert\CodeFish-src\Prototype\bin\Release\FisheyeView\CodeviewControl.Designer.cs
+C:\Users\t_qix\Downloads\dissert\CodeFish-src\Prototype\bin\Release\Experiment\Sources\MulticastClient.cs
+C:\Users\t_qix\Downloads\dissert\CodeFish-src\Prototype\bin\Release\Prototype.exe
+C:\Users\t_qix\Downloads\dissert\CodeFish-src\Prototype\bin\Release\CMicroParser.dll
+C:\Users\t_qix\Downloads\dissert\CodeFish-src\Prototype\obj\Release\Prototype.exe
+S:\cpp projects\stack-recaller\CodeFish-src\Prototype\bin\Release\Prototype.exe.config
+S:\cpp projects\stack-recaller\CodeFish-src\Prototype\obj\Release\Prototype.exe
+S:\cpp projects\stack-recaller\CodeFish-src\Prototype\bin\Release\Experiment\Sources\Cell.cs
+S:\cpp projects\stack-recaller\CodeFish-src\Prototype\bin\Release\Experiment\Sources\Graph.cs
+S:\cpp projects\stack-recaller\CodeFish-src\Prototype\bin\Release\Experiment\Sources\MonthCalendarPlusBase.cs
+S:\cpp projects\stack-recaller\CodeFish-src\Prototype\bin\Release\Experiment\Sources\MonthCalendarPlusBase.designer.cs
+S:\cpp projects\stack-recaller\CodeFish-src\Prototype\bin\Release\Experiment\Sources\MoveNubRenderer.cs
+S:\cpp projects\stack-recaller\CodeFish-src\Prototype\bin\Release\Experiment\Sources\Sheet.cs
+S:\cpp projects\stack-recaller\CodeFish-src\Prototype\bin\Release\Experiment\Sources\Graph.resx
+S:\cpp projects\stack-recaller\CodeFish-src\Prototype\bin\Release\Experiment\CodeFish-Plan.jpg
+S:\cpp projects\stack-recaller\CodeFish-src\Prototype\bin\Release\Experiment\CodeFish-Things.jpg
+S:\cpp projects\stack-recaller\CodeFish-src\Prototype\bin\Release\Experiment\Introduction.htm
+S:\cpp projects\stack-recaller\CodeFish-src\Prototype\bin\Release\Experiment\Tasks\Cell1.txt
+S:\cpp projects\stack-recaller\CodeFish-src\Prototype\bin\Release\Experiment\Tasks\Cell2.txt
+S:\cpp projects\stack-recaller\CodeFish-src\Prototype\bin\Release\Experiment\Tasks\Graph1.txt
+S:\cpp projects\stack-recaller\CodeFish-src\Prototype\bin\Release\Experiment\Tasks\Graph2.txt
+S:\cpp projects\stack-recaller\CodeFish-src\Prototype\bin\Release\Experiment\Tasks\MulticastClient1.txt
+S:\cpp projects\stack-recaller\CodeFish-src\Prototype\bin\Release\Experiment\Tasks\MulticastClient2.txt
+S:\cpp projects\stack-recaller\CodeFish-src\Prototype\bin\Release\Experiment\Tasks\Sheet1.txt
+S:\cpp projects\stack-recaller\CodeFish-src\Prototype\bin\Release\Experiment\Tasks\Sheet2.txt
+S:\cpp projects\stack-recaller\CodeFish-src\Prototype\bin\Release\FisheyeView\CodeviewControl.resx
+S:\cpp projects\stack-recaller\CodeFish-src\Prototype\bin\Release\FisheyeView\CodeviewControl.cs
+S:\cpp projects\stack-recaller\CodeFish-src\Prototype\bin\Release\FisheyeView\CodeviewControl.Designer.cs
+S:\cpp projects\stack-recaller\CodeFish-src\Prototype\bin\Release\Experiment\Sources\MulticastClient.cs
+S:\cpp projects\stack-recaller\CodeFish-src\Prototype\bin\Release\Prototype.exe
+S:\cpp projects\stack-recaller\CodeFish-src\Prototype\bin\Release\CMicroParser.dll
+S:\cpp projects\stack-recaller\CodeFish-src\Prototype\obj\Release\ResolveAssemblyReference.cache
+S:\cpp projects\stack-recaller\CodeFish-src\Prototype\obj\Release\Prototype.Experiment.ExperimentPanel.resources
+S:\cpp projects\stack-recaller\CodeFish-src\Prototype\obj\Release\Prototype.DXLayoutControl.resources
+S:\cpp projects\stack-recaller\CodeFish-src\Prototype\obj\Release\Prototype.CodeviewControl.resources
+S:\cpp projects\stack-recaller\CodeFish-src\Prototype\obj\Release\Prototype.ScrollableDX.resources
+S:\cpp projects\stack-recaller\CodeFish-src\Prototype\obj\Release\Prototype.MainForm.resources
+S:\cpp projects\stack-recaller\CodeFish-src\Prototype\obj\Release\Prototype.OptionsDialog.resources
+S:\cpp projects\stack-recaller\CodeFish-src\Prototype\obj\Release\Prototype.Properties.Resources.resources
+S:\cpp projects\stack-recaller\CodeFish-src\Prototype\obj\Release\Prototype.SearchDialog.resources
+S:\cpp projects\stack-recaller\CodeFish-src\Prototype\obj\Release\ResGen.read.1.tlog
+S:\cpp projects\stack-recaller\CodeFish-src\Prototype\obj\Release\ResGen.write.1.tlog
