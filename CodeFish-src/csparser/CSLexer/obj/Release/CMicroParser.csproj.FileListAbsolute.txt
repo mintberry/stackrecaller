@@ -1,0 +1,7 @@
+C:\Users\t_qix\Downloads\dissert\CodeFish-src\csparser\CSLexer\bin\Release\CMicroParser.dll
+C:\Users\t_qix\Downloads\dissert\CodeFish-src\csparser\CSLexer\bin\Release\DotNetZen.CodeDom.dll
+C:\Users\t_qix\Downloads\dissert\CodeFish-src\csparser\CSLexer\bin\Release\DotNetZen.CodeDom.Patterns.dll
+C:\Users\t_qix\Downloads\dissert\CodeFish-src\csparser\CSLexer\bin\Release\DotNetZen.CodeDom.xml
+C:\Users\t_qix\Downloads\dissert\CodeFish-src\csparser\CSLexer\bin\Release\DotNetZen.CodeDom.Patterns.xml
+C:\Users\t_qix\Downloads\dissert\CodeFish-src\csparser\CSLexer\obj\Release\ResolveAssemblyReference.cache
+C:\Users\t_qix\Downloads\dissert\CodeFish-src\csparser\CSLexer\obj\Release\CMicroParser.dll

@@ -1,0 +1,67 @@
+8
+
+dir
+600
+svn://blz/Fisheye/trunk/Prototype/DOI
+svn://blz
+
+
+
+2007-05-27T16:30:03.781876Z
+555
+blaze
+
+
+svn:special svn:externals svn:needs-lock
+
+
+
+
+
+
+
+
+
+
+
+1fc9e8c4-89b6-3c4f-9415-aae5c8ccf226
+
+DynamicDOI.cs
+file
+
+
+
+
+2007-05-27T15:36:53.429000Z
+bdc5b0d2826de45895ac0b302bd4a370
+2007-05-27T11:58:37.675816Z
+552
+blaze
+
+backup
+dir
+
+StaticDOI.cs
+file
+
+
+
+
+2007-05-27T21:40:58.824207Z
+148cf3566cc5bd0c7c80d0eb48c834f8
+2007-05-27T16:30:03.781876Z
+555
+blaze
+
+IDOIStrategy.cs
+file
+
+
+
+
+2007-04-25T14:35:26.586000Z
+524edbbe9366ece586ff15ac86577975
+2007-04-25T13:18:10.843750Z
+476
+blaze
+

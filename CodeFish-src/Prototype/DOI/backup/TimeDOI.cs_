@@ -1,0 +1,53 @@
+using System;
+using System.Collections.Generic;
+using System.Text;
+
+namespace Prototype
+{
+    class TimeDOI : SimpleDOI
+    {
+        DateTime[] history;
+        DateTime _lastChange;
+
+        public TimeDOI():base()
+        {
+            this.DistanceWeightFactor = 0.4f;
+        }
+
+        public void OnModelChanged()
+        {
+            Reset();
+        }
+        
+        public override void OnFocusChanged()
+        {
+            base.OnFocusChanged();
+
+            _lastChange = DateTime.Now;
+
+            for (int i = Model.Default.Focus.Start; i < Model.Default.Focus.End; i++)
+                history[i] = DateTime.Now;
+        }
+
+
+        protected override float Distance(int i)
+        {
+            if (history[i] != DateTime.MinValue)
+            {
+                return (float)(1.0 / ((_lastChange - history[i]).TotalSeconds + 0.1));
+            }
+            else
+            {
+                return base.Distance(i);
+            }
+        }
+
+        public override void Reset()
+        {
+            history = new DateTime[Model.Default.Length];
+            for (int i = 0; i < history.Length; i++)
+                history[i] = DateTime.MinValue;
+            base.Reset();
+        }
+    }
+}

@@ -1,0 +1,7 @@
+bin\Debug\cmc.exe
+bin\Debug\cmc.pdb
+bin\Debug\CMicroParser.dll
+bin\Debug\CMicroParser.pdb
+obj\Debug\ResolveAssemblyReference.cache
+obj\Debug\cmc.exe
+obj\Debug\cmc.pdb

@@ -1,0 +1,16 @@
+./Experiment/Sources/Graph.cs
+In the method Inserts(...) find the line number of the call to FindMaxMinValues() 
+In the method OnPaint(...) how many for, foreach or if/else statements enclose line 256?
+In the method DrawMarker(...) find the field used (as the condition in the first if-statement) and determine the line number of its definition. 
+Which of the methods and classes used method Display(...), line 185-180, are defined within the file?  
+In the method OnMouseMove(...) find the line number of the call to DrawMarker() 
+Describe the functionality of the method Insert(), line 117-137.
+In the method DrawMarker(...), line 267-336, find the starting if-statement for the '}' on line 334.
+How many of the fields _OffsetX and _GraphThickness are encapsulated correctly?
+In the method Display(...) find the second last method call and determine the line number of its definition.
+In the constructor Graph() find the line number of the first field being initialized.
+In the method FindMaxMinValues() find the last field used and determine the line number of its definition.
+How many of the fields _Timespan and _HighestValue are encapsulated correctly?
+Describe the functionality of the method FindMaxMinValues(), line 185-204.
+Which of the fields and classes used in the method Insert(...), line 117-137, are defined within the file?
+In the method DrawMarker(...), line 267-336, how many for, foreach or if/else statements enclose line 292? 

@@ -1,0 +1,138 @@
+using System;
+using System.Collections.Generic;
+using System.Text;
+using System.Diagnostics;
+using System.ComponentModel;
+
+namespace Prototype
+{
+    class SimpleDOI : IDOIStrategy
+    {
+
+        private Line[] _document = new Line[] { };
+        private float _maxWeight = 0.1f;
+
+        private DateTime _lastTime;
+        private float _timeout = 1000f;
+
+        public SimpleDOI()
+        {
+            _lastTime = DateTime.Now;
+        }
+
+        float[] IDOIStrategy.Weights
+        {
+            get
+            {
+                float[] weights = new float[_document.Length];
+
+                for (int i = 0; i < _document.Length; i++)
+                {
+                    if (Model.Default.Skips[i])
+                        weights[i] = 0f;
+                    else
+                    {
+                        float distanceBonus;
+
+                        distanceBonus = Distance(i);
+
+                        float normalizedWeight = _document[i].weight / _maxWeight;
+
+                        weights[i] = (float)Math.Pow((normalizedWeight * (1 - _distanceWeightFactor)) + (distanceBonus * _distanceWeightFactor), 0.5);
+                        //Debug.Assert(weights[i] < 10f);
+                    }
+                }
+
+                return weights;
+            }
+        }
+
+
+
+        public void OnModelChanged()
+        {
+            _document = new Line[Model.Default.Length];
+
+            for (int i = 1; i < Model.Default.Length; i++)
+                _document[i] = new Line(Model.Default.Document[i], 0.1f);
+        }
+
+        protected virtual float Distance(int i)
+        {
+            return 1f / (Model.Default.Focus.Distance(i) + 1);
+        }
+
+        public virtual void OnFocusChanged()
+        {
+            if ((float)((TimeSpan)(DateTime.Now - _lastTime)).TotalMilliseconds > _timeout)
+            {
+                InflateWeights(_focusChangedInflator);
+            }
+            else
+                _lastTime = DateTime.Now;
+        }
+
+
+        private void InflateWeights(float inflator)
+        {
+            for (int i = Model.Default.Focus.Start; i < Model.Default.Focus.End; i++)
+            {
+                float distanceWeight = 1.0f - (float)Model.Default.Focus.DistanceToCenter(i) / Model.Default.Focus.Lines;
+                _document[i].weight += inflator * distanceWeight;
+                _maxWeight = Math.Max(_document[i].weight, _maxWeight);
+            }
+        }
+
+        private float _focusChangedInflator = 0.05f;
+        [CategoryAttribute("DOI settings"),
+        DescriptionAttribute("Inflator when focus area changes. Should be between 0.001 and 1.000.")]
+
+        public float FocusChangedInflator
+        {
+            get
+            {
+                return _focusChangedInflator;
+            }
+            set
+            {
+                _focusChangedInflator = value;
+            }
+        }
+
+        private float _distanceWeightFactor = 0.1f;
+        [CategoryAttribute("DOI settings"),
+        DescriptionAttribute("Weight factor for distance component of DOI function. Should be between 1 and 0.")]
+        public float DistanceWeightFactor
+        {
+            get
+            {
+                return _distanceWeightFactor;
+            }
+            set
+            {
+                _distanceWeightFactor = value;
+            }
+        }
+
+
+        public virtual void Reset()
+        {
+            string[] document = new string[_document.Length];
+            for (int i = 0; i < document.Length; i++)
+                document[i] = _document[i].text;
+
+            for (int i = 1; i < document.Length; i++)
+                _document[i] = new Line(document[i], 0.1f);
+
+            _maxWeight = 0.1f;
+        }
+
+        [CategoryAttribute("Settings"),
+        DescriptionAttribute("Milliseconds before a focus change is considered a transition.")]
+        public float Timeout
+        {
+            get { return _timeout; }
+            set { _timeout = value; }
+        }
+    }
+}
