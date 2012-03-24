@@ -5,3 +5,10 @@ C:\Users\t_qix\Downloads\dissert\CodeFish-src\csparser\CSLexer\bin\Release\DotNe
 C:\Users\t_qix\Downloads\dissert\CodeFish-src\csparser\CSLexer\bin\Release\DotNetZen.CodeDom.Patterns.xml
 C:\Users\t_qix\Downloads\dissert\CodeFish-src\csparser\CSLexer\obj\Release\ResolveAssemblyReference.cache
 C:\Users\t_qix\Downloads\dissert\CodeFish-src\csparser\CSLexer\obj\Release\CMicroParser.dll
+S:\cpp projects\stack-recaller\CodeFish-src\csparser\CSLexer\bin\Release\CMicroParser.dll
+S:\cpp projects\stack-recaller\CodeFish-src\csparser\CSLexer\bin\Release\DotNetZen.CodeDom.dll
+S:\cpp projects\stack-recaller\CodeFish-src\csparser\CSLexer\bin\Release\DotNetZen.CodeDom.Patterns.dll
+S:\cpp projects\stack-recaller\CodeFish-src\csparser\CSLexer\bin\Release\DotNetZen.CodeDom.xml
+S:\cpp projects\stack-recaller\CodeFish-src\csparser\CSLexer\bin\Release\DotNetZen.CodeDom.Patterns.xml
+S:\cpp projects\stack-recaller\CodeFish-src\csparser\CSLexer\obj\Release\ResolveAssemblyReference.cache
+S:\cpp projects\stack-recaller\CodeFish-src\csparser\CSLexer\obj\Release\CMicroParser.dll
