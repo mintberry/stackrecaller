@@ -1,0 +1,97 @@
+   //map lines and real id's
+            Dictionary<string, List<int>> map = new Dictionary<string, List<int>>();
+
+            foreach (IdentifierName idn in Model.Default.ParsedDocument.NameTable)
+            {
+                map.Add(idn.FullyQualifiedName[0], new List<int>());
+            }
+
+
+            LinkedListNode<DDW.Token> token = Model.Default.LexedDocument.First;
+            while (token != null)
+            {
+                if (token.Value.ID == TokenID.Ident)
+                {
+                    int count;
+                    if (token.Next == null || token.Next.Value.Line != token.Value.Line)
+                        count = Model.Default.Document[token.Value.Line-1].Length - (token.Value.Col);
+                    else
+                        count = token.Next.Value.Col - token.Value.Col;
+
+                    string part = Model.Default.Document[token.Value.Line - 1].Substring(token.Value.Col, count).Trim();
+
+                    if(map.ContainsKey(part) && !map[part].Contains(token.Value.Line-1))
+                        map[part].Add(token.Value.Line - 1);
+                    
+                }
+                token = token.Next;
+            }
+
+
+            for (int i = 0; i < Model.Default.Length; i++)
+            {
+                foreach (KeyValuePair<string,List<int>> kv in map)
+                {
+                    if (Model.Default.Document[i].IndexOf(kv.Key) > 0)
+                        kv.Value.Add(i);
+                }
+            }
+
+
+ 
+ 
+ 
+ /*List<List<string>> identifiers = new List<List<string>>();
+            for (int i = 0; i < Model.Default.Length; i++)
+            {
+                identifiers.Add(new List<int>());
+                _semanticWeights[i] = new float[Model.Default.Length];
+            }
+
+
+            foreach (DDW.Token tok in Model.Default.LexedDocument)
+            {
+                if (tok.ID == TokenID.Ident)
+                    identifiers[tok.Line].Add("");
+            }*/
+
+           /* List<List<int>> identifiers = new List<List<int>>();
+            LinkedListNode<DDW.Token> token = Model.Default.LexedDocument.First;
+            for (int i = 0; i < Model.Default.Length; i++)
+            {
+                identifiers.Add(new List<int>());
+                _semanticWeights[i] = new float[Model.Default.Length];
+                while (token != null && token.Value.Line - 1 == i)
+                {
+                    if (token.Value.ID == TokenID.Ident)
+                        identifiers[i].Add(token.Value.Data);
+                    token = token.Next;
+                }
+            }
+
+            //Aggregating identifier lists over the whole focus area
+            List<List<int>> collapsedIdentifiers = new List<List<int>>();
+            for (int i = 0; i < Model.Default.Length; i++)
+            {
+                collapsedIdentifiers.Add(new List<int>());
+                for (int f = -Model.Default.FocusAreaRadius; f < Model.Default.FocusAreaRadius; f++)
+                {
+                    if (i + f < 0 || i + f >= Model.Default.Length)
+                        continue;
+                    collapsedIdentifiers[i].AddRange(identifiers[i + f]);
+                }
+
+            }
+
+
+            for (int i = 0; i < Model.Default.Length; i++)
+			{
+                foreach (DDW.Token tok in Model.Default.LexedDocument)
+                {
+                    if (tok.ID == TokenID.Ident 
+                        && collapsedIdentifiers[i].Contains(tok.Data)
+                        && tok.Line - 1 != i)
+                        _semanticWeights[i][tok.Line - 1] = SEMANTIC_GAIN;
+                }
+            }
+            * */
