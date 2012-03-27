@@ -1,4 +1,4 @@
-using System;
+ï»¿using System;
 using System.Collections.Generic;
 using System.ComponentModel;
 using System.Data;
@@ -34,13 +34,13 @@ namespace Prototype
 	
 	public class Highlighter
 	{
-        private const string KEYWORD = "¤keyword¤";
-        private const string COMMENT = "¤comment¤";
-        private const string NORMAL = "¤normal¤";
-        private const string STRING = "¤str¤";
-        private const string PRE = "¤pre¤";
-        private const string TYPE = "¤type¤";
-        private const string IDENT = "¤ident¤";
+        private const string KEYWORD = "Â¤keywordÂ¤";
+        private const string COMMENT = "Â¤commentÂ¤";
+        private const string NORMAL = "Â¤normalÂ¤";
+        private const string STRING = "Â¤strÂ¤";
+        private const string PRE = "Â¤preÂ¤";
+        private const string TYPE = "Â¤typeÂ¤";
+        private const string IDENT = "Â¤identÂ¤";
 
         public static Token[] TokenizeLine(string line)
         {
@@ -108,7 +108,7 @@ namespace Prototype
 			// Replace comments
 			re = new Regex( @"//.*$", RegexOptions.Multiline );
 			line = re.Replace( line, new MatchEvaluator( CommentHandler ) );
-            if (line.IndexOf("¤comment¤") > 0)
+            if (line.IndexOf("Â¤commentÂ¤") > 0)
                 return line;
 			
 			// Commented out multi line comments
@@ -198,7 +198,7 @@ namespace Prototype
 
 //		private static string LineHandler( Match m )
 //		{
-//			return "" + m.Value + "¤newline¤";
+//			return "" + m.Value + "Â¤newlineÂ¤";
 //		}
 	}
 }

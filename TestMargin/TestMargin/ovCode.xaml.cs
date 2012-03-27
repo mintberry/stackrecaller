@@ -12,6 +12,7 @@ using System.Windows.Media.Imaging;
 using System.Windows.Navigation;
 using System.Windows.Shapes;
 using Microsoft.VisualStudio.Text.Editor;
+using Microsoft.VisualStudio.Text.Formatting;
 
 namespace TestMargin
 {
@@ -20,7 +21,8 @@ namespace TestMargin
     /// </summary>
     public partial class ovCode : UserControl
     {
-        IWpfTextView _wtv = null;
+        private IWpfTextView _wtv = null;
+        private ITextViewLine []_tvls;
 
         public ovCode()
         {
@@ -30,13 +32,14 @@ namespace TestMargin
         public ovCode(IWpfTextView wtv)
         {
             _wtv = wtv;
+            _tvls = _wtv.TextViewLines.ToArray();
             InitializeComponent();
             
         }
 
         public void UpdateOV() 
         {
- 
+            
         }
     }
 }

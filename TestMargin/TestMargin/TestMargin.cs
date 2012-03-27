@@ -1,11 +1,14 @@
 ﻿using System;
+using System.Collections.Generic;
 using System.Windows.Controls;
 using System.Windows.Media;
 using Microsoft.VisualStudio.Text.Editor;
+using Microsoft.VisualStudio.Text.Formatting;
 using Microsoft.VisualStudio.Text;
 using Microsoft.VisualStudio.VCCodeModel;
 using EnvDTE;
 using EnvDTE80;
+using TestMargin.OverViews;
 
 namespace TestMargin
 {
@@ -23,6 +26,8 @@ namespace TestMargin
         private Document _doc;
         private VCFileCodeModel _vccm;
 
+        private List<OvLine> _ovlc;
+
         private ovCode _overviewport = null;                                 //the wpf control to display the overview
 
         /// <summary>
@@ -34,7 +39,7 @@ namespace TestMargin
             _textView = textView;
             _dte = dte;
 
-            this.Width = 100;
+            //this.Width = _textView.ViewportWidth / 4;
             this.ClipToBounds = true;
             this.Background = new SolidColorBrush(Colors.LightGreen);
 
@@ -60,9 +65,10 @@ namespace TestMargin
             //label.Background = new SolidColorBrush(Colors.LightGreen);
             //label.Content = "Hello world!";
             //this.Children.Add(label);
-            _overviewport = new ovCode(_textView);
+            
+            //_overviewport = new ovCode(_textView);
 
-            this.Children.Add(_overviewport);
+            //this.Children.Add(_overviewport);
 
         }
 
@@ -70,40 +76,63 @@ namespace TestMargin
         {
             int linecount = _textView.TextSnapshot.LineCount;
             //throw new NotImplementedException();
-            System.Diagnostics.Trace.WriteLine("CaretPostitionChanged:" + _textView.TextSnapshot.GetLineNumberFromPosition(_textView.Caret.Position.BufferPosition));
+            //System.Diagnostics.Trace.WriteLine("CaretPostitionChanged:" + _textView.TextSnapshot.GetLineNumberFromPosition(_textView.Caret.Position.BufferPosition));
 
         }
 
         void _textView_LayoutChanged(object sender, TextViewLayoutChangedEventArgs e)
         {
+            this.Width = _textView.ViewportWidth / 5;
+            this.Height = _textView.ViewportHeight;
+
+
+
+            Parse2OvLines();
+            DrawOverview();
+            //System.Diagnostics.Trace.WriteLine("###         margin:" + this.Height);
             //System.Diagnostics.Trace.WriteLine("###         FirstVisibleLine: " + _textView.TextSnapshot.GetLineNumberFromPosition(_textView.TextViewLines.FirstVisibleLine.Start));
 
             //_doc = _dte.ActiveDocument;
             
-            try
-            {
-                _vccm = _dte.ActiveDocument.ProjectItem.FileCodeModel as VCFileCodeModel;
-                System.Diagnostics.Trace.WriteLine("{{{");
-                foreach (CodeElement ce in _vccm.Functions)
-                {
-                    System.Diagnostics.Trace.WriteLine("###         DTEDocument:" + ce.Kind + " : " + ce.StartPoint.Line);
-                }
-            }
-            catch (Exception e1)
-            {
-                System.Diagnostics.Trace.WriteLine("@@@         Exception:" + e1.ToString());
-            }
-            //throw new NotImplementedException();
-            if (_overviewport != null)
-            {
-                _overviewport.UpdateOV();                         //update the overview accroding to the change of main text area
-            }
+            //try
+            //{
+            //    _vccm = _dte.ActiveDocument.ProjectItem.FileCodeModel as VCFileCodeModel;
+            //    System.Diagnostics.Trace.WriteLine("{{{");
+            //    foreach (CodeElement ce in _vccm.Functions)
+            //    {
+            //        System.Diagnostics.Trace.WriteLine("###         DTEDocument:" + ce.Kind + " : " + ce.StartPoint.Line);
+            //    }
+            //}
+            //catch (Exception e1)
+            //{
+            //    System.Diagnostics.Trace.WriteLine("@@@         Exception:" + e1.ToString());
+            //}
+            ////throw new NotImplementedException();
+            //if (_overviewport != null)
+            //{
+            //    _overviewport.UpdateOV();                         //update the overview accroding to the change of main text area
+            //}
         }
 
         private void ThrowIfDisposed()
         {
             if (_isDisposed)
                 throw new ObjectDisposedException(MarginName);
+        }
+
+        private void DrawOverview() 
+        {
+            this.Children.Clear();
+
+            int lnCount = _ovlc.Count;
+            float divHeight = (float)(this.Height / lnCount);
+            float widRate = (float)(this.ActualWidth / (_textView.ViewportWidth - this.ActualWidth));
+            System.Diagnostics.Trace.WriteLine("###         DRAW:" + this.ActualWidth + " : " + _textView.ViewportWidth);
+            foreach (OvLine ovl in _ovlc)
+            {
+                ovl.DrawSelf(this, widRate, divHeight);
+                
+            }
         }
 
         #region IWpfTextViewMargin Members
@@ -169,5 +198,31 @@ namespace TestMargin
         #endregion
 
 
+        protected override void OnRender(DrawingContext dc)
+        {
+            base.OnRender(dc);
+
+            
+        }
+
+        private void Parse2OvLines() 
+        {
+            if (_ovlc == null)
+            {
+                _ovlc = new List<OvLine>();
+            }
+            else _ovlc.Clear();
+            
+            foreach (ITextSnapshotLine tvl in _textView.TextSnapshot.Lines)
+            {
+                _ovlc.Add(new OvLine(tvl, (float)(this.ActualWidth / 4.0f)));
+            }
+            System.Diagnostics.Trace.WriteLine("###         PARSE:" + _ovlc.Count);
+        }
+
+        static public int GetViewLineNumber(ITextViewLine tvl)
+        {
+            return tvl.Snapshot.GetLineNumberFromPosition(tvl.Start);
+        }
     }
 }

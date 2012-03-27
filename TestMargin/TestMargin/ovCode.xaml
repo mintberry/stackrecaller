@@ -7,5 +7,7 @@
     <!--<Grid DataContext="{Binding}">
         <Label Content="Label" Height="54" HorizontalAlignment="Left" Margin="43,42,0,0" Name="label1" VerticalAlignment="Top" Width="162" DataContext="{Binding}" />
     </Grid>-->
-    <ScrollViewer Name="scrollViewer1" VerticalScrollBarVisibility="Hidden" HorizontalAlignment="Left" VerticalAlignment="Top" />
+    <!--ScrollViewer Name="scrollViewer1" VerticalScrollBarVisibility="Hidden" HorizontalAlignment="Left" VerticalAlignment="Top">
+        
+    </ScrollViewer-->
 </UserControl>
