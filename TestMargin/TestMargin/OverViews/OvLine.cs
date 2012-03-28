@@ -7,6 +7,7 @@ using System.Windows;
 using System.Windows.Controls;
 using System.Windows.Media;
 using System.Windows.Shapes;
+using System.Text.RegularExpressions;
 using Microsoft.VisualStudio.Text;
 
 
@@ -35,7 +36,8 @@ namespace TestMargin.OverViews
 
             lnNumber = itv.LineNumber;
             lnStart = 0.0f;
-            lnTextStart = 0.0f;
+            lnTextStart = (float)Find1stChar(itv);
+            //if (lnNumber == 65) System.Diagnostics.Trace.WriteLine("%%%                 REGEX: " + lnTextStart ); 
             lnEnd = (float)itv.Length;
             lnHeight = 1.0f;
             lnLength = itv.Length;
@@ -47,7 +49,7 @@ namespace TestMargin.OverViews
         public void DrawSelf(Canvas c, float widRate, float height)
         {
             LineGeometry myLineGeometry = new LineGeometry();
-            myLineGeometry.StartPoint = new Point(_bzCurvArea + lnStart * widRate, (double)(lnNumber));
+            myLineGeometry.StartPoint = new Point(_bzCurvArea + lnTextStart * widRate, (double)(lnNumber));
             myLineGeometry.EndPoint = new Point(_bzCurvArea + lnEnd * widRate, (double)(lnNumber));
 
             Path myPath = new Path();
@@ -56,6 +58,23 @@ namespace TestMargin.OverViews
             myPath.Data = myLineGeometry;
 
             c.Children.Add(myPath);
+        }
+
+        private int Find1stChar(ITextSnapshotLine tsl) 
+        {
+            string s = tsl.GetText();
+            int i1stChar = Regex.Match(s, @"\S").Index;
+            int i1stTab = Regex.Match(s, @"\t").Index;
+            if(i1stTab < i1stChar)
+            {
+                int iTabCount = Regex.Matches(s, @"\t").Count;
+                if (iTabCount <= i1stChar)
+                {
+                    i1stChar = iTabCount * 4 + i1stChar - iTabCount;
+                }
+            }
+            
+            return i1stChar;
         }
 
         

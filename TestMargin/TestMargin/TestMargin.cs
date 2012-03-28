@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using System.Windows.Controls;
 using System.Windows.Media;
+using System.Text.RegularExpressions;
 using Microsoft.VisualStudio.Text.Editor;
 using Microsoft.VisualStudio.Text.Formatting;
 using Microsoft.VisualStudio.Text;
@@ -218,6 +219,15 @@ namespace TestMargin
                 _ovlc.Add(new OvLine(tvl, (float)(this.ActualWidth / 4.0f)));
             }
             System.Diagnostics.Trace.WriteLine("###         PARSE:" + _ovlc.Count);
+        }
+
+        private float WidthPerChar() 
+        {
+            string s = _textView.TextViewLines.FirstVisibleLine.Extent.GetText();
+            int iTabCount = Regex.Matches(s, @"\t").Count;
+            int iCharCount = iTabCount * 4 + s.Length - iTabCount;
+            float widthpch = (float)(_textView.TextViewLines.FirstVisibleLine.TextWidth / iCharCount);
+            return widthpch;
         }
 
         static public int GetViewLineNumber(ITextViewLine tvl)
