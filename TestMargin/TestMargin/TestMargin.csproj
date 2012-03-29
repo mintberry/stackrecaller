@@ -87,6 +87,10 @@
       <DependentUpon>ovCode.xaml</DependentUpon>
     </Compile>
     <Compile Include="OverViews\OvLine.cs" />
+    <Compile Include="Taggers\InvismakerFormat.cs" />
+    <Compile Include="Taggers\TextInvisTag.cs" />
+    <Compile Include="Taggers\TextInvisTagger.cs" />
+    <Compile Include="Taggers\TextInvisTaggerProvider.cs" />
     <Compile Include="TestMargin.cs" />
     <Compile Include="TestMarginFactory.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />

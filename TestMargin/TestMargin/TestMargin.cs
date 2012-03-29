@@ -83,13 +83,15 @@ namespace TestMargin
 
         void _textView_LayoutChanged(object sender, TextViewLayoutChangedEventArgs e)
         {
-            this.Width = _textView.ViewportWidth / 5;
-            this.Height = _textView.ViewportHeight;
+            if(e.VerticalTranslation != true)
+            {
+                this.Width = _textView.ViewportWidth / 5;
+                this.Height = _textView.ViewportHeight;
 
+                Parse2OvLines();
+                DrawOverview();
+            }
 
-
-            Parse2OvLines();
-            DrawOverview();
             //System.Diagnostics.Trace.WriteLine("###         margin:" + this.Height);
             //System.Diagnostics.Trace.WriteLine("###         FirstVisibleLine: " + _textView.TextSnapshot.GetLineNumberFromPosition(_textView.TextViewLines.FirstVisibleLine.Start));
 
