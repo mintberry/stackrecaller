@@ -17,8 +17,8 @@ namespace TestMargin.Taggers
     {
         ITextView View { get; set; }                                      //iwpftextview
         ITextBuffer SourceBuffer { get; set; }
-        ITextSearchService TextSearchService { get; set; }
-        ITextStructureNavigator TextStructureNavigator { get; set; }
+        //ITextSearchService TextSearchService { get; set; }
+        //ITextStructureNavigator TextStructureNavigator { get; set; }
         NormalizedSnapshotSpanCollection WordSpans { get; set; }
         SnapshotSpan? CurrentWord { get; set; }
         SnapshotPoint RequestedPoint { get; set; }
@@ -26,13 +26,13 @@ namespace TestMargin.Taggers
 
         public event EventHandler<SnapshotSpanEventArgs> TagsChanged;       //
 
-        public TextInvisTagger(ITextView view, ITextBuffer sourceBuffer, ITextSearchService textSearchService,
-            ITextStructureNavigator textStructureNavigator)
+        public TextInvisTagger(ITextView view, ITextBuffer sourceBuffer/*, ITextSearchService textSearchService,
+            ITextStructureNavigator textStructureNavigator*/)
         {
             this.View = view;
             this.SourceBuffer = sourceBuffer;
-            this.TextSearchService = textSearchService;
-            this.TextStructureNavigator = textStructureNavigator;
+            //this.TextSearchService = textSearchService;
+            //this.TextStructureNavigator = textStructureNavigator;
             this.WordSpans = new NormalizedSnapshotSpanCollection();
             this.CurrentWord = null;
             this.View.Caret.PositionChanged += CaretPositionChanged;
@@ -49,7 +49,10 @@ namespace TestMargin.Taggers
             SnapshotSpan span = RequestedPoint.GetContainingLine().Extent;                          // the line containing the position
             NormalizedSnapshotSpanCollection col = new NormalizedSnapshotSpanCollection(span);
 
+            CurrentWord = span;
+            WordSpans = col;
 
+            SyncText();
         }
         private void ViewLayoutChanged(object sender, TextViewLayoutChangedEventArgs e) 
         {
@@ -63,7 +66,11 @@ namespace TestMargin.Taggers
         {
             lock (updateLock)
             {
-
+                if (TagsChanged != null)
+                {
+                    //raise an event, but why the span is whole?
+                    TagsChanged(this, new SnapshotSpanEventArgs(new SnapshotSpan(SourceBuffer.CurrentSnapshot, 0, SourceBuffer.CurrentSnapshot.Length)));
+                }
             }
         }
 
@@ -73,15 +80,17 @@ namespace TestMargin.Taggers
 
         IEnumerable<ITagSpan<TextInvisTag>> ITagger<TextInvisTag>.GetTags(NormalizedSnapshotSpanCollection spans)
         {
-            throw new NotImplementedException();
+            if (CurrentWord.HasValue)
+            {
+                if (spans.OverlapsWith(new NormalizedSnapshotSpanCollection(CurrentWord.Value)))
+                    yield return new TagSpan<TextInvisTag>(CurrentWord.Value, new TextInvisTag());
+            }
+            //throw new NotImplementedException();
+            //foreach (SnapshotSpan span in spans)
+            //{
+            //    yield return new TagSpan<TextInvisTag>(span, new TextInvisTag());
+            //}
         }
-
-        event EventHandler<SnapshotSpanEventArgs> ITagger<TextInvisTag>.TagsChanged
-        {
-            add { throw new NotImplementedException(); }
-            remove { throw new NotImplementedException(); }
-        }
-
         #endregion
     }
 }

@@ -23,6 +23,7 @@ namespace TestMargin.Taggers
             
             this.BackgroundColor = Colors.LightBlue;
             this.ForegroundColor = Colors.DarkBlue;
+            
             this.DisplayName = "Invisible Lines";
             //this.ZOrder = 5;
         }

@@ -78,7 +78,8 @@ namespace TestMargin
             int linecount = _textView.TextSnapshot.LineCount;
             //throw new NotImplementedException();
             //System.Diagnostics.Trace.WriteLine("CaretPostitionChanged:" + _textView.TextSnapshot.GetLineNumberFromPosition(_textView.Caret.Position.BufferPosition));
-
+            ITextSnapshotLine ssl = e.NewPosition.BufferPosition.GetContainingLine();
+            
         }
 
         void _textView_LayoutChanged(object sender, TextViewLayoutChangedEventArgs e)
@@ -129,11 +130,12 @@ namespace TestMargin
 
             int lnCount = _ovlc.Count;
             float divHeight = (float)(this.Height / lnCount);
-            float widRate = (float)(this.ActualWidth / (_textView.ViewportWidth - this.ActualWidth));
-            System.Diagnostics.Trace.WriteLine("###         DRAW:" + this.ActualWidth + " : " + _textView.ViewportWidth);
+            float widRate = (float)(this.ActualWidth / 2.0f / _textView.ViewportWidth);
+            float widperchar = WidthPerChar();
+            System.Diagnostics.Trace.WriteLine("###         DRAW:" + this.ActualWidth + " : " + widperchar);
             foreach (OvLine ovl in _ovlc)
             {
-                ovl.DrawSelf(this, widRate, divHeight);
+                ovl.DrawSelf(this, widperchar, divHeight, widRate);
                 
             }
         }
@@ -229,6 +231,7 @@ namespace TestMargin
             int iTabCount = Regex.Matches(s, @"\t").Count;
             int iCharCount = iTabCount * 4 + s.Length - iTabCount;
             float widthpch = (float)(_textView.TextViewLines.FirstVisibleLine.TextWidth / iCharCount);
+            System.Diagnostics.Trace.WriteLine("###         WIDTH:" + iCharCount + " : " + _textView.TextViewLines.FirstVisibleLine.TextWidth);
             return widthpch;
         }
 

@@ -12,17 +12,25 @@ using Microsoft.VisualStudio.Utilities;
 namespace TestMargin.Taggers
 {
     [Export(typeof(IViewTaggerProvider))]
-    [ContentType("text")]
+    [ContentType("C/C++")]
     [TagType(typeof(TextMarkerTag))]
     internal class TextInvisTaggerProvider : IViewTaggerProvider
     {
+        //[Import]
+        //internal ITextSearchService TextSearchService { get; set; }
+
+        //[Import]
+        //internal ITextStructureNavigatorSelectorService TextStructureNavigatorSelector { get; set; }
 
 
         #region IViewTaggerProvider Members
 
         ITagger<T> IViewTaggerProvider.CreateTagger<T>(ITextView textView, ITextBuffer buffer)
         {
-            throw new NotImplementedException();
+            //throw new NotImplementedException();
+            if (textView.TextBuffer != buffer)
+                return null;
+            return new TextInvisTagger(textView, buffer) as ITagger<T>;
         }
 
         #endregion

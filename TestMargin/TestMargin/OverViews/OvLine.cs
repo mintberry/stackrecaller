@@ -41,16 +41,16 @@ namespace TestMargin.OverViews
             lnEnd = (float)itv.Length;
             lnHeight = 1.0f;
             lnLength = itv.Length;
-            lnColor = new System.Windows.Media.Color();
+            lnColor = new System.Windows.Media.Color();                    //get the color of the textview
             lnFocus = false;
         }
 
         //draw self on canvas
-        public void DrawSelf(Canvas c, float widRate, float height)
+        public void DrawSelf(Canvas c, float widperchar, float height, float widRate)
         {
             LineGeometry myLineGeometry = new LineGeometry();
-            myLineGeometry.StartPoint = new Point(_bzCurvArea + lnTextStart * widRate, (double)(lnNumber));
-            myLineGeometry.EndPoint = new Point(_bzCurvArea + lnEnd * widRate, (double)(lnNumber));
+            myLineGeometry.StartPoint = new Point(_bzCurvArea + lnTextStart * widRate, (double)(lnNumber * 3));
+            myLineGeometry.EndPoint = new Point(_bzCurvArea + lnLength * widperchar * widRate, (double)(lnNumber * 3));
 
             Path myPath = new Path();
             myPath.Stroke = Brushes.Black;
