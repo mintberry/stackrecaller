@@ -3,10 +3,13 @@ using System.Collections.Generic;
 using System.Windows.Controls;
 using System.Windows.Media;
 using System.Text.RegularExpressions;
+using Microsoft.VisualStudio;
+using Microsoft.VisualStudio.Editor;
 using Microsoft.VisualStudio.Text.Editor;
 using Microsoft.VisualStudio.Text.Formatting;
 using Microsoft.VisualStudio.Text;
 using Microsoft.VisualStudio.VCCodeModel;
+using Microsoft.VisualStudio.TextManager.Interop;
 using EnvDTE;
 using EnvDTE80;
 using TestMargin.OverViews;
@@ -27,6 +30,9 @@ namespace TestMargin
         private Document _doc;
         private VCFileCodeModel _vccm;
 
+        private IVsHiddenTextManager _htm;
+        private IVsEditorAdaptersFactoryService _afService;
+
         private List<OvLine> _ovlc;
 
         private ovCode _overviewport = null;                                 //the wpf control to display the overview
@@ -35,10 +41,12 @@ namespace TestMargin
         /// Creates a <see cref="TestMargin"/> for a given <see cref="IWpfTextView"/>.
         /// </summary>
         /// <param name="textView">The <see cref="IWpfTextView"/> to attach the margin to.</param>
-        public TestMargin(IWpfTextView textView, DTE2 dte)
+        public TestMargin(IWpfTextView textView, DTE2 dte, IVsHiddenTextManager htm, IVsEditorAdaptersFactoryService afService)
         {
             _textView = textView;
             _dte = dte;
+            _htm = htm;
+            _afService = afService;
 
             //this.Width = _textView.ViewportWidth / 4;
             this.ClipToBounds = true;
@@ -91,6 +99,26 @@ namespace TestMargin
 
                 Parse2OvLines();
                 DrawOverview();
+            }
+
+            if(_htm !=  null)
+            {
+                int iErrStat;
+                IVsHiddenTextSession hts = null;
+                iErrStat = _htm.GetHiddenTextSession(_afService.GetBufferAdapter(_textView.TextBuffer), out hts);
+                System.Diagnostics.Trace.WriteLine("&&&                TEXTMGR: " + _htm.ToString());
+                if (iErrStat == VSConstants.S_OK)
+                {
+                    System.Diagnostics.Trace.WriteLine("&&&                HIDMGR: ");
+                }
+                else 
+                {
+                    iErrStat = _htm.CreateHiddenTextSession(0, _textView.TextBuffer, null, out hts);
+                    if (iErrStat == VSConstants.S_OK)
+                    {
+                        System.Diagnostics.Trace.WriteLine("&&&                HIDSES: ");
+                    }
+                }
             }
 
             //System.Diagnostics.Trace.WriteLine("###         margin:" + this.Height);
@@ -233,6 +261,12 @@ namespace TestMargin
             float widthpch = (float)(_textView.TextViewLines.FirstVisibleLine.TextWidth / iCharCount);
             System.Diagnostics.Trace.WriteLine("###         WIDTH:" + iCharCount + " : " + _textView.TextViewLines.FirstVisibleLine.TextWidth);
             return widthpch;
+        }
+
+        private int VLine2SLine(ITextViewLine tvl) 
+        {
+            //to be implemented, return snapshotline number
+            return 0;
         }
 
         static public int GetViewLineNumber(ITextViewLine tvl)
