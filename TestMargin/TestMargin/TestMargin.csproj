@@ -95,6 +95,8 @@
     </Compile>
     <Compile Include="OverViews\OvLine.cs" />
     <Compile Include="Taggers\InvismakerFormat.cs" />
+    <Compile Include="Taggers\OutlnTagger.cs" />
+    <Compile Include="Taggers\OutlnTaggerProvider.cs" />
     <Compile Include="Taggers\TextInvisTag.cs" />
     <Compile Include="Taggers\TextInvisTagger.cs" />
     <Compile Include="Taggers\TextInvisTaggerProvider.cs" />
