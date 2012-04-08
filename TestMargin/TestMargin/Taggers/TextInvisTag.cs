@@ -13,9 +13,16 @@ using Microsoft.VisualStudio.Utilities;
 
 namespace TestMargin.Taggers
 {
-    class TextInvisTag: TextMarkerTag
+    class TextInvisTag: ClassificationTag
     {
-        public TextInvisTag() : base("ClassificationFormatDefinition/InvisFormat") { }
+        
 
+        public TextInvisTag(IClassificationType type)
+            : base(type)
+        {
+            //System.Diagnostics.Trace.WriteLine("&&&                TIT: ");
+        }
+        //"ClassificationFormatDefinition/InvisFormat"
+        //"invisclass.invis"
     }
 }

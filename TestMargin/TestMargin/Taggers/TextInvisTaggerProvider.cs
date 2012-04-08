@@ -6,6 +6,7 @@ using System.Text;
 using Microsoft.VisualStudio.Text;
 using Microsoft.VisualStudio.Text.Editor;
 using Microsoft.VisualStudio.Text.Tagging;
+using Microsoft.VisualStudio.Text.Classification;
 using Microsoft.VisualStudio.Utilities;
 
 
@@ -13,7 +14,7 @@ namespace TestMargin.Taggers
 {
     [Export(typeof(IViewTaggerProvider))]
     [ContentType("C/C++")]
-    [TagType(typeof(TextMarkerTag))]
+    [TagType(typeof(ClassificationTag))]
     internal class TextInvisTaggerProvider : IViewTaggerProvider
     {
         //[Import]
@@ -21,6 +22,9 @@ namespace TestMargin.Taggers
 
         //[Import]
         //internal ITextStructureNavigatorSelectorService TextStructureNavigatorSelector { get; set; }
+
+        [Import]
+        internal IClassificationTypeRegistryService registry { set; get; }
 
 
         #region IViewTaggerProvider Members
@@ -30,7 +34,7 @@ namespace TestMargin.Taggers
             //throw new NotImplementedException();
             if (textView.TextBuffer != buffer)
                 return null;
-            return new TextInvisTagger(textView, buffer) as ITagger<T>;
+            return new TextInvisTagger(textView, buffer, registry) as ITagger<T>;
         }
 
         #endregion

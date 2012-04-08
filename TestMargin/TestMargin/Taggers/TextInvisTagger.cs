@@ -24,10 +24,12 @@ namespace TestMargin.Taggers
         SnapshotPoint RequestedPoint { get; set; }
         object updateLock = new object();
 
+        IClassificationTypeRegistryService _ctrs { set; get; }
+
         public event EventHandler<SnapshotSpanEventArgs> TagsChanged;       //
 
         public TextInvisTagger(ITextView view, ITextBuffer sourceBuffer/*, ITextSearchService textSearchService,
-            ITextStructureNavigator textStructureNavigator*/)
+            ITextStructureNavigator textStructureNavigator*/, IClassificationTypeRegistryService ctrs)
         {
             this.View = view;
             this.SourceBuffer = sourceBuffer;
@@ -37,6 +39,8 @@ namespace TestMargin.Taggers
             this.CurrentWord = null;
             this.View.Caret.PositionChanged += CaretPositionChanged;
             this.View.LayoutChanged += ViewLayoutChanged;
+
+            this._ctrs = ctrs;
         }
 
         private void CaretPositionChanged(object sender, CaretPositionChangedEventArgs e) 
@@ -83,7 +87,7 @@ namespace TestMargin.Taggers
             if (CurrentWord.HasValue)
             {
                 if (spans.OverlapsWith(new NormalizedSnapshotSpanCollection(CurrentWord.Value)))
-                    yield return new TagSpan<TextInvisTag>(CurrentWord.Value, new TextInvisTag());
+                    yield return new TagSpan<TextInvisTag>(CurrentWord.Value, new TextInvisTag(_ctrs.GetClassificationType("invisclass.careton")));
             }
             //throw new NotImplementedException();
             //foreach (SnapshotSpan span in spans)

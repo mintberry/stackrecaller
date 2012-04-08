@@ -94,6 +94,7 @@
       <DependentUpon>ovCode.xaml</DependentUpon>
     </Compile>
     <Compile Include="OverViews\OvLine.cs" />
+    <Compile Include="Taggers\ClassiTypes.cs" />
     <Compile Include="Taggers\InvismakerFormat.cs" />
     <Compile Include="Taggers\OutlnTagger.cs" />
     <Compile Include="Taggers\OutlnTaggerProvider.cs" />
