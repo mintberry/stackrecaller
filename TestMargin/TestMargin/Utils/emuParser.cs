@@ -6,7 +6,7 @@ using System.Text.RegularExpressions;
 
 namespace TestMargin.Utils
 {
-    class emuParser
+    static class emuParser
     {
 
     }

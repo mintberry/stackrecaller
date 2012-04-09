@@ -105,6 +105,7 @@
     <Compile Include="TestMarginFactory.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="Utils\CodeBlock.cs" />
+    <Compile Include="Utils\emuParser.cs" />
   </ItemGroup>
   <ItemGroup>
     <None Include="source.extension.vsixmanifest">

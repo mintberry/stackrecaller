@@ -18,7 +18,7 @@ namespace TestMargin.Taggers
     [ClassificationType(ClassificationTypeNames = "invisclass.careton")]
     [Name("ClassificationFormatDefinition/InvisFormat")]
     [UserVisible(true)]                                           //try invisible later
-    [Order(After = Priority.High)]
+    [Order(Before = Priority.Default)]
     internal sealed class InvisMakerFormat : ClassificationFormatDefinition  //used to be markerformat
     {
         public InvisMakerFormat()
@@ -26,7 +26,7 @@ namespace TestMargin.Taggers
             
             this.BackgroundColor = Colors.DarkViolet;
             //this.ForegroundColor = Colors.Crimson;
-            
+            this.FontRenderingSize = 12;
             //this.FontTypeface = new Typeface("Courier New");
             this.DisplayName = "Invisible Lines";
             //this.ZOrder = 5;
@@ -38,7 +38,7 @@ namespace TestMargin.Taggers
     [ClassificationType(ClassificationTypeNames = "invisclass.invis")]
     [Name("ClassificationFormatDefinition/InvisClassInvis")]
     [UserVisible(true)]                                           //try invisible later
-    [Order(After = Priority.High)]
+    [Order(Before = Priority.Default)]
     internal sealed class InvisClassFormat : ClassificationFormatDefinition  //used to be markerformat
     {
         public InvisClassFormat()

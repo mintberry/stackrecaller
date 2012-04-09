@@ -17,10 +17,10 @@ namespace TestMargin.Taggers
     {
         public ITagger<T> CreateTagger<T>(ITextBuffer buffer) where T : ITag
         {
-        //create a single tagger for each buffer.
-        Func<ITagger<T>> sc = delegate() { return new OutlnTagger(buffer) as ITagger<T>; };
-        //return buffer.Properties.GetOrCreateSingletonProperty<ITagger<T>>(sc);
-        return null;
-        } 
+            //create a single tagger for each buffer.
+            Func<ITagger<T>> sc = delegate() { return new OutlnTagger(buffer) as ITagger<T>; };
+            return buffer.Properties.GetOrCreateSingletonProperty<ITagger<T>>(sc);
+            //return null;
+        }
     }
 }
