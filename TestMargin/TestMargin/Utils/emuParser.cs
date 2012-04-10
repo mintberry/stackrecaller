@@ -31,7 +31,7 @@ namespace TestMargin.Utils
         private const string rx_nonwhite = @"\S";
         private const string rx_blockstart = @"\s*{\s*\r";
         private const string rx_blockend = @"\s*}\s*\r";
-        private const string rx_precompile = @"";
+        private const string rx_precompile = @"^#";
 
         ITextSnapshot _ts { get; set; }
 
@@ -44,18 +44,25 @@ namespace TestMargin.Utils
             this.LineCount = _ts.LineCount;
         }
 
-        void BuildTree(out LineEntity root)     //build single tree
+        public void BuildTrees()     //build single tree
         {
-            root = new LineEntity(0, null, CodeLineType.Normal);        //is 0 origin, comply to textsnapshot
+            Roots = new List<LineEntity>();
+            LineEntity root = new LineEntity(0, null, CodeLineType.Normal);        //is 0 origin, comply to textsnapshot
             LineEntity lastLE = root;
             LineEntity currentParent = root;
             foreach (ITextSnapshotLine tsl in _ts.Lines)
             {
-                
                 if(tsl.LineNumber == 0)
                 {
                     continue;
                     //Root = new LineEntity(tsl.LineNumber, null);        //is 0 origin, comply to textsnapshot
+                }
+                CodeLineType linetype = CurrentLineType(tsl);
+                int iIndent = GetIndentation(tsl);
+                //
+                if (linetype == CodeLineType.Blank)
+                {
+
                 }
                 
             }

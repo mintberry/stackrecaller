@@ -5,12 +5,19 @@ using System.Text;
 
 namespace TestMargin.Utils
 {
+    enum DisplayType {
+        Origin,
+        Dismiss,
+        Minimum,
+        HighLit,
+    }
     class LineEntity
     {
         int LineNumber { set; get; }
         int LineDepth { set; get; }                   //root depth is 0
 
         CodeLineType Type { set; get; }
+        DisplayType Dis { set; get; }
         LineEntity Parent { set; get; }               //a tree structure
 
         List<LineEntity> Children { get; set; }
@@ -29,6 +36,7 @@ namespace TestMargin.Utils
                 this.LineDepth = 0;
             }
             this.Type = type;
+            this.Dis = DisplayType.Origin;
             this.Children = new List<LineEntity>();
         }
 
