@@ -96,5 +96,17 @@ namespace TestMargin.Taggers
             //}
         }
         #endregion
+        SnapshotSpan? GetSpanFromLineNumber(int lineNumber) 
+        {
+            return View.TextSnapshot.GetLineFromLineNumber(lineNumber).Extent;
+        }
+        ITagSpan<TextInvisTag> GetTagSpanFromLineNumber(int lineNumber)
+        {
+            SnapshotSpan sspan = GetSpanFromLineNumber(lineNumber).Value;
+            return new TagSpan<TextInvisTag>(sspan, new TextInvisTag(_ctrs.GetClassificationType("invisclass.careton")));
+        }
+        #region Helpers
+
+        #endregion
     }
 }
