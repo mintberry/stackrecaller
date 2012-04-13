@@ -17,7 +17,8 @@ namespace TestMargin.Utils
         PreCompile,
         Comment,                       //maybe later use
         BlockStart,                    //
-        BlockEnd                       //
+        BlockEnd,                      //
+        Special                        //may fo the questioning indentation code lines
     }
 
     internal sealed class emuParser
@@ -32,6 +33,8 @@ namespace TestMargin.Utils
         private const string rx_blockstart = @"\s*{\s*\r";
         private const string rx_blockend = @"\s*}\s*\r";
         private const string rx_precompile = @"^#";
+
+        private int tab_count = 4;   //how many space a tab
 
         ITextSnapshot _ts { get; set; }
 
@@ -49,7 +52,7 @@ namespace TestMargin.Utils
             Roots = new List<LineEntity>();
             LineEntity root = new LineEntity(0, null, CodeLineType.Normal);        //is 0 origin, comply to textsnapshot
             LineEntity lastLE = root;
-            LineEntity currentParent = root;
+            LineEntity currentParent = root;                  //current LineEntity
             foreach (ITextSnapshotLine tsl in _ts.Lines)
             {
                 if(tsl.LineNumber == 0)
@@ -59,9 +62,49 @@ namespace TestMargin.Utils
                 }
                 CodeLineType linetype = CurrentLineType(tsl);
                 int iIndent = GetIndentation(tsl);
+                int lastDepth = currentParent.LineDepth;
+                //LineEntity thisline = new LineEntity(tsl.LineNumber, currentParent, linetype);
                 //
-                if (linetype == CodeLineType.Blank)
+                //if this line is blank, regonized as root line,
+                //but will not be parent, parent will be last one
+                if (linetype == CodeLineType.Blank)          
                 {
+                    LineEntity blankline = new LineEntity(tsl.LineNumber, null, linetype);
+                    blankline.DisT = DisplayType.Dismiss;       //do not display code line
+                    Roots.Add(blankline);
+                    continue;
+                }
+                if(iIndent == 0)                               //start a new root line, will be parent
+                {
+                    LineEntity newroot = new LineEntity(tsl.LineNumber, null, linetype);
+                    Roots.Add(newroot);
+                    currentParent = newroot;
+                }
+                else
+                {
+                    if(iIndent == lastDepth)
+                    {
+                        LineEntity newchild = new LineEntity(tsl.LineNumber, currentParent.Parent, linetype);
+                        newchild.Add2Parent();
+                    }
+                    else if(iIndent - lastDepth == 1)                   //new children level
+                    {
+                        LineEntity newchild = new LineEntity(tsl.LineNumber, currentParent, linetype);
+                        newchild.Add2Parent();
+                        currentParent = newchild;
+                    }
+                    else if(iIndent < lastDepth)
+                    {
+                        int temp = iIndent;
+                        while (temp != lastDepth)
+                        {
+                            currentParent = currentParent.Parent;
+                            --temp;
+                        }
+                        LineEntity newchild = new LineEntity(tsl.LineNumber, currentParent.Parent, linetype);
+                        newchild.Add2Parent();
+                        currentParent = newchild;
+                    }
 
                 }
                 
@@ -81,8 +124,18 @@ namespace TestMargin.Utils
 
             int tabCount = Regex.Matches(whiteString, rx_tab).Count;
             int spaceCount = Regex.Matches(whiteString, rx_space).Count;
-            tabCount += spaceCount / 4;
+            tabCount += spaceCount / tab_count;
             return tabCount;
+        }
+
+        
+        /// <summary>
+        /// generate display type for each code line
+        /// </summary>
+        /// <param name="focusPoint">the central point of textview</param>
+        void GenDispType(int focusPoint) 
+        {
+
         }
 
         CodeLineType CurrentLineType(ITextSnapshotLine tsl)
@@ -100,5 +153,19 @@ namespace TestMargin.Utils
             }
             else return CodeLineType.Blank;
         }
+
+        #region Helpers
+        /// <summary>
+        /// get the distance from current focus(central line) to dest line
+        /// </summary>
+        /// <param name="cur">focus line</param>
+        /// <param name="dest">dest line</param>
+        /// <returns></returns>
+        int GetDistInAST(LineEntity cur, LineEntity dest) 
+        {
+
+            return 0;
+        }
+        #endregion
     }
 }

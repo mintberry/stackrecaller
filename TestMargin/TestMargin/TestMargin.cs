@@ -253,6 +253,8 @@ namespace TestMargin
             System.Diagnostics.Trace.WriteLine("###         PARSE:" + _ovlc.Count);
         }
 
+
+        #region Helpers
         private float WidthPerChar() 
         {
             string s = _textView.TextViewLines.FirstVisibleLine.Extent.GetText();
@@ -273,5 +275,6 @@ namespace TestMargin
         {
             return tvl.Snapshot.GetLineNumberFromPosition(tvl.Start);
         }
+        #endregion  
     }
 }

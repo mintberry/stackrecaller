@@ -10,6 +10,7 @@ using Microsoft.VisualStudio.Text.Editor;
 using Microsoft.VisualStudio.Text.Operations;
 using Microsoft.VisualStudio.Text.Tagging;
 using Microsoft.VisualStudio.Utilities;
+using TestMargin.Utils;
 
 namespace TestMargin.Taggers
 {
@@ -22,6 +23,9 @@ namespace TestMargin.Taggers
         NormalizedSnapshotSpanCollection WordSpans { get; set; }
         SnapshotSpan? CurrentWord { get; set; }
         SnapshotPoint RequestedPoint { get; set; }
+
+        EditorActor Actor { get; set; }
+         
         object updateLock = new object();
 
         IClassificationTypeRegistryService _ctrs { set; get; }
@@ -39,6 +43,8 @@ namespace TestMargin.Taggers
             this.CurrentWord = null;
             this.View.Caret.PositionChanged += CaretPositionChanged;
             this.View.LayoutChanged += ViewLayoutChanged;
+
+            Actor = new EditorActor(View);
 
             this._ctrs = ctrs;
         }
@@ -62,7 +68,8 @@ namespace TestMargin.Taggers
         {
             if(e.VerticalTranslation == true)                //scroll vertically
             {
-
+                int centralLine = Actor.GetCentralLine();
+                SyncText();
             }
         }
 
@@ -88,6 +95,7 @@ namespace TestMargin.Taggers
             {
                 if (spans.OverlapsWith(new NormalizedSnapshotSpanCollection(CurrentWord.Value)))
                     yield return new TagSpan<TextInvisTag>(CurrentWord.Value, new TextInvisTag(_ctrs.GetClassificationType("invisclass.careton")));
+                yield return GetTagSpanFromLineNumber(Actor.CentralLine);
             }
             //throw new NotImplementedException();
             //foreach (SnapshotSpan span in spans)
@@ -96,16 +104,29 @@ namespace TestMargin.Taggers
             //}
         }
         #endregion
-        SnapshotSpan? GetSpanFromLineNumber(int lineNumber) 
+
+        #region Helpers
+        /// <summary>
+        /// get textsnapshotspan from line number
+        /// </summary>
+        /// <param name="lineNumber"></param>
+        /// <returns></returns>
+        SnapshotSpan? GetSpanFromLineNumber(int lineNumber)
         {
             return View.TextSnapshot.GetLineFromLineNumber(lineNumber).Extent;
         }
+
+        /// <summary>
+        /// create new tagspan from line number
+        /// </summary>
+        /// <param name="lineNumber"></param>
+        /// <returns></returns>
         ITagSpan<TextInvisTag> GetTagSpanFromLineNumber(int lineNumber)
         {
             SnapshotSpan sspan = GetSpanFromLineNumber(lineNumber).Value;
             return new TagSpan<TextInvisTag>(sspan, new TextInvisTag(_ctrs.GetClassificationType("invisclass.careton")));
         }
-        #region Helpers
+
 
         #endregion
     }

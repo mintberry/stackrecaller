@@ -14,13 +14,13 @@ namespace TestMargin.Utils
     class LineEntity
     {
         int LineNumber { set; get; }
-        int LineDepth { set; get; }                   //root depth is 0
+        public int LineDepth { set; get; }                   //root depth is 0
 
         CodeLineType Type { set; get; }
-        DisplayType Dis { set; get; }
-        LineEntity Parent { set; get; }               //a tree structure
+        public DisplayType DisT { set; get; }
+        public LineEntity Parent { set; get; }               //a tree structure
 
-        List<LineEntity> Children { get; set; }
+        public List<LineEntity> Children { get; set; }
         
         public LineEntity(int lineNumber, LineEntity parent, CodeLineType type)
         {
@@ -36,11 +36,12 @@ namespace TestMargin.Utils
                 this.LineDepth = 0;
             }
             this.Type = type;
-            this.Dis = DisplayType.Origin;
+            this.DisT = DisplayType.Origin;
             this.Children = new List<LineEntity>();
         }
 
-        void Add2Parent() 
+        //use this
+        public void Add2Parent() 
         {
             if (Parent != null)
                 Parent.Children.Add(this);
