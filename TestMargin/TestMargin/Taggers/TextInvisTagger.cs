@@ -25,6 +25,7 @@ namespace TestMargin.Taggers
         SnapshotPoint RequestedPoint { get; set; }
 
         EditorActor Actor { get; set; }
+        emuParser Parser { get; set; }
          
         object updateLock = new object();
 
@@ -45,6 +46,10 @@ namespace TestMargin.Taggers
             this.View.LayoutChanged += ViewLayoutChanged;
 
             Actor = new EditorActor(View);
+            Parser = new emuParser(View.TextSnapshot, Actor);
+
+            //not known whether here is okay
+            Parser.BuildTrees();
 
             this._ctrs = ctrs;
         }

@@ -35,22 +35,32 @@ namespace TestMargin.Utils
         private const string rx_precompile = @"^#";
 
         private int tab_count = 4;   //how many space a tab
+        private int threshold = -5;  //DOI threshold
 
         ITextSnapshot _ts { get; set; }
 
+        EditorActor _ea { get; set; }
+
         List<LineEntity> Roots { set; get; }                  //a tree
+        LineEntity [] consLineEntity { get; set; }                                      //for consecutive access
         int LineCount { get; set; }
 
-        emuParser(ITextSnapshot ts) 
+        public emuParser(ITextSnapshot ts, EditorActor ea) 
         {
             this._ts = ts;
+            this._ea = ea;
             this.LineCount = _ts.LineCount;
+
+            Roots = new List<LineEntity>();
+            consLineEntity = new LineEntity[this.LineCount];
         }
 
         public void BuildTrees()     //build single tree
         {
-            Roots = new List<LineEntity>();
+            
             LineEntity root = new LineEntity(0, null, CodeLineType.Normal);        //is 0 origin, comply to textsnapshot
+            this.Add2TreeandArray(root);
+
             LineEntity lastLE = root;
             LineEntity currentParent = root;                  //current LineEntity
             foreach (ITextSnapshotLine tsl in _ts.Lines)
@@ -71,13 +81,13 @@ namespace TestMargin.Utils
                 {
                     LineEntity blankline = new LineEntity(tsl.LineNumber, null, linetype);
                     blankline.DisT = DisplayType.Dismiss;       //do not display code line
-                    Roots.Add(blankline);
+                    this.Add2TreeandArray(blankline);
                     continue;
                 }
                 if(iIndent == 0)                               //start a new root line, will be parent
                 {
                     LineEntity newroot = new LineEntity(tsl.LineNumber, null, linetype);
-                    Roots.Add(newroot);
+                    this.Add2TreeandArray(newroot);
                     currentParent = newroot;
                 }
                 else
@@ -85,12 +95,12 @@ namespace TestMargin.Utils
                     if(iIndent == lastDepth)
                     {
                         LineEntity newchild = new LineEntity(tsl.LineNumber, currentParent.Parent, linetype);
-                        newchild.Add2Parent();
+                        this.Add2TreeandArray(newchild);
                     }
                     else if(iIndent - lastDepth == 1)                   //new children level
                     {
                         LineEntity newchild = new LineEntity(tsl.LineNumber, currentParent, linetype);
-                        newchild.Add2Parent();
+                        this.Add2TreeandArray(newchild);
                         currentParent = newchild;
                     }
                     else if(iIndent < lastDepth)
@@ -102,7 +112,7 @@ namespace TestMargin.Utils
                             --temp;
                         }
                         LineEntity newchild = new LineEntity(tsl.LineNumber, currentParent.Parent, linetype);
-                        newchild.Add2Parent();
+                        this.Add2TreeandArray(newchild);
                         currentParent = newchild;
                     }
 
@@ -135,7 +145,10 @@ namespace TestMargin.Utils
         /// <param name="focusPoint">the central point of textview</param>
         void GenDispType(int focusPoint) 
         {
-
+            foreach(LineEntity le in Roots)
+            {
+                Traverse2SetDispType(le);
+            }
         }
 
         CodeLineType CurrentLineType(ITextSnapshotLine tsl)
@@ -163,8 +176,80 @@ namespace TestMargin.Utils
         /// <returns></returns>
         int GetDistInAST(LineEntity cur, LineEntity dest) 
         {
+            if(cur.LineDepth == 0)
+            {
+                return dest.LineDepth;
+            }
+            else if(dest.LineDepth == 0)
+            {
+                return cur.LineDepth;
+            }
 
-            return 0;
+            //if neither is root
+            LineEntity curAnc = cur;                         //!may use deep clone
+            LineEntity destAnc = dest;
+            int dist = 0;
+            while(curAnc.Parent != null && destAnc != null)
+            {
+                curAnc = curAnc.Parent;
+                destAnc = destAnc.Parent;
+                if (curAnc.Equals(destAnc))
+                {
+                    dist = 2 * (cur.LineDepth - curAnc.LineDepth);
+                    return dist;
+                }
+            }
+            dist = curAnc.LineDepth + destAnc.LineDepth;
+            return dist;
+        }
+
+
+        void Traverse2SetDispType(LineEntity root) 
+        {
+            int thisDOI = makeDOI(consLineEntity[_ea.GetCentralLine()], root);
+            if (thisDOI < threshold)
+            {
+                root.DisT = DisplayType.Dismiss;
+            }
+            
+            //if not leaf
+            if(root.Children.Count != 0)
+            {
+                foreach(LineEntity child in root.Children)
+                {
+                    Traverse2SetDispType(child);
+                }
+            }
+        }
+
+        int makeDOI(LineEntity cur, LineEntity dest) 
+        {
+            int dist = GetDistInAST(cur, dest);
+            return (-dest.LineDepth - dist);                              //here can be more complext formular
+        }
+
+        void Add2TreeandArray(LineEntity tobeadded) 
+        {
+            consLineEntity[tobeadded.LineNumber] = tobeadded;
+            if (tobeadded.Parent == null)
+                Roots.Add(tobeadded);
+            else
+                tobeadded.Add2Parent();
+        }
+
+        /// <summary>
+        /// currently deprecated
+        /// </summary>
+        /// <param name="successor"></param>
+        /// <returns></returns>
+        LineEntity GetAncestor(LineEntity successor) 
+        {
+            LineEntity ancestor = successor;                              //deep clone
+            while(ancestor.Parent != null)
+            {
+                ancestor = ancestor.Parent;
+            }
+            return ancestor;
         }
         #endregion
     }

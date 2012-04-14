@@ -11,9 +11,9 @@ namespace TestMargin.Utils
         Minimum,
         HighLit,
     }
-    class LineEntity
+    class LineEntity: ICloneable
     {
-        int LineNumber { set; get; }
+        public int LineNumber { set; get; }
         public int LineDepth { set; get; }                   //root depth is 0
 
         CodeLineType Type { set; get; }
@@ -46,5 +46,22 @@ namespace TestMargin.Utils
             if (Parent != null)
                 Parent.Children.Add(this);
         }
+
+        #region ICloneable Members
+
+
+        /// <summary>
+        /// this is problematic
+        /// </summary>
+        /// <returns></returns>
+        object ICloneable.Clone()
+        {
+            LineEntity ret = new LineEntity(this.LineNumber, this.Parent, this.Type);
+            
+            return ret;
+            //throw new NotImplementedException();
+        }
+
+        #endregion
     }
 }
