@@ -20,7 +20,7 @@ namespace TestMargin.Utils
     {
         ITextView View { get; set; }                                      //iwpftextview
         public int CentralLine { get; set; }
-        IViewScroller Scroller { get; set; }
+        public IViewScroller Scroller { get; set; }
 
         /// <summary>
         /// constructor

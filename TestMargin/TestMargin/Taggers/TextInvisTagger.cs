@@ -61,19 +61,27 @@ namespace TestMargin.Taggers
             if (!ssp.HasValue) return;
             RequestedPoint = ssp.Value;
 
-            SnapshotSpan span = RequestedPoint.GetContainingLine().Extent;                          // the line containing the position
+            ITextSnapshotLine selectedLine = RequestedPoint.GetContainingLine();
+            SnapshotSpan span = selectedLine.Extent;                          // the line containing the position
             NormalizedSnapshotSpanCollection col = new NormalizedSnapshotSpanCollection(span);
 
             CurrentWord = span;
             WordSpans = col;
 
-            SyncText();
+            int selectedLineNumber = selectedLine.LineNumber;
+            int diff = selectedLineNumber - Actor.CentralLine;
+            ScrollDirection direction = diff > 0 ? ScrollDirection.Down : ScrollDirection.Up;
+            Actor.Scroller.ScrollViewportVerticallyByLines(direction, Math.Abs(diff));
+
+            //SyncText();           //not trigger the event, just change vertical layout
         }
         private void ViewLayoutChanged(object sender, TextViewLayoutChangedEventArgs e) 
         {
             if(e.VerticalTranslation == true)                //scroll vertically
             {
                 int centralLine = Actor.GetCentralLine();
+                Parser.GenDispType(centralLine);
+                
                 SyncText();
             }
         }
@@ -98,9 +106,16 @@ namespace TestMargin.Taggers
         {
             if (CurrentWord.HasValue)
             {
-                if (spans.OverlapsWith(new NormalizedSnapshotSpanCollection(CurrentWord.Value)))
-                    yield return new TagSpan<TextInvisTag>(CurrentWord.Value, new TextInvisTag(_ctrs.GetClassificationType("invisclass.careton")));
-                yield return GetTagSpanFromLineNumber(Actor.CentralLine);
+                //if (spans.OverlapsWith(new NormalizedSnapshotSpanCollection(CurrentWord.Value)))
+                //    yield return new TagSpan<TextInvisTag>(CurrentWord.Value, new TextInvisTag(_ctrs.GetClassificationType("invisclass.careton")));
+                yield return GetTagSpanFromLineNumber(Actor.CentralLine, "invisclass.central");
+
+                foreach (LineEntity le in Parser.consLineEntity)
+                {
+                    if (le.DisT == DisplayType.Dismiss)
+                        yield return GetTagSpanFromLineNumber(le.LineNumber, "invisclass.invis");
+                    //
+                }
             }
             //throw new NotImplementedException();
             //foreach (SnapshotSpan span in spans)
@@ -126,12 +141,11 @@ namespace TestMargin.Taggers
         /// </summary>
         /// <param name="lineNumber"></param>
         /// <returns></returns>
-        ITagSpan<TextInvisTag> GetTagSpanFromLineNumber(int lineNumber)
+        ITagSpan<TextInvisTag> GetTagSpanFromLineNumber(int lineNumber, string classification)
         {
             SnapshotSpan sspan = GetSpanFromLineNumber(lineNumber).Value;
-            return new TagSpan<TextInvisTag>(sspan, new TextInvisTag(_ctrs.GetClassificationType("invisclass.careton")));
+            return new TagSpan<TextInvisTag>(sspan, new TextInvisTag(_ctrs.GetClassificationType(classification)));
         }
-
 
         #endregion
     }

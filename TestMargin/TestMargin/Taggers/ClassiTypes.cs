@@ -23,5 +23,10 @@ namespace TestMargin.Taggers
         [Name("invisclass.careton")]
         [BaseDefinition("invisclass")]
         internal static ClassificationTypeDefinition InvisClassCaretOnDefinition = null;
+
+        [Export]
+        [Name("invisclass.central")]
+        [BaseDefinition("invisclass")]
+        internal static ClassificationTypeDefinition InvisClassCentralDefinition = null;
     }
 }

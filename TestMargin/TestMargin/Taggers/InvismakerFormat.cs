@@ -13,7 +13,7 @@ using Microsoft.VisualStudio.Utilities;
 
 namespace TestMargin.Taggers
 {
-    //maker for caret on
+    //maker for caret on, or centralline
     [Export(typeof(EditorFormatDefinition))]
     [ClassificationType(ClassificationTypeNames = "invisclass.careton")]
     [Name("ClassificationFormatDefinition/InvisFormat")]
@@ -24,9 +24,9 @@ namespace TestMargin.Taggers
         public InvisMakerFormat()
         {
             
-            this.BackgroundColor = Colors.DarkViolet;
+            this.BackgroundColor = Colors.LightGray;
             //this.ForegroundColor = Colors.Crimson;
-            this.FontRenderingSize = 12;
+            //this.FontRenderingSize = 12;
             //this.FontTypeface = new Typeface("Courier New");
             this.DisplayName = "Invisible Lines";
             //this.ZOrder = 5;
@@ -46,9 +46,28 @@ namespace TestMargin.Taggers
 
             //this.BackgroundColor = Colors.Crimson;
             this.ForegroundColor = Colors.Crimson;
-            this.FontRenderingSize = 10;
-            this.FontTypeface = new Typeface("Courier New");
+            //this.FontRenderingSize = 5;
+            //this.FontTypeface = new Typeface("Courier New");
             this.DisplayName = "Invisible Lines";
+            //this.ZOrder = 5;
+        }
+    }
+
+    [Export(typeof(EditorFormatDefinition))]
+    [ClassificationType(ClassificationTypeNames = "invisclass.central")]
+    [Name("ClassificationFormatDefinition/InvisCentral")]
+    [UserVisible(true)]                                           //try invisible later
+    [Order(Before = Priority.Default)]
+    internal sealed class InvisCentralFormat : ClassificationFormatDefinition  //used to be markerformat
+    {
+        public InvisCentralFormat()
+        {
+
+            this.BackgroundColor = Colors.LightSeaGreen;
+            //this.ForegroundColor = Colors.Crimson;
+            //this.FontRenderingSize = 12;
+            //this.FontTypeface = new Typeface("Courier New");
+            this.DisplayName = "Central Line";
             //this.ZOrder = 5;
         }
     }

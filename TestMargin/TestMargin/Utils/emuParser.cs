@@ -25,7 +25,7 @@ namespace TestMargin.Utils
     {
         //Regexs
         private const string rx_tab = @"\t";
-        private const string rx_space = @"\x020";
+        private const string rx_space = @" ";
         private const string rx_commentslash = @"//";
         private const string rx_commentstart = @"/\*";
         private const string rx_commentend = @"\*/";
@@ -35,14 +35,14 @@ namespace TestMargin.Utils
         private const string rx_precompile = @"^#";
 
         private int tab_count = 4;   //how many space a tab
-        private int threshold = -5;  //DOI threshold
+        private int threshold = -3;  //DOI threshold
 
         ITextSnapshot _ts { get; set; }
 
         EditorActor _ea { get; set; }
 
         List<LineEntity> Roots { set; get; }                  //a tree
-        LineEntity [] consLineEntity { get; set; }                                      //for consecutive access
+        public LineEntity [] consLineEntity { get; set; }                                      //for consecutive access
         int LineCount { get; set; }
 
         public emuParser(ITextSnapshot ts, EditorActor ea) 
@@ -88,7 +88,7 @@ namespace TestMargin.Utils
                 {
                     LineEntity newroot = new LineEntity(tsl.LineNumber, null, linetype);
                     this.Add2TreeandArray(newroot);
-                    currentParent = newroot;
+                    currentParent = consLineEntity[newroot.LineNumber];
                 }
                 else
                 {
@@ -96,12 +96,13 @@ namespace TestMargin.Utils
                     {
                         LineEntity newchild = new LineEntity(tsl.LineNumber, currentParent.Parent, linetype);
                         this.Add2TreeandArray(newchild);
+                        //change current parent here?
                     }
                     else if(iIndent - lastDepth == 1)                   //new children level
                     {
                         LineEntity newchild = new LineEntity(tsl.LineNumber, currentParent, linetype);
                         this.Add2TreeandArray(newchild);
-                        currentParent = newchild;
+                        currentParent = consLineEntity[newchild.LineNumber];
                     }
                     else if(iIndent < lastDepth)
                     {
@@ -109,11 +110,11 @@ namespace TestMargin.Utils
                         while (temp != lastDepth)
                         {
                             currentParent = currentParent.Parent;
-                            --temp;
+                            ++temp;
                         }
                         LineEntity newchild = new LineEntity(tsl.LineNumber, currentParent.Parent, linetype);
                         this.Add2TreeandArray(newchild);
-                        currentParent = newchild;
+                        currentParent = consLineEntity[newchild.LineNumber];
                     }
 
                 }
@@ -143,7 +144,7 @@ namespace TestMargin.Utils
         /// generate display type for each code line
         /// </summary>
         /// <param name="focusPoint">the central point of textview</param>
-        void GenDispType(int focusPoint) 
+        public void GenDispType(int focusPoint) 
         {
             foreach(LineEntity le in Roots)
             {
@@ -199,7 +200,7 @@ namespace TestMargin.Utils
                     return dist;
                 }
             }
-            dist = curAnc.LineDepth + destAnc.LineDepth;
+            dist = cur.LineDepth + dest.LineDepth;
             return dist;
         }
 
@@ -210,6 +211,10 @@ namespace TestMargin.Utils
             if (thisDOI < threshold)
             {
                 root.DisT = DisplayType.Dismiss;
+            }
+            else 
+            {
+                root.DisT = DisplayType.Origin;
             }
             
             //if not leaf
@@ -224,6 +229,7 @@ namespace TestMargin.Utils
 
         int makeDOI(LineEntity cur, LineEntity dest) 
         {
+            if (cur.Equals(dest)) return 0;
             int dist = GetDistInAST(cur, dest);
             return (-dest.LineDepth - dist);                              //here can be more complext formular
         }
