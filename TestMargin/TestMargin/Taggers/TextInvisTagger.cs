@@ -112,7 +112,8 @@ namespace TestMargin.Taggers
 
                 foreach (LineEntity le in Parser.consLineEntity)
                 {
-                    if (le.DisT == DisplayType.Dismiss)
+                    //hard code here
+                    if (le != null && le.DisT == DisplayType.Dismiss)
                         yield return GetTagSpanFromLineNumber(le.LineNumber, "invisclass.invis");
                     //
                 }

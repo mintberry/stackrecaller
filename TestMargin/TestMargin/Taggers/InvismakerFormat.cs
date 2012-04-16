@@ -45,7 +45,7 @@ namespace TestMargin.Taggers
         {
 
             //this.BackgroundColor = Colors.Crimson;
-            this.ForegroundColor = Colors.Crimson;
+            this.ForegroundColor = Colors.Cyan;
             //this.FontRenderingSize = 5;
             //this.FontTypeface = new Typeface("Courier New");
             this.DisplayName = "Invisible Lines";
