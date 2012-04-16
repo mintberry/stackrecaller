@@ -35,6 +35,13 @@ namespace TestMargin.Utils
 
 
         #region Helpers
+
+        public void ScrollLines(int lineNumbers) 
+        {
+            ScrollDirection direction = lineNumbers > 0 ? ScrollDirection.Down : ScrollDirection.Up;
+            this.Scroller.ScrollViewportVerticallyByLines(direction, Math.Abs(lineNumbers));
+        }
+
         /// <summary>
         /// </summary>
         /// <returns>central viewline number</returns>

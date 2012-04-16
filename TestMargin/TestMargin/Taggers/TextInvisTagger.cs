@@ -68,10 +68,10 @@ namespace TestMargin.Taggers
             CurrentWord = span;
             WordSpans = col;
 
+
             int selectedLineNumber = selectedLine.LineNumber;
             int diff = selectedLineNumber - Actor.CentralLine;
-            ScrollDirection direction = diff > 0 ? ScrollDirection.Down : ScrollDirection.Up;
-            Actor.Scroller.ScrollViewportVerticallyByLines(direction, Math.Abs(diff));
+            Actor.ScrollLines(diff);
 
             //SyncText();           //not trigger the event, just change vertical layout
         }
