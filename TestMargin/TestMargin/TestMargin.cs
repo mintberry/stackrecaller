@@ -92,7 +92,7 @@ namespace TestMargin
 
         void _textView_LayoutChanged(object sender, TextViewLayoutChangedEventArgs e)
         {
-            if(e.VerticalTranslation != true)
+            if(e.HorizontalTranslation == true)
             {
                 this.Width = _textView.ViewportWidth / 5;
                 this.Height = _textView.ViewportHeight;
@@ -101,7 +101,7 @@ namespace TestMargin
                 DrawOverview();
             }
 
-            if(_htm !=  null)
+            if(_htm != null)
             {
                 int iErrStat;
                 IVsHiddenTextSession hts = null;

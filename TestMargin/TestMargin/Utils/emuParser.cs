@@ -208,6 +208,8 @@ namespace TestMargin.Utils
         void Traverse2SetDispType(LineEntity root) 
         {
             int thisDOI = makeDOI(consLineEntity[_ea.GetCentralLine()], root);
+            //experiment adjustive threshold
+            threshold = -consLineEntity[_ea.CentralLine].LineDepth + threshold;
             if (thisDOI < threshold)
             {
                 root.DisT = DisplayType.Dismiss;
@@ -227,6 +229,13 @@ namespace TestMargin.Utils
             }
         }
 
+
+        /// <summary>
+        /// make a more adjustive DOI algorithm
+        /// </summary>
+        /// <param name="cur"></param>
+        /// <param name="dest"></param>
+        /// <returns></returns>
         int makeDOI(LineEntity cur, LineEntity dest) 
         {
             if (cur.Equals(dest)) return 0;
@@ -256,6 +265,25 @@ namespace TestMargin.Utils
                 ancestor = ancestor.Parent;
             }
             return ancestor;
+        }
+
+        /// <summary>
+        /// get text extent of specific line, excluding the space & tabs
+        /// </summary>
+        /// <param name="View"></param>
+        /// <param name="lineNumber"></param>
+        /// <returns></returns>
+        public static SnapshotSpan? GetTextSpanFromLineNumber(ITextView view, int lineNumber)
+        {
+            SnapshotSpan? originSpan = view.TextSnapshot.GetLineFromLineNumber(lineNumber).Extent;
+            if (originSpan.HasValue)
+            {
+                int firstNonWhite = Regex.Match(originSpan.Value.GetText(), rx_nonwhite).Index;
+                return new SnapshotSpan(originSpan.Value.Start + firstNonWhite, originSpan.Value.End);
+            }
+            else
+                return null;
+            
         }
         #endregion
     }

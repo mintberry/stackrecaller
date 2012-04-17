@@ -26,7 +26,7 @@ namespace TestMargin.Taggers
 
         EditorActor Actor { get; set; }
         emuParser Parser { get; set; }
-         
+
         object updateLock = new object();
 
         IClassificationTypeRegistryService _ctrs { set; get; }
@@ -54,7 +54,7 @@ namespace TestMargin.Taggers
             this._ctrs = ctrs;
         }
 
-        private void CaretPositionChanged(object sender, CaretPositionChangedEventArgs e) 
+        private void CaretPositionChanged(object sender, CaretPositionChangedEventArgs e)
         {
             CaretPosition cp = e.NewPosition;
             SnapshotPoint? ssp = cp.Point.GetPoint(SourceBuffer, cp.Affinity);
@@ -75,18 +75,18 @@ namespace TestMargin.Taggers
 
             //SyncText();           //not trigger the event, just change vertical layout
         }
-        private void ViewLayoutChanged(object sender, TextViewLayoutChangedEventArgs e) 
+        private void ViewLayoutChanged(object sender, TextViewLayoutChangedEventArgs e)
         {
-            if(e.VerticalTranslation == true)                //scroll vertically
+            if (e.VerticalTranslation == true)                //scroll vertically
             {
                 int centralLine = Actor.GetCentralLine();
                 Parser.GenDispType(centralLine);
-                
+
                 SyncText();
             }
         }
 
-        private void SyncText() 
+        private void SyncText()
         {
             lock (updateLock)
             {
@@ -144,9 +144,19 @@ namespace TestMargin.Taggers
         /// <returns></returns>
         ITagSpan<TextInvisTag> GetTagSpanFromLineNumber(int lineNumber, string classification)
         {
-            SnapshotSpan sspan = GetSpanFromLineNumber(lineNumber).Value;
-            return new TagSpan<TextInvisTag>(sspan, new TextInvisTag(_ctrs.GetClassificationType(classification)));
+            SnapshotSpan? sspanq = emuParser.GetTextSpanFromLineNumber(View, lineNumber);
+            if (sspanq.HasValue)
+            {
+                SnapshotSpan sspan = sspanq.Value;
+                //GetSpanFromLineNumber(lineNumber).Value; use new emuParser span
+                return new TagSpan<TextInvisTag>(sspan, new TextInvisTag(_ctrs.GetClassificationType(classification)));
+            }
+            else
+            {
+                return null;
+            }
         }
+
 
         #endregion
     }
