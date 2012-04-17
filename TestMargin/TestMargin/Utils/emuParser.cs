@@ -36,6 +36,7 @@ namespace TestMargin.Utils
 
         private int tab_count = 4;   //how many space a tab
         private int threshold = -3;  //DOI threshold
+        private const int const_threshold = -2;
 
         ITextSnapshot _ts { get; set; }
 
@@ -113,6 +114,14 @@ namespace TestMargin.Utils
                             ++temp;
                         }
                         LineEntity newchild = new LineEntity(tsl.LineNumber, currentParent.Parent, linetype);
+                        this.Add2TreeandArray(newchild);
+                        currentParent = consLineEntity[newchild.LineNumber];
+                    }
+                    //things we do not wish to see, a hard code work around for now
+                    //treated as first level child
+                    else if(iIndent - lastDepth > 1) 
+                    {
+                        LineEntity newchild = new LineEntity(tsl.LineNumber, currentParent, linetype);
                         this.Add2TreeandArray(newchild);
                         currentParent = consLineEntity[newchild.LineNumber];
                     }
@@ -209,7 +218,7 @@ namespace TestMargin.Utils
         {
             int thisDOI = makeDOI(consLineEntity[_ea.GetCentralLine()], root);
             //experiment adjustive threshold
-            threshold = -consLineEntity[_ea.CentralLine].LineDepth + threshold;
+            threshold = -consLineEntity[_ea.CentralLine].LineDepth + const_threshold ;
             if (thisDOI < threshold)
             {
                 root.DisT = DisplayType.Dismiss;
@@ -238,6 +247,8 @@ namespace TestMargin.Utils
         /// <returns></returns>
         int makeDOI(LineEntity cur, LineEntity dest) 
         {
+            //another hard code fix, a line 549 bug, 
+            //if (cur == null || dest == null) return -1;
             if (cur.Equals(dest)) return 0;
             int dist = GetDistInAST(cur, dest);
             return (-dest.LineDepth - dist);                              //here can be more complext formular

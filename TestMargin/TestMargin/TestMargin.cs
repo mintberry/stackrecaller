@@ -92,7 +92,7 @@ namespace TestMargin
 
         void _textView_LayoutChanged(object sender, TextViewLayoutChangedEventArgs e)
         {
-            if(e.HorizontalTranslation == true)
+            if(e.VerticalTranslation != true)
             {
                 this.Width = _textView.ViewportWidth / 5;
                 this.Height = _textView.ViewportHeight;
@@ -106,7 +106,7 @@ namespace TestMargin
                 int iErrStat;
                 IVsHiddenTextSession hts = null;
                 iErrStat = _htm.GetHiddenTextSession(_afService.GetBufferAdapter(_textView.TextBuffer), out hts);
-                System.Diagnostics.Trace.WriteLine("&&&                TEXTMGR: " + _htm.ToString());
+                //System.Diagnostics.Trace.WriteLine("&&&                TEXTMGR: " + _htm.ToString());
                 if (iErrStat == VSConstants.S_OK)
                 {
                     System.Diagnostics.Trace.WriteLine("&&&                HIDMGR: ");
