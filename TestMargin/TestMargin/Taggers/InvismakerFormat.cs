@@ -63,7 +63,7 @@ namespace TestMargin.Taggers
         public InvisCentralFormat()
         {
 
-            this.BackgroundColor = Colors.LightSeaGreen;
+            this.BackgroundColor = Colors.LightCoral;
             //this.ForegroundColor = Colors.Crimson;
             //this.FontRenderingSize = 12;
             //this.FontTypeface = new Typeface("Courier New");
