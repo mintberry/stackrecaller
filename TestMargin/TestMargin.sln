@@ -3,8 +3,6 @@ Microsoft Visual Studio Solution File, Format Version 11.00
 # Visual Studio 2010
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "TestMargin", "TestMargin\TestMargin.csproj", "{3B91C0F0-8FDF-43DD-90E2-5ABB8B1C70F9}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "TestAdorn", "..\TestAdorn\TestAdorn.csproj", "{B6E1369D-B573-4C07-B8A1-2FF4835DCEA7}"
-EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -15,10 +13,6 @@ Global
 		{3B91C0F0-8FDF-43DD-90E2-5ABB8B1C70F9}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{3B91C0F0-8FDF-43DD-90E2-5ABB8B1C70F9}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{3B91C0F0-8FDF-43DD-90E2-5ABB8B1C70F9}.Release|Any CPU.Build.0 = Release|Any CPU
-		{B6E1369D-B573-4C07-B8A1-2FF4835DCEA7}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
-		{B6E1369D-B573-4C07-B8A1-2FF4835DCEA7}.Debug|Any CPU.Build.0 = Debug|Any CPU
-		{B6E1369D-B573-4C07-B8A1-2FF4835DCEA7}.Release|Any CPU.ActiveCfg = Release|Any CPU
-		{B6E1369D-B573-4C07-B8A1-2FF4835DCEA7}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE

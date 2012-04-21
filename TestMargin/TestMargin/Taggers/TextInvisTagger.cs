@@ -14,6 +14,12 @@ using TestMargin.Utils;
 
 namespace TestMargin.Taggers
 {
+    enum TextSyncType { 
+        AllText,
+        Hover,
+        Central
+    }
+
     class TextInvisTagger : ITagger<TextInvisTag>
     {
         ITextView View { get; set; }                                      //iwpftextview
@@ -44,14 +50,29 @@ namespace TestMargin.Taggers
             this.CurrentWord = null;
             this.View.Caret.PositionChanged += CaretPositionChanged;
             this.View.LayoutChanged += ViewLayoutChanged;
+            this.View.MouseHover += new EventHandler<MouseHoverEventArgs>(View_MouseHover);
 
-            Actor = new EditorActor(View);
-            Parser = new emuParser(View.TextSnapshot, Actor);
+            this.Actor = new EditorActor(View);
+            this.Parser = new emuParser(View.TextSnapshot, Actor);
 
             //not known whether here is okay
             Parser.BuildTrees();
 
             this._ctrs = ctrs;
+        }
+
+        void View_MouseHover(object sender, MouseHoverEventArgs e)
+        {
+            //throw new NotImplementedException();
+            SnapshotPoint? sspq = e.TextPosition.GetPoint(View.TextSnapshot,PositionAffinity.Predecessor);
+            if(sspq.HasValue)
+            {
+                SnapshotPoint ssp = sspq.Value;
+                ITextSnapshotLine hoverLine = ssp.GetContainingLine();
+                Actor.HoverLine = hoverLine.LineNumber;
+
+                SyncText(TextSyncType.Hover);
+            }
         }
 
         private void CaretPositionChanged(object sender, CaretPositionChangedEventArgs e)
@@ -73,27 +94,52 @@ namespace TestMargin.Taggers
             int diff = selectedLineNumber - Actor.CentralLine;
             Actor.ScrollLines(selectedLineNumber, diff);
 
-            //SyncText();           //not trigger the event, just change vertical layout
+            System.Diagnostics.Trace.WriteLine("%%%                 CENTRAL: " + Actor.CentralLine);
+
+            
+            //SyncText(TextSyncType.Central);           //not trigger the event, just change vertical layout
         }
         private void ViewLayoutChanged(object sender, TextViewLayoutChangedEventArgs e)
         {
             if (e.VerticalTranslation == true)                //scroll vertically
             {
                 int centralLine = Actor.GetCentralLine();
+                if (centralLine == -1) return;
                 Parser.GenDispType(centralLine);
 
-                SyncText();
+                SyncText(TextSyncType.AllText);
             }
         }
 
-        private void SyncText()
+        private void SyncText(TextSyncType synctype)
         {
             lock (updateLock)
             {
                 if (TagsChanged != null)
                 {
                     //raise an event, but why the span is whole?
-                    TagsChanged(this, new SnapshotSpanEventArgs(new SnapshotSpan(SourceBuffer.CurrentSnapshot, 0, SourceBuffer.CurrentSnapshot.Length)));
+                    switch (synctype) 
+                    {
+                        case TextSyncType.AllText:
+                            TagsChanged(this, new SnapshotSpanEventArgs(new SnapshotSpan(SourceBuffer.CurrentSnapshot,
+                                0,SourceBuffer.CurrentSnapshot.Length)));
+                            break;
+                        case TextSyncType.Hover:
+                            ITextSnapshotLine hoverline = SourceBuffer.CurrentSnapshot.GetLineFromLineNumber(Actor.HoverLine);
+                            TagsChanged(this, new SnapshotSpanEventArgs(new SnapshotSpan(SourceBuffer.CurrentSnapshot,
+                                hoverline.Start, hoverline.Length)));
+                            break;
+                        case TextSyncType.Central:
+                            ITextSnapshotLine centralline = SourceBuffer.CurrentSnapshot.GetLineFromLineNumber(Actor.CentralLine);
+                            TagsChanged(this, new SnapshotSpanEventArgs(new SnapshotSpan(SourceBuffer.CurrentSnapshot,
+                                centralline.Start, centralline.Length)));
+                            break;
+                        default: break;
+
+                    }
+                    TagsChanged(this, new SnapshotSpanEventArgs(
+                        new SnapshotSpan(SourceBuffer.CurrentSnapshot, 0, 
+                            SourceBuffer.CurrentSnapshot.Length)));
                 }
             }
         }
@@ -108,6 +154,7 @@ namespace TestMargin.Taggers
             {
                 //if (spans.OverlapsWith(new NormalizedSnapshotSpanCollection(CurrentWord.Value)))
                 //    yield return new TagSpan<TextInvisTag>(CurrentWord.Value, new TextInvisTag(_ctrs.GetClassificationType("invisclass.careton")));
+                yield return GetTagSpanFromLineNumber(Actor.HoverLine, "invisclass.lower.hover");
                 yield return GetTagSpanFromLineNumber(Actor.CentralLine, "invisclass.central");
 
                 foreach (LineEntity le in Parser.consLineEntity)
@@ -134,6 +181,10 @@ namespace TestMargin.Taggers
         /// <returns></returns>
         SnapshotSpan? GetSpanFromLineNumber(int lineNumber)
         {
+            if (lineNumber == -1)
+            {
+                return null;
+            }
             return View.TextSnapshot.GetLineFromLineNumber(lineNumber).Extent;
         }
 
@@ -144,6 +195,10 @@ namespace TestMargin.Taggers
         /// <returns></returns>
         ITagSpan<TextInvisTag> GetTagSpanFromLineNumber(int lineNumber, string classification)
         {
+            if (lineNumber == -1)
+            {
+                return null;
+            }
             SnapshotSpan? sspanq = emuParser.GetTextSpanFromLineNumber(View, lineNumber);
             if (sspanq.HasValue)
             {

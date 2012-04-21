@@ -250,7 +250,7 @@ namespace TestMargin
             {
                 _ovlc.Add(new OvLine(tvl, (float)(this.ActualWidth / 4.0f)));
             }
-            System.Diagnostics.Trace.WriteLine("###         PARSE:" + _ovlc.Count);
+            //System.Diagnostics.Trace.WriteLine("###         PARSE:" + _ovlc.Count);
         }
 
 
@@ -261,7 +261,7 @@ namespace TestMargin
             int iTabCount = Regex.Matches(s, @"\t").Count;
             int iCharCount = iTabCount * 4 + s.Length - iTabCount;
             float widthpch = (float)(_textView.TextViewLines.FirstVisibleLine.TextWidth / iCharCount);
-            System.Diagnostics.Trace.WriteLine("###         WIDTH:" + iCharCount + " : " + _textView.TextViewLines.FirstVisibleLine.TextWidth);
+            //System.Diagnostics.Trace.WriteLine("###         WIDTH:" + iCharCount + " : " + _textView.TextViewLines.FirstVisibleLine.TextWidth);
             return widthpch;
         }
 

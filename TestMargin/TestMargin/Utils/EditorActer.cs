@@ -20,42 +20,75 @@ namespace TestMargin.Utils
     {
         ITextView View { get; set; }                                      //iwpftextview
         public int CentralLine { get; set; }
+        public int HoverLine { get; set; }
         public IViewScroller Scroller { get; set; }
 
         /// <summary>
         /// constructor
         /// </summary>
-        public EditorActor(ITextView itv) 
+        public EditorActor(ITextView itv)
         {
             this.View = itv;
             Scroller = View.ViewScroller;
+
             GetCentralLine();
+            HoverLine = -1;
         }
 
 
 
         #region Helpers
 
-        public void ScrollLines(int targetLineNumber, int lineNumbers) 
+        public void ScrollLines(int targetLineNumber, int lineNumbers)
         {
+            this.GetCentralLine();
+            if (-1 == this.CentralLine)
+                return;
             ScrollDirection direction = lineNumbers > 0 ? ScrollDirection.Down : ScrollDirection.Up;
             this.Scroller.ScrollViewportVerticallyByLines(direction, Math.Abs(lineNumbers));
-            /*do
+
+            System.Diagnostics.Trace.WriteLine("^^^                 CENTRAL: " + this.CentralLine);
+
+            if (this.GetCentralLine() != targetLineNumber && !IsEdge(0) && IsEdge(View.TextSnapshot.LineCount - 1))
             {
-                this.Scroller.ScrollViewportVerticallyByLine(direction);
-            } while (GetCentralLine() != targetLineNumber);*/
+                //better not use recursion here
+                //ScrollLines(targetLineNumber, targetLineNumber - this.CentralLine);
+                lineNumbers = targetLineNumber - this.CentralLine;
+                ScrollDirection direction_r = lineNumbers > 0 ? ScrollDirection.Down : ScrollDirection.Up;
+                this.Scroller.ScrollViewportVerticallyByLines(direction_r, Math.Abs(lineNumbers));
+            }
         }
 
-        /// <summary>
+        /// <summary>subject to change
         /// </summary>
         /// <returns>central viewline number</returns>
-        public int GetCentralLine() 
+        public int GetCentralLine()
         {
-            ITextViewLineCollection tvlc = View.TextViewLines;
-            if (tvlc == null) return 0;                         //quite important
-            
+            if (View == null)
+            {
+                return -1;
+            }
+            ITextViewLineCollection tvlc;
+            try
+            {
+                tvlc = View.TextViewLines;
+            }
+            catch (InvalidOperationException)
+            {
+                return -1;
+            }
+            if (tvlc == null) return -1;                         //quite important, not applicable now
             int colSize = tvlc.Count;
             return CentralLine = TestMargin.GetViewLineNumber(tvlc[colSize / 2]);
+        }
+
+        bool IsEdge(int toporbot)
+        {
+            ITextViewLineCollection tvlc = View.TextViewLines;
+            if (tvlc == null) return true;                         //quite important
+
+            int colSize = tvlc.Count;
+            return TestMargin.GetViewLineNumber(tvlc.FirstVisibleLine) == toporbot;
         }
         #endregion
     }
