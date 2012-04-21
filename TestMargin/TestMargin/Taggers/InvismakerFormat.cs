@@ -71,4 +71,24 @@ namespace TestMargin.Taggers
             //this.ZOrder = 5;
         }
     }
+
+    [Export(typeof(EditorFormatDefinition))]
+    [ClassificationType(ClassificationTypeNames = "invisclass.lower.hover")]
+    [Name("ClassificationFormatDefinition/InvisHover")]
+    [UserVisible(true)]                                           //try invisible later
+    [Order(Before = "invisclass")]
+    internal sealed class InvisHoverFormat : ClassificationFormatDefinition  //used to be markerformat
+    {
+        public InvisHoverFormat()
+        {
+
+            this.BackgroundColor = Colors.LightGoldenrodYellow;
+            //this.ForegroundColor = Colors.Crimson;
+            //this.FontRenderingSize = 12;
+            //this.FontTypeface = new Typeface("Courier New");
+            this.DisplayName = "hover Line";
+            //this.ZOrder = 5;
+        }
+    }
+
 }

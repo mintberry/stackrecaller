@@ -28,5 +28,15 @@ namespace TestMargin.Taggers
         [Name("invisclass.central")]
         [BaseDefinition("invisclass")]
         internal static ClassificationTypeDefinition InvisClassCentralDefinition = null;
+
+        [Export]
+        [Name("invisclass.lower")]
+        //[BaseDefinition("invisclass")]
+        internal static ClassificationTypeDefinition InvisClassLowerDefinition = null;
+
+        [Export]
+        [Name("invisclass.lower.hover")]
+        [BaseDefinition("invisclass.lower")]
+        internal static ClassificationTypeDefinition InvisClassHoverDefinition = null;
     }
 }
