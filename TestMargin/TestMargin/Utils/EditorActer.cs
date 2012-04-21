@@ -36,10 +36,14 @@ namespace TestMargin.Utils
 
         #region Helpers
 
-        public void ScrollLines(int lineNumbers) 
+        public void ScrollLines(int targetLineNumber, int lineNumbers) 
         {
             ScrollDirection direction = lineNumbers > 0 ? ScrollDirection.Down : ScrollDirection.Up;
             this.Scroller.ScrollViewportVerticallyByLines(direction, Math.Abs(lineNumbers));
+            /*do
+            {
+                this.Scroller.ScrollViewportVerticallyByLine(direction);
+            } while (GetCentralLine() != targetLineNumber);*/
         }
 
         /// <summary>
@@ -49,6 +53,7 @@ namespace TestMargin.Utils
         {
             ITextViewLineCollection tvlc = View.TextViewLines;
             if (tvlc == null) return 0;                         //quite important
+            
             int colSize = tvlc.Count;
             return CentralLine = TestMargin.GetViewLineNumber(tvlc[colSize / 2]);
         }

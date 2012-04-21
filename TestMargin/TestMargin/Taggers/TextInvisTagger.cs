@@ -71,7 +71,7 @@ namespace TestMargin.Taggers
 
             int selectedLineNumber = selectedLine.LineNumber;
             int diff = selectedLineNumber - Actor.CentralLine;
-            Actor.ScrollLines(diff);
+            Actor.ScrollLines(selectedLineNumber, diff);
 
             //SyncText();           //not trigger the event, just change vertical layout
         }
