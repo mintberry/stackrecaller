@@ -76,13 +76,13 @@ namespace TestMargin.Taggers
     [ClassificationType(ClassificationTypeNames = "invisclass.lower.hover")]
     [Name("ClassificationFormatDefinition/InvisHover")]
     [UserVisible(true)]                                           //try invisible later
-    [Order(Before = "invisclass")]
+    [Order(Before = Priority.Low)]
     internal sealed class InvisHoverFormat : ClassificationFormatDefinition  //used to be markerformat
     {
         public InvisHoverFormat()
         {
 
-            this.BackgroundColor = Colors.LightGoldenrodYellow;
+            this.BackgroundColor = Colors.Gold;
             //this.ForegroundColor = Colors.Crimson;
             //this.FontRenderingSize = 12;
             //this.FontTypeface = new Typeface("Courier New");

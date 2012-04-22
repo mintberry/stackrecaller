@@ -65,13 +65,18 @@ namespace TestMargin.Taggers
         {
             //throw new NotImplementedException();
             SnapshotPoint? sspq = e.TextPosition.GetPoint(View.TextSnapshot,PositionAffinity.Predecessor);
+            
             if(sspq.HasValue)
             {
-                SnapshotPoint ssp = sspq.Value;
+                SnapshotPoint ssp = new SnapshotPoint(SourceBuffer.CurrentSnapshot, e.Position);
                 ITextSnapshotLine hoverLine = ssp.GetContainingLine();
                 Actor.HoverLine = hoverLine.LineNumber;
 
-                SyncText(TextSyncType.Hover);
+                if(Actor.GetCentralLine() != Actor.HoverLine)
+                {
+                    SyncText(TextSyncType.Hover);
+                }
+                
             }
         }
 
@@ -97,7 +102,7 @@ namespace TestMargin.Taggers
             System.Diagnostics.Trace.WriteLine("%%%                 CENTRAL: " + Actor.CentralLine);
 
             
-            //SyncText(TextSyncType.Central);           //not trigger the event, just change vertical layout
+            SyncText(TextSyncType.Central);           //not trigger the event, just change vertical layout
         }
         private void ViewLayoutChanged(object sender, TextViewLayoutChangedEventArgs e)
         {
@@ -150,18 +155,20 @@ namespace TestMargin.Taggers
 
         IEnumerable<ITagSpan<TextInvisTag>> ITagger<TextInvisTag>.GetTags(NormalizedSnapshotSpanCollection spans)
         {
+            //the spans shall be used
             if (CurrentWord.HasValue)
             {
                 //if (spans.OverlapsWith(new NormalizedSnapshotSpanCollection(CurrentWord.Value)))
                 //    yield return new TagSpan<TextInvisTag>(CurrentWord.Value, new TextInvisTag(_ctrs.GetClassificationType("invisclass.careton")));
-                yield return GetTagSpanFromLineNumber(Actor.HoverLine, "invisclass.lower.hover");
-                yield return GetTagSpanFromLineNumber(Actor.CentralLine, "invisclass.central");
+                if (Actor.HoverLine != Actor.CentralLine)
+                    yield return GetTagSpanFromLineNumber(Actor.HoverLine, "invisclass.lower.hover", spans);
+                yield return GetTagSpanFromLineNumber(Actor.CentralLine, "invisclass.central", spans);
 
                 foreach (LineEntity le in Parser.consLineEntity)
                 {
                     //hard code here
                     if (le != null && le.DisT == DisplayType.Dismiss)
-                        yield return GetTagSpanFromLineNumber(le.LineNumber, "invisclass.invis");
+                        yield return GetTagSpanFromLineNumber(le.LineNumber, "invisclass.invis", spans);
                     //
                 }
             }
@@ -193,14 +200,15 @@ namespace TestMargin.Taggers
         /// </summary>
         /// <param name="lineNumber"></param>
         /// <returns></returns>
-        ITagSpan<TextInvisTag> GetTagSpanFromLineNumber(int lineNumber, string classification)
+        ITagSpan<TextInvisTag> GetTagSpanFromLineNumber(int lineNumber, string classification, 
+            NormalizedSnapshotSpanCollection spans)
         {
             if (lineNumber == -1)
             {
                 return null;
             }
             SnapshotSpan? sspanq = emuParser.GetTextSpanFromLineNumber(View, lineNumber);
-            if (sspanq.HasValue)
+            if (sspanq.HasValue /*&& spans.OverlapsWith(new NormalizedSnapshotSpanCollection(sspanq.Value))*/)
             {
                 SnapshotSpan sspan = sspanq.Value;
                 //GetSpanFromLineNumber(lineNumber).Value; use new emuParser span

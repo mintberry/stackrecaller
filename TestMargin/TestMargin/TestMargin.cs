@@ -160,7 +160,7 @@ namespace TestMargin
             float divHeight = (float)(this.Height / lnCount);
             float widRate = (float)(this.ActualWidth / 2.0f / _textView.ViewportWidth);
             float widperchar = WidthPerChar();
-            System.Diagnostics.Trace.WriteLine("###         DRAW:" + this.ActualWidth + " : " + widperchar);
+            //System.Diagnostics.Trace.WriteLine("###         DRAW:" + this.ActualWidth + " : " + widperchar);
             foreach (OvLine ovl in _ovlc)
             {
                 ovl.DrawSelf(this, widperchar, divHeight, widRate);
