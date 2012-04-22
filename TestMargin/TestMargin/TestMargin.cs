@@ -61,6 +61,10 @@ namespace TestMargin
 
             this.MouseMove += new System.Windows.Input.MouseEventHandler(TestMargin_MouseMove);
 
+            this._textView.ViewportHeightChanged += new EventHandler(_textView_ViewportHeightChanged);
+
+            this._textView.ViewportWidthChanged += new EventHandler(_textView_ViewportWidthChanged);
+
             //Document d = _dte.ActiveDocument;
 
             //try
@@ -84,6 +88,26 @@ namespace TestMargin
 
             //this.Children.Add(_overviewport);
 
+        }
+
+        void _textView_ViewportWidthChanged(object sender, EventArgs e)
+        {
+            //throw new NotImplementedException();
+            this.Width = _textView.ViewportWidth / 5;
+            this.Height = _textView.ViewportHeight;
+
+            _ovc.IsRedraw = true;
+            _ovc.ReGenOv();
+        }
+
+        void _textView_ViewportHeightChanged(object sender, EventArgs e)
+        {
+            //throw new NotImplementedException();
+            this.Width = _textView.ViewportWidth / 5;
+            this.Height = _textView.ViewportHeight;
+
+            _ovc.IsRedraw = true;
+            _ovc.ReGenOv();
         }
 
         /// <summary>
@@ -114,8 +138,7 @@ namespace TestMargin
                 this.Width = _textView.ViewportWidth / 5;
                 this.Height = _textView.ViewportHeight;
 
-                _ovc.Parse2OvLines();
-                _ovc.DrawOverview();
+                //_ovc.ReGenOv();
             }
 
             if(_htm != null)

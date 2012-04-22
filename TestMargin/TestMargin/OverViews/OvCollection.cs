@@ -31,8 +31,6 @@ namespace TestMargin.OverViews
 
         public void DrawOverview()
         {
-            if (!IsRedraw) return;
-
             Host.Children.Clear();
 
             int lnCount = _ovlc.Count;
@@ -61,6 +59,16 @@ namespace TestMargin.OverViews
                 _ovlc.Add(new OvLine(Host, tvl, (float)(Host.ActualWidth / 4.0f)));
             }
             //System.Diagnostics.Trace.WriteLine("###         PARSE:" + _ovlc.Count);
+        }
+
+        public void ReGenOv() 
+        {
+            if (IsRedraw)
+            {
+                Parse2OvLines();
+                DrawOverview();
+                IsRedraw = false;
+            }
         }
     }
 }
