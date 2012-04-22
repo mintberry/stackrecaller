@@ -23,7 +23,7 @@ namespace TestMargin
     class TestMargin : Canvas, IWpfTextViewMargin
     {
         public const string MarginName = "TestMargin";
-        private IWpfTextView _textView;
+        public IWpfTextView _textView { get; set; }
         private bool _isDisposed = false;
 
         private DTE2 _dte;
@@ -33,7 +33,8 @@ namespace TestMargin
         private IVsHiddenTextManager _htm;
         private IVsEditorAdaptersFactoryService _afService;
 
-        private List<OvLine> _ovlc;
+        //private List<OvLine> _ovlc;
+        private OvCollection _ovc;
 
         private ovCode _overviewport = null;                                 //the wpf control to display the overview
 
@@ -52,9 +53,13 @@ namespace TestMargin
             this.ClipToBounds = true;
             this.Background = new SolidColorBrush(Colors.LightGreen);
 
+            _ovc = new OvCollection(this);
+
             _textView.LayoutChanged += new EventHandler<TextViewLayoutChangedEventArgs>(_textView_LayoutChanged);
 
             _textView.Caret.PositionChanged += new EventHandler<CaretPositionChangedEventArgs>(Caret_PositionChanged);
+
+            this.MouseMove += new System.Windows.Input.MouseEventHandler(TestMargin_MouseMove);
 
             //Document d = _dte.ActiveDocument;
 
@@ -81,6 +86,18 @@ namespace TestMargin
 
         }
 
+        /// <summary>
+        /// handle mouse move on overview, sync with editor
+        /// </summary>
+        /// <param name="sender"></param>
+        /// <param name="e"></param>
+        void TestMargin_MouseMove(object sender, System.Windows.Input.MouseEventArgs e)
+        {
+            //throw new NotImplementedException();
+            System.Windows.Point hoverpoint = e.GetPosition(this);
+
+        }
+
         void Caret_PositionChanged(object sender, CaretPositionChangedEventArgs e)
         {
             int linecount = _textView.TextSnapshot.LineCount;
@@ -97,8 +114,8 @@ namespace TestMargin
                 this.Width = _textView.ViewportWidth / 5;
                 this.Height = _textView.ViewportHeight;
 
-                Parse2OvLines();
-                DrawOverview();
+                _ovc.Parse2OvLines();
+                _ovc.DrawOverview();
             }
 
             if(_htm != null)
@@ -152,21 +169,7 @@ namespace TestMargin
                 throw new ObjectDisposedException(MarginName);
         }
 
-        private void DrawOverview() 
-        {
-            this.Children.Clear();
-
-            int lnCount = _ovlc.Count;
-            float divHeight = (float)(this.Height / lnCount);
-            float widRate = (float)(this.ActualWidth / 2.0f / _textView.ViewportWidth);
-            float widperchar = WidthPerChar();
-            //System.Diagnostics.Trace.WriteLine("###         DRAW:" + this.ActualWidth + " : " + widperchar);
-            foreach (OvLine ovl in _ovlc)
-            {
-                ovl.DrawSelf(this, widperchar, divHeight, widRate);
-                
-            }
-        }
+        
 
         #region IWpfTextViewMargin Members
 
@@ -238,29 +241,16 @@ namespace TestMargin
             
         }
 
-        private void Parse2OvLines() 
-        {
-            if (_ovlc == null)
-            {
-                _ovlc = new List<OvLine>();
-            }
-            else _ovlc.Clear();
-            
-            foreach (ITextSnapshotLine tvl in _textView.TextSnapshot.Lines)
-            {
-                _ovlc.Add(new OvLine(tvl, (float)(this.ActualWidth / 4.0f)));
-            }
-            //System.Diagnostics.Trace.WriteLine("###         PARSE:" + _ovlc.Count);
-        }
+        
 
 
         #region Helpers
-        private float WidthPerChar() 
+        public static float WidthPerChar(ITextView textView) 
         {
-            string s = _textView.TextViewLines.FirstVisibleLine.Extent.GetText();
+            string s = textView.TextViewLines.FirstVisibleLine.Extent.GetText();
             int iTabCount = Regex.Matches(s, @"\t").Count;
             int iCharCount = iTabCount * 4 + s.Length - iTabCount;
-            float widthpch = (float)(_textView.TextViewLines.FirstVisibleLine.TextWidth / iCharCount);
+            float widthpch = (float)(textView.TextViewLines.FirstVisibleLine.TextWidth / iCharCount);
             //System.Diagnostics.Trace.WriteLine("###         WIDTH:" + iCharCount + " : " + _textView.TextViewLines.FirstVisibleLine.TextWidth);
             return widthpch;
         }
@@ -274,6 +264,12 @@ namespace TestMargin
         static public int GetViewLineNumber(ITextViewLine tvl)
         {
             return tvl.Snapshot.GetLineNumberFromPosition(tvl.Start);
+        }
+
+        private int GetLineNumberFromPoint(System.Windows.Point point) 
+        {
+
+            return 0;
         }
         #endregion  
     }

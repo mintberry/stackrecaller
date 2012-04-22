@@ -102,7 +102,7 @@ namespace TestMargin.Taggers
             System.Diagnostics.Trace.WriteLine("%%%                 CENTRAL: " + Actor.CentralLine);
 
             
-            SyncText(TextSyncType.Central);           //not trigger the event, just change vertical layout
+            //SyncText(TextSyncType.Central);           //not trigger the event, just change vertical layout
         }
         private void ViewLayoutChanged(object sender, TextViewLayoutChangedEventArgs e)
         {
@@ -123,28 +123,8 @@ namespace TestMargin.Taggers
                 if (TagsChanged != null)
                 {
                     //raise an event, but why the span is whole?
-                    switch (synctype) 
-                    {
-                        case TextSyncType.AllText:
-                            TagsChanged(this, new SnapshotSpanEventArgs(new SnapshotSpan(SourceBuffer.CurrentSnapshot,
-                                0,SourceBuffer.CurrentSnapshot.Length)));
-                            break;
-                        case TextSyncType.Hover:
-                            ITextSnapshotLine hoverline = SourceBuffer.CurrentSnapshot.GetLineFromLineNumber(Actor.HoverLine);
-                            TagsChanged(this, new SnapshotSpanEventArgs(new SnapshotSpan(SourceBuffer.CurrentSnapshot,
-                                hoverline.Start, hoverline.Length)));
-                            break;
-                        case TextSyncType.Central:
-                            ITextSnapshotLine centralline = SourceBuffer.CurrentSnapshot.GetLineFromLineNumber(Actor.CentralLine);
-                            TagsChanged(this, new SnapshotSpanEventArgs(new SnapshotSpan(SourceBuffer.CurrentSnapshot,
-                                centralline.Start, centralline.Length)));
-                            break;
-                        default: break;
-
-                    }
-                    TagsChanged(this, new SnapshotSpanEventArgs(
-                        new SnapshotSpan(SourceBuffer.CurrentSnapshot, 0, 
-                            SourceBuffer.CurrentSnapshot.Length)));
+                    TagsChanged(this, new SnapshotSpanEventArgs(new SnapshotSpan(SourceBuffer.CurrentSnapshot,
+                                 0, SourceBuffer.CurrentSnapshot.Length)));
                 }
             }
         }
