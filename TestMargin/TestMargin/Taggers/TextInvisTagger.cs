@@ -116,6 +116,7 @@ namespace TestMargin.Taggers
 
             this.Actor.ScrollLines(selectedLineNumber, diff);
             //trigger a event or call ViewLayoutChanged directly
+            //this ia a brute force bug fix
             this.ScrollNumberFixed(this, null);
 
             //Actor.ValidateScroll();

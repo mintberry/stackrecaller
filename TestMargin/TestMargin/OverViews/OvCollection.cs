@@ -14,9 +14,9 @@ namespace TestMargin.OverViews
 {
     class OvCollection
     {
-        public static float divHeight;
-        public static float widRate;
-        public static float widperchar;
+        public static float divHeight;      //the height of each line
+        public static float widRate;        //rate between ov and real editor
+        public static float widperchar;     //width per char of real editor
 
         TestMargin Host { get; set; }
         public List<OvLine> _ovlc { get; set; }
