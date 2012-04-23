@@ -39,11 +39,11 @@ namespace TestMargin.Utils
 
         #region Helpers
 
-        public void ScrollLines(int targetLineNumber, int lineNumbers)
+        public int ScrollLines(int targetLineNumber, int lineNumbers)
         {
             this.GetCentralLine();
             if (-1 == this.CentralLine)
-                return;
+                return -1;
             ScrollDirection direction = lineNumbers > 0 ? ScrollDirection.Down : ScrollDirection.Up;
             this.Scroller.ScrollViewportVerticallyByLines(direction, Math.Abs(lineNumbers));
 
@@ -56,7 +56,10 @@ namespace TestMargin.Utils
                 lineNumbers = targetLineNumber - this.CentralLine;
                 ScrollDirection direction_r = lineNumbers > 0 ? ScrollDirection.Down : ScrollDirection.Up;
                 this.Scroller.ScrollViewportVerticallyByLines(direction_r, Math.Abs(lineNumbers));
+
+                return 1;
             }
+            return 0;
         }
 
         /// <summary>subject to change
@@ -89,6 +92,12 @@ namespace TestMargin.Utils
 
             int colSize = tvlc.Count;
             return TestMargin.GetViewLineNumber(tvlc.FirstVisibleLine) == toporbot;
+        }
+
+        public void ValidateScroll() 
+        {
+            this.Scroller.ScrollViewportVerticallyByPixels(0.1);
+            this.Scroller.ScrollViewportVerticallyByPixels(-0.1);
         }
         #endregion
     }

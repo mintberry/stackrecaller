@@ -39,6 +39,8 @@ namespace TestMargin.Taggers
 
         public event EventHandler<SnapshotSpanEventArgs> TagsChanged;       //
 
+        public event EventHandler<TextViewLayoutChangedEventArgs> ScrollNumberFixed;
+
         public TextInvisTagger(ITextView view, ITextBuffer sourceBuffer/*, ITextSearchService textSearchService,
             ITextStructureNavigator textStructureNavigator*/, IClassificationTypeRegistryService ctrs)
         {
@@ -51,6 +53,7 @@ namespace TestMargin.Taggers
             this.View.Caret.PositionChanged += CaretPositionChanged;
             this.View.LayoutChanged += ViewLayoutChanged;
             this.View.MouseHover += new EventHandler<MouseHoverEventArgs>(View_MouseHover);
+            this.ScrollNumberFixed += ViewLayoutChanged;
 
             this.Actor = new EditorActor(View);
             this.Parser = new emuParser(View.TextSnapshot, Actor);
@@ -97,11 +100,14 @@ namespace TestMargin.Taggers
 
             int selectedLineNumber = selectedLine.LineNumber;
             int diff = selectedLineNumber - Actor.CentralLine;
-            Actor.ScrollLines(selectedLineNumber, diff);
+            if (1 == Actor.ScrollLines(selectedLineNumber, diff))
+            {
+                //trigger a event or call ViewLayoutChanged directly
+            }
 
             System.Diagnostics.Trace.WriteLine("%%%                 CENTRAL: " + Actor.CentralLine);
 
-            
+            //Actor.ValidateScroll();
             //SyncText(TextSyncType.Central);           //not trigger the event, just change vertical layout
         }
         private void ViewLayoutChanged(object sender, TextViewLayoutChangedEventArgs e)
