@@ -53,7 +53,7 @@ namespace TestMargin.Taggers
             this.View.Caret.PositionChanged += CaretPositionChanged;
             this.View.LayoutChanged += ViewLayoutChanged;
             this.View.MouseHover += new EventHandler<MouseHoverEventArgs>(View_MouseHover);
-            this.ScrollNumberFixed += ViewLayoutChanged;
+            this.ScrollNumberFixed += new EventHandler<TextViewLayoutChangedEventArgs>(TextInvisTagger_ScrollNumberFixed);
 
             this.Actor = new EditorActor(View);
             this.Parser = new emuParser(View.TextSnapshot, Actor);
@@ -62,6 +62,19 @@ namespace TestMargin.Taggers
             Parser.BuildTrees();
 
             this._ctrs = ctrs;
+        }
+
+        void TextInvisTagger_ScrollNumberFixed(object sender, TextViewLayoutChangedEventArgs e)
+        {
+            //throw new NotImplementedException();
+            if (e == null)
+            {
+                int centralLine = Actor.GetCentralLine();
+                if (centralLine == -1) return;
+                Parser.GenDispType(centralLine);
+
+                SyncText(TextSyncType.AllText);
+            }
         }
 
         void View_MouseHover(object sender, MouseHoverEventArgs e)
@@ -100,12 +113,10 @@ namespace TestMargin.Taggers
 
             int selectedLineNumber = selectedLine.LineNumber;
             int diff = selectedLineNumber - Actor.CentralLine;
-            if (1 == Actor.ScrollLines(selectedLineNumber, diff))
-            {
-                //trigger a event or call ViewLayoutChanged directly
-            }
 
-            System.Diagnostics.Trace.WriteLine("%%%                 CENTRAL: " + Actor.CentralLine);
+            this.Actor.ScrollLines(selectedLineNumber, diff);
+            //trigger a event or call ViewLayoutChanged directly
+            this.ScrollNumberFixed(this, null);
 
             //Actor.ValidateScroll();
             //SyncText(TextSyncType.Central);           //not trigger the event, just change vertical layout
@@ -115,6 +126,7 @@ namespace TestMargin.Taggers
             if (e.VerticalTranslation == true)                //scroll vertically
             {
                 int centralLine = Actor.GetCentralLine();
+                System.Diagnostics.Trace.WriteLine("%%%                 CENTRAL: " + Actor.CentralLine);
                 if (centralLine == -1) return;
                 Parser.GenDispType(centralLine);
 
