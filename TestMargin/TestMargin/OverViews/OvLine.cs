@@ -18,8 +18,11 @@ namespace TestMargin.OverViews
     {
         //these variables are for global use, thus may be moved to new classes(collection)
         public static double lnInterval = 3.0;
-        public static double lnStrokeTh = 0.8;
+        public static double lnStrokeTh = 0.6;
         public static double lnHoverStrokeTh = 1.0;
+
+        public event EventHandler<EventArgs> OvLineHovered;
+        public event EventHandler<EventArgs> OvLineSelected; 
 
 
         public float _bzCurvArea;                    //area before overview
@@ -64,7 +67,8 @@ namespace TestMargin.OverViews
 
         void myPath_MouseLeave(object sender, System.Windows.Input.MouseEventArgs e)
         {
-            //DrawSelfCmz();
+            this.OvLineSelected(this, null);
+            DrawSelfCmz(OvCollection.widperchar, OvCollection.divHeight, OvCollection.widRatio, lnStrokeTh, Brushes.Black);
             //throw new NotImplementedException();
         }
 
@@ -75,7 +79,7 @@ namespace TestMargin.OverViews
         /// <param name="e"></param>
         void myPath_MouseLeftButtonDown(object sender, System.Windows.Input.MouseButtonEventArgs e)
         {
-
+            
             //throw new NotImplementedException();
         }
 
@@ -86,12 +90,13 @@ namespace TestMargin.OverViews
         /// <param name="e"></param>
         void myPath_MouseEnter(object sender, System.Windows.Input.MouseEventArgs e)
         {
-            //DrawSelfCmz();
+            DrawSelfCmz(OvCollection.widperchar,OvCollection.divHeight,OvCollection.widRatio, lnHoverStrokeTh, Brushes.Gold);
             //throw new NotImplementedException();
+            
         }
 
         /// <summary>
-        /// draw oneself on canvas, initial draw
+        /// draw oneself on canvas, initial draw, called by others
         /// </summary>
         /// <param name="c"></param>
         /// <param name="widperchar"></param>
@@ -100,8 +105,8 @@ namespace TestMargin.OverViews
         public void DrawSelf(Canvas c, float widperchar, float height, float widRate)
         {
             LineGeometry myLineGeometry = new LineGeometry();
-            myLineGeometry.StartPoint = new Point(_bzCurvArea + lnTextStart * widperchar * widRate, (double)(lnNumber * lnInterval));
-            myLineGeometry.EndPoint = new Point(_bzCurvArea + lnLength * widperchar * widRate, (double)(lnNumber * lnInterval));
+            myLineGeometry.StartPoint = new Point(_bzCurvArea + lnTextStart * widperchar * widRate, (double)(lnNumber * height));
+            myLineGeometry.EndPoint = new Point(_bzCurvArea + lnLength * widperchar * widRate, (double)(lnNumber * height));
 
             //myPath = new Path();
             myPath.Stroke = Brushes.Black;
@@ -114,15 +119,17 @@ namespace TestMargin.OverViews
 
         public void DrawSelfCmz(float widperchar, float height, float widRate, double thickness, SolidColorBrush brushcolor)
         {
-            LineGeometry myLineGeometry = new LineGeometry();
-            myLineGeometry.StartPoint = new Point(_bzCurvArea + lnTextStart * widperchar * widRate, (double)(lnNumber * lnInterval));
-            myLineGeometry.EndPoint = new Point(_bzCurvArea + lnLength * widperchar * widRate, (double)(lnNumber * lnInterval));
+            //LineGeometry myLineGeometry = new LineGeometry();
+            //myLineGeometry.StartPoint = new Point(_bzCurvArea + lnTextStart * widperchar * widRate, (double)(lnNumber * height));
+            //myLineGeometry.EndPoint = new Point(_bzCurvArea + lnLength * widperchar * widRate, (double)(lnNumber * height));
 
-            myPath.Stroke = Brushes.BlueViolet;
+            myPath.Stroke = brushcolor;
             myPath.StrokeThickness = thickness;
-            myPath.Data = myLineGeometry;
+            //myPath.Data = myLineGeometry;
 
-            myCanvas.Children[this.lnNumber] = myPath;
+            //myCanvas.Children[this.lnNumber].InvalidateVisual();
+            //myCanvas.Children[this.lnNumber] = myPath;
+            
         }
 
         private int Find1stChar(ITextSnapshotLine tsl) 
@@ -141,7 +148,7 @@ namespace TestMargin.OverViews
             
             return i1stChar;
         }
-
         
     }
+
 }

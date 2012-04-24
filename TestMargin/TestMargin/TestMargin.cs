@@ -270,7 +270,7 @@ namespace TestMargin
         #region Helpers
         public static float WidthPerChar(ITextView textView) 
         {
-            string s = textView.TextViewLines.FirstVisibleLine.Extent.GetText();
+            string s = textView.TextViewLines.FirstVisibleLine.Extent.GetText();                          //maybe should not use first visible line, use mid-line
             int iTabCount = Regex.Matches(s, @"\t").Count;
             int iCharCount = iTabCount * 4 + s.Length - iTabCount;
             float widthpch = (float)(textView.TextViewLines.FirstVisibleLine.TextWidth / iCharCount);

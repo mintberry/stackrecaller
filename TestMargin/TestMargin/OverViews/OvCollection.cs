@@ -15,18 +15,21 @@ namespace TestMargin.OverViews
     class OvCollection
     {
         public static float divHeight;      //the height of each line
-        public static float widRate;        //rate between ov and real editor
+        public static float widRatio;        //rate between ov and real editor
         public static float widperchar;     //width per char of real editor
 
         TestMargin Host { get; set; }
         public List<OvLine> _ovlc { get; set; }
         public bool IsRedraw { get; set; }
 
+        public int SelectedLine { get; set; }
+
         public OvCollection(TestMargin host) 
         {
             this.Host = host;
             _ovlc = new List<OvLine>();
             IsRedraw = true;
+            SelectedLine = -1;
         }
 
         public void DrawOverview()
@@ -34,13 +37,13 @@ namespace TestMargin.OverViews
             Host.Children.Clear();
 
             int lnCount = _ovlc.Count;
-            float divHeight = (float)(Host.Height / lnCount);
-            float widRate = (float)(Host.ActualWidth / 2.0f / Host._textView.ViewportWidth);
-            float widperchar = TestMargin.WidthPerChar(Host._textView);
+            divHeight = (float)(Host.Height / lnCount);
+            widRatio = (float)(Host.ActualWidth / 2.0f / Host._textView.ViewportWidth);
+            widperchar = TestMargin.WidthPerChar(Host._textView);
             //System.Diagnostics.Trace.WriteLine("###         DRAW:" + this.ActualWidth + " : " + widperchar);
             foreach (OvLine ovl in _ovlc)
             {
-                ovl.DrawSelf(Host, widperchar, divHeight, widRate);
+                ovl.DrawSelf(Host, widperchar, divHeight, widRatio);
 
             }
         }
@@ -69,6 +72,11 @@ namespace TestMargin.OverViews
                 DrawOverview();
                 IsRedraw = false;
             }
+        }
+
+        public void DrawBezier() 
+        {
+
         }
     }
 }
