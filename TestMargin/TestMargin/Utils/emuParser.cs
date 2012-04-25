@@ -37,6 +37,7 @@ namespace TestMargin.Utils
         private int tab_count = 4;   //how many space a tab
         private int threshold = -3;  //DOI threshold
         private const int const_threshold = -2;
+        private int central_offset = 5;
 
         ITextSnapshot _ts { get; set; }
 
@@ -227,7 +228,10 @@ namespace TestMargin.Utils
             {
                 root.DisT = DisplayType.Origin;
             }
-            
+            //a simple approach to FOCUS area, better add color background
+            if (Math.Abs(_ea.CentralLine - root.LineNumber) < central_offset)
+                root.DisT = DisplayType.Origin;
+
             //if not leaf
             if(root.Children.Count != 0)
             {

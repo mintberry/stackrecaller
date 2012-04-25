@@ -22,7 +22,7 @@ namespace TestMargin.Taggers
 
     class TextInvisTagger : ITagger<TextInvisTag>
     {
-        ITextView View { get; set; }                                      //iwpftextview
+        IWpfTextView View { get; set; }                                      //iwpftextview
         ITextBuffer SourceBuffer { get; set; }
         //ITextSearchService TextSearchService { get; set; }
         //ITextStructureNavigator TextStructureNavigator { get; set; }
@@ -44,7 +44,7 @@ namespace TestMargin.Taggers
         public TextInvisTagger(ITextView view, ITextBuffer sourceBuffer/*, ITextSearchService textSearchService,
             ITextStructureNavigator textStructureNavigator*/, IClassificationTypeRegistryService ctrs)
         {
-            this.View = view;
+            this.View = view as IWpfTextView;
             this.SourceBuffer = sourceBuffer;
             //this.TextSearchService = textSearchService;
             //this.TextStructureNavigator = textStructureNavigator;

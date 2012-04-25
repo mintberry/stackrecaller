@@ -13,7 +13,7 @@ using Microsoft.VisualStudio.Utilities;
 
 namespace TestMargin.Taggers
 {
-    class TextInvisTag: ClassificationTag
+    class TextInvisTag : ClassificationTag, IOutliningRegionTag
     {
         
 
@@ -24,5 +24,25 @@ namespace TestMargin.Taggers
         }
         //"ClassificationFormatDefinition/InvisFormat"
         //"invisclass.invis"
+
+        object IOutliningRegionTag.CollapsedForm
+        {
+            get { return null; }
+        }
+
+        object IOutliningRegionTag.CollapsedHintForm
+        {
+            get { return null; }
+        }
+
+        bool IOutliningRegionTag.IsDefaultCollapsed
+        {
+            get { return false; }
+        }
+
+        bool IOutliningRegionTag.IsImplementation
+        {
+            get { return false; }
+        }
     }
 }

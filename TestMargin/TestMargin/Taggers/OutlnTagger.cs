@@ -46,76 +46,10 @@ namespace TestMargin.Taggers
 
             //keep the current (deepest) partial region, which will have
             // references to any parent partial regions.
-            PartialRegion currentRegion = null;
 
             foreach (var line in newSnapshot.Lines)
             {
-                int regionStart = -1;
-                string text = line.GetText();
-
-                //lines that contain a "[" denote the start of a new region.
-                if ((regionStart = text.IndexOf(startHide, StringComparison.Ordinal)) != -1)
-                {
-                    int currentLevel = (currentRegion != null) ? currentRegion.Level : 1;
-                    int newLevel;
-                    if (!TryGetLevel(text, regionStart, out newLevel))
-                        newLevel = currentLevel + 1;
-
-                    //levels are the same and we have an existing region;
-                    //end the current region and start the next
-                    if (currentLevel == newLevel && currentRegion != null)
-                    {
-                        newRegions.Add(new Region()
-                        {
-                            Level = currentRegion.Level,
-                            StartLine = currentRegion.StartLine,
-                            StartOffset = currentRegion.StartOffset,
-                            EndLine = line.LineNumber
-                        });
-
-                        currentRegion = new PartialRegion()
-                        {
-                            Level = newLevel,
-                            StartLine = line.LineNumber,
-                            StartOffset = regionStart,
-                            PartialParent = currentRegion.PartialParent
-                        };
-                    }
-                    //this is a new (sub)region
-                    else
-                    {
-                        currentRegion = new PartialRegion()
-                        {
-                            Level = newLevel,
-                            StartLine = line.LineNumber,
-                            StartOffset = regionStart,
-                            PartialParent = currentRegion
-                        };
-                    }
-                }
-                //lines that contain "]" denote the end of a region
-                else if ((regionStart = text.IndexOf(endHide, StringComparison.Ordinal)) != -1)
-                {
-                    int currentLevel = (currentRegion != null) ? currentRegion.Level : 1;
-                    int closingLevel;
-                    if (!TryGetLevel(text, regionStart, out closingLevel))
-                        closingLevel = currentLevel;
-
-                    //the regions match
-                    if (currentRegion != null &&
-                        currentLevel == closingLevel)
-                    {
-                        newRegions.Add(new Region()
-                        {
-                            Level = currentLevel,
-                            StartLine = currentRegion.StartLine,
-                            StartOffset = currentRegion.StartOffset,
-                            EndLine = line.LineNumber
-                        });
-
-                        currentRegion = currentRegion.PartialParent;
-                    }
-                }
+                
             }
 
             //determine the changed span, and send a changed event with the new spans
@@ -191,7 +125,7 @@ namespace TestMargin.Taggers
 
                     //the region starts at the beginning of the "[", and goes until the *end* of the line that contains the "]".
                     yield return new TagSpan<IOutliningRegionTag>(
-                        new SnapshotSpan(startLine.Start + region.StartOffset,
+                        new SnapshotSpan(startLine.Start + endLine.End,
                         endLine.End),
                         new OutliningRegionTag(false, false, ellipsis, hoverText));
                 }
@@ -201,23 +135,25 @@ namespace TestMargin.Taggers
         static SnapshotSpan AsSnapshotSpan(Region region, ITextSnapshot snapshot)
         {
             var startLine = snapshot.GetLineFromLineNumber(region.StartLine);
-            var endLine = (region.StartLine == region.EndLine) ? startLine
-                 : snapshot.GetLineFromLineNumber(region.EndLine);
-            return new SnapshotSpan(startLine.Start + region.StartOffset, endLine.End);
+
+            var endLine = snapshot.GetLineFromLineNumber(region.EndLine);
+
+            return new SnapshotSpan(startLine.Start, endLine.End);
         }
 
     }
 
-    class PartialRegion
+    class Region
     {
         public int StartLine { get; set; }
-        public int StartOffset { get; set; }
-        public int Level { get; set; }
-        public PartialRegion PartialParent { get; set; }
+        public int EndLine { get; set; }
+
+        public Region(int start, int end) 
+        {
+            StartLine = start;
+            EndLine = end;
+        } 
+     
     }
 
-    class Region : PartialRegion
-    {
-        public int EndLine { get; set; }
-    } 
 }
