@@ -8,12 +8,14 @@ using Microsoft.VisualStudio.Editor;
 using Microsoft.VisualStudio.Text.Editor;
 using Microsoft.VisualStudio.Utilities;
 using Microsoft.VisualStudio.Text;
+using Microsoft.VisualStudio.Text.Tagging;
 using Microsoft.VisualStudio.OLE.Interop;
 using Microsoft.VisualStudio.ComponentModelHost;
 using EnvDTE;
 using EnvDTE80;
 using Microsoft.VisualStudio.Shell;
 using Microsoft.VisualStudio.TextManager.Interop;
+using TestMargin.Taggers;
 
 namespace TestMargin
 {
@@ -41,6 +43,9 @@ namespace TestMargin
         [Import]
         internal SVsServiceProvider serviceProvider = null;
 
+        //[Import]
+        //internal IViewTaggerProvider textInvisTaggerProvider { get; set; }
+
         //[Import(typeof(IVsEditorAdaptersFactoryService))]
         //internal IVsEditorAdaptersFactoryService editorFactory { get; set; }
 
@@ -65,6 +70,7 @@ namespace TestMargin
             
             //System.Diagnostics.Trace.WriteLine(":" + _textBufferFactoryService.TextContentType.ToString());
             _curTextBuf = _textBufferFactoryService.CreateTextBuffer("test", _textBufferFactoryService.PlaintextContentType);
+
             
             return new TestMargin(textViewHost.TextView, dte, _htm, adapterFactoryService);
         }

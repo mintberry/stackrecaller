@@ -13,6 +13,7 @@ using Microsoft.VisualStudio.TextManager.Interop;
 using EnvDTE;
 using EnvDTE80;
 using TestMargin.OverViews;
+using TestMargin.Taggers;
 
 namespace TestMargin
 {
@@ -35,6 +36,7 @@ namespace TestMargin
 
         //private List<OvLine> _ovlc;
         private OvCollection _ovc;
+        private TextInvisTagger _tit;
 
         private ovCode _overviewport = null;                                 //the wpf control to display the overview
 
@@ -48,6 +50,7 @@ namespace TestMargin
             _dte = dte;
             _htm = htm;
             _afService = afService;
+           
 
             //this.Width = _textView.ViewportWidth / 4;
             this.ClipToBounds = true;

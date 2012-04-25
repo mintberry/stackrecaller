@@ -14,6 +14,9 @@ namespace TestMargin.OverViews
 {
     class OvCollection
     {
+        public event EventHandler<EventArgs> OvLineHovered;
+        public event EventHandler<EventArgs> OvLineSelected; 
+
         public static float divHeight;      //the height of each line
         public static float widRatio;        //rate between ov and real editor
         public static float widperchar;     //width per char of real editor
@@ -59,7 +62,7 @@ namespace TestMargin.OverViews
 
             foreach (ITextSnapshotLine tvl in Host._textView.TextSnapshot.Lines)
             {
-                _ovlc.Add(new OvLine(Host, tvl, (float)(Host.ActualWidth / 4.0f)));
+                _ovlc.Add(new OvLine(Host, tvl, (float)(Host.ActualWidth / 4.0f),this));
             }
             //System.Diagnostics.Trace.WriteLine("###         PARSE:" + _ovlc.Count);
         }
@@ -72,6 +75,16 @@ namespace TestMargin.OverViews
                 DrawOverview();
                 IsRedraw = false;
             }
+        }
+
+        public void OneSeleted(int lnnumber)
+        {
+            if(SelectedLine != -1)
+                _ovlc[SelectedLine].SelectedChanged(true);
+            
+            this.SelectedLine = lnnumber;
+
+            //trigger an event
         }
 
         public void DrawBezier() 

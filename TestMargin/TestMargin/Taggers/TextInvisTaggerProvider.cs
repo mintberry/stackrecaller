@@ -26,6 +26,8 @@ namespace TestMargin.Taggers
         [Import]
         internal IClassificationTypeRegistryService registry { set; get; }
 
+        TextInvisTagger _val;
+
 
         #region IViewTaggerProvider Members
 
@@ -34,9 +36,15 @@ namespace TestMargin.Taggers
             //throw new NotImplementedException();
             if (textView.TextBuffer != buffer)
                 return null;
-            return new TextInvisTagger(textView, buffer, registry) as ITagger<T>;
+            _val = new TextInvisTagger(textView, buffer, registry);
+            return _val as ITagger<T>;
         }
 
         #endregion
+
+        public TextInvisTagger GetThyTagger()
+        {
+            return _val;
+        }
     }
 }
