@@ -44,6 +44,7 @@ namespace TestMargin.Taggers
 
         public TextInvisTagger GetThyTagger()
         {
+            System.Diagnostics.Trace.WriteLine("~~~               GetThyTagger" + _val);
             return _val;
         }
     }

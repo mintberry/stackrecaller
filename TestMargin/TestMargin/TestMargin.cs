@@ -1,5 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.ComponentModel.Composition;
+using System.ComponentModel.Composition.Hosting;
 using System.Windows.Controls;
 using System.Windows.Media;
 using System.Text.RegularExpressions;
@@ -8,6 +10,7 @@ using Microsoft.VisualStudio.Editor;
 using Microsoft.VisualStudio.Text.Editor;
 using Microsoft.VisualStudio.Text.Formatting;
 using Microsoft.VisualStudio.Text;
+using Microsoft.VisualStudio.Text.Tagging;
 using Microsoft.VisualStudio.VCCodeModel;
 using Microsoft.VisualStudio.TextManager.Interop;
 using EnvDTE;
@@ -23,6 +26,9 @@ namespace TestMargin
     /// </summary>
     class TestMargin : Canvas, IWpfTextViewMargin
     {
+        [Import(typeof(IViewTaggerProvider))]
+        public IViewTaggerProvider vt_provider; //{ get; set; }
+
         public const string MarginName = "TestMargin";
         public IWpfTextView _textView { get; set; }
         private bool _isDisposed = false;
@@ -36,7 +42,8 @@ namespace TestMargin
 
         //private List<OvLine> _ovlc;
         private OvCollection _ovc;
-        private TextInvisTagger _tit;
+        private CompositionContainer _container;
+        private TextInvisTaggerProvider _tit_provider;
 
         private ovCode _overviewport = null;                                 //the wpf control to display the overview
 
@@ -57,6 +64,24 @@ namespace TestMargin
             this.Background = new SolidColorBrush(Colors.LightGreen);
 
             _ovc = new OvCollection(this);
+
+            //An aggregate catalog that combines multiple catalogs
+            var catalog = new AggregateCatalog();
+            //Adds all the parts found in the same assembly as the Program class
+            catalog.Catalogs.Add(new AssemblyCatalog(typeof(TestMargin).Assembly));
+            //catalog.Catalogs.Add(new DirectoryCatalog(@"C:\Users\t_qix\Documents\Visual Studio 2010\Projects\MyAddin1\stack-recaller\TestMargin\TestMargin\bin\Debug"));
+            //Create the CompositionContainer with the parts in the catalog
+            _container = new CompositionContainer(catalog);
+            //Fill the imports of this object
+            try
+            {
+                this._container.ComposeParts(this);
+            }
+            catch (CompositionException compositionException)
+            {
+                Console.WriteLine("!!!               "+compositionException.ToString());
+            }
+            
 
             _textView.LayoutChanged += new EventHandler<TextViewLayoutChangedEventArgs>(_textView_LayoutChanged);
 
