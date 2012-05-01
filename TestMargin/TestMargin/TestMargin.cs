@@ -5,7 +5,9 @@ using System.ComponentModel.Composition.Hosting;
 using System.Windows.Controls;
 using System.Windows.Media;
 using System.Text.RegularExpressions;
+using System.Reflection;
 using Microsoft.VisualStudio;
+using Microsoft.VisualStudio.Text.Classification;
 using Microsoft.VisualStudio.Editor;
 using Microsoft.VisualStudio.Text.Editor;
 using Microsoft.VisualStudio.Text.Formatting;
@@ -13,6 +15,7 @@ using Microsoft.VisualStudio.Text;
 using Microsoft.VisualStudio.Text.Tagging;
 using Microsoft.VisualStudio.VCCodeModel;
 using Microsoft.VisualStudio.TextManager.Interop;
+using Microsoft.VisualStudio.Utilities;
 using EnvDTE;
 using EnvDTE80;
 using TestMargin.OverViews;
@@ -26,9 +29,6 @@ namespace TestMargin
     /// </summary>
     class TestMargin : Canvas, IWpfTextViewMargin
     {
-        [Import(typeof(IViewTaggerProvider))]
-        public IViewTaggerProvider vt_provider; //{ get; set; }
-
         public const string MarginName = "TestMargin";
         public IWpfTextView _textView { get; set; }
         private bool _isDisposed = false;
@@ -42,10 +42,32 @@ namespace TestMargin
 
         //private List<OvLine> _ovlc;
         private OvCollection _ovc;
-        private CompositionContainer _container;
+        private J4I j4i;
         private TextInvisTaggerProvider _tit_provider;
 
         private ovCode _overviewport = null;                                 //the wpf control to display the overview
+
+
+        public TestMargin(IWpfTextView textView)
+        {
+            _textView = textView;
+            this.ClipToBounds = true;
+            this.Background = new SolidColorBrush(Colors.LightGreen);
+
+            this.j4i = new J4I();
+
+            _ovc = new OvCollection(this);
+
+            _textView.LayoutChanged += new EventHandler<TextViewLayoutChangedEventArgs>(_textView_LayoutChanged);
+
+            _textView.Caret.PositionChanged += new EventHandler<CaretPositionChangedEventArgs>(Caret_PositionChanged);
+
+            this.MouseMove += new System.Windows.Input.MouseEventHandler(TestMargin_MouseMove);
+
+            this._textView.ViewportHeightChanged += new EventHandler(_textView_ViewportHeightChanged);
+
+            this._textView.ViewportWidthChanged += new EventHandler(_textView_ViewportWidthChanged);
+        }
 
         /// <summary>
         /// Creates a <see cref="TestMargin"/> for a given <see cref="IWpfTextView"/>.
@@ -63,25 +85,9 @@ namespace TestMargin
             this.ClipToBounds = true;
             this.Background = new SolidColorBrush(Colors.LightGreen);
 
-            _ovc = new OvCollection(this);
+            this.j4i = new J4I();
 
-            //An aggregate catalog that combines multiple catalogs
-            var catalog = new AggregateCatalog();
-            //Adds all the parts found in the same assembly as the Program class
-            catalog.Catalogs.Add(new AssemblyCatalog(typeof(TestMargin).Assembly));
-            //catalog.Catalogs.Add(new DirectoryCatalog(@"C:\Users\t_qix\Documents\Visual Studio 2010\Projects\MyAddin1\stack-recaller\TestMargin\TestMargin\bin\Debug"));
-            //Create the CompositionContainer with the parts in the catalog
-            _container = new CompositionContainer(catalog);
-            //Fill the imports of this object
-            try
-            {
-                this._container.ComposeParts(this);
-            }
-            catch (CompositionException compositionException)
-            {
-                Console.WriteLine("!!!               "+compositionException.ToString());
-            }
-            
+            _ovc = new OvCollection(this);
 
             _textView.LayoutChanged += new EventHandler<TextViewLayoutChangedEventArgs>(_textView_LayoutChanged);
 
@@ -323,5 +329,42 @@ namespace TestMargin
             return 0;
         }
         #endregion  
+    }
+
+    /// <summary>
+    /// class that just for import
+    /// </summary>
+    class J4I 
+    {
+        [Import(typeof(IViewTaggerProvider))]
+        public IViewTaggerProvider vt_provider { get; set; }
+
+        private CompositionContainer _container;
+
+        public J4I() 
+        {
+            return;//not using this class
+            //An aggregate catalog that combines multiple catalogs
+            var catalog = new AggregateCatalog();
+            //Adds all the parts found in the same assembly as the Program class
+            catalog.Catalogs.Add(new AssemblyCatalog(typeof(TestMargin).Assembly));
+            Assembly x = Assembly.GetEntryAssembly();
+            catalog.Catalogs.Add(new AssemblyCatalog(x));
+            //catalog.Catalogs.Add(new TypeCatalog(typeof(IClassificationTypeRegistryService)));
+            //catalog.Catalogs.Add(new AssemblyCatalog(@"C:\Program Files (x86)\Microsoft Visual Studio 10.0\Common7\IDE\devenv.exe"));
+            //Create the CompositionContainer with the parts in the catalog
+            _container = new CompositionContainer(catalog);
+            //Fill the imports of this object
+            try
+            {
+                this._container.ComposeParts(this);
+
+            }
+            catch (CompositionException compositionException)
+            {
+                System.Diagnostics.Trace.WriteLine("!!!               " + compositionException.Message);
+            }
+            
+        }
     }
 }

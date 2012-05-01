@@ -119,7 +119,7 @@ namespace TestMargin.OverViews
             myLineGeometry.EndPoint = new Point(_bzCurvArea + lnLength * widperchar * widRate, (double)(lnNumber * height));
 
             //myPath = new Path();
-            myPath.Stroke = Brushes.Black;
+            myPath.Stroke = Brushes.Crimson;
             myPath.StrokeThickness = lnStrokeTh;
             myPath.Data = myLineGeometry;
 
@@ -166,7 +166,7 @@ namespace TestMargin.OverViews
                 IsSeleted = false;
             }
             if (!IsSeleted)
-                DrawSelfCmz(OvCollection.widperchar, OvCollection.divHeight, OvCollection.widRatio, lnStrokeTh, Brushes.Black);
+                DrawSelfCmz(OvCollection.widperchar, OvCollection.divHeight, OvCollection.widRatio, lnStrokeTh, Brushes.Crimson);
             //throw new NotImplementedException();
         }
         

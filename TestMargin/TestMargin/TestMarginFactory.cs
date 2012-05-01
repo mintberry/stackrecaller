@@ -4,11 +4,13 @@
 using System.Runtime.InteropServices;
 using System.ComponentModel;
 using System.ComponentModel.Composition;
+using System.ComponentModel.Composition.Hosting;
 using Microsoft.VisualStudio.Editor;
 using Microsoft.VisualStudio.Text.Editor;
 using Microsoft.VisualStudio.Utilities;
 using Microsoft.VisualStudio.Text;
 using Microsoft.VisualStudio.Text.Tagging;
+using Microsoft.VisualStudio.Text.Classification;
 using Microsoft.VisualStudio.OLE.Interop;
 using Microsoft.VisualStudio.ComponentModelHost;
 using EnvDTE;
@@ -34,45 +36,41 @@ namespace TestMargin
     [TextViewRole(PredefinedTextViewRoles.Interactive)]
     internal sealed class MarginFactory : IWpfTextViewMarginProvider
     {
-        [Import]
-        internal IContentTypeRegistryService ContentTypeRegistryService { get; set; }   //just a test
+        //[Import]
+        //internal IContentTypeRegistryService ContentTypeRegistryService { get; set; }   //just a test
 
-        [Import]
-        internal ITextBufferFactoryService TextBufferFactoryService = null;
+        //[Import]
+        //internal ITextBufferFactoryService TextBufferFactoryService = null;
 
-        [Import]
-        internal SVsServiceProvider serviceProvider = null;
+        //[Import]
+        //internal SVsServiceProvider serviceProvider = null;
 
+        // consume the tagger provider
         //[Import]
         //internal IViewTaggerProvider textInvisTaggerProvider { get; set; }
 
-        //[Import(typeof(IVsEditorAdaptersFactoryService))]
-        //internal IVsEditorAdaptersFactoryService editorFactory { get; set; }
-
-        //[Import]
-        //internal IServiceProvider isp = null;
 
         public IWpfTextViewMargin CreateMargin(IWpfTextViewHost textViewHost, IWpfTextViewMargin containerMargin)
         {
             int iErrStat;
 
-            _contentTypeRegistryService = ContentTypeRegistryService;
-            _textBufferFactoryService = TextBufferFactoryService;
+            //_contentTypeRegistryService = ContentTypeRegistryService;
+            //_textBufferFactoryService = TextBufferFactoryService;
 
-            DTE2 dte = (DTE2)serviceProvider.GetService(typeof(DTE));
+            //DTE2 dte = (DTE2)serviceProvider.GetService(typeof(DTE));
 
-            iErrStat = GetHiddenTextManager(serviceProvider);
+            //iErrStat = GetHiddenTextManager(serviceProvider);
 
 
-            IComponentModel componentModel = (IComponentModel)ServiceProvider.GlobalProvider.GetService(typeof(SComponentModel));
-            IVsEditorAdaptersFactoryService adapterFactoryService = componentModel.GetService<IVsEditorAdaptersFactoryService>();
-
-            
-            //System.Diagnostics.Trace.WriteLine(":" + _textBufferFactoryService.TextContentType.ToString());
-            _curTextBuf = _textBufferFactoryService.CreateTextBuffer("test", _textBufferFactoryService.PlaintextContentType);
+            //IComponentModel componentModel = (IComponentModel)ServiceProvider.GlobalProvider.GetService(typeof(SComponentModel));
+            //IVsEditorAdaptersFactoryService adapterFactoryService = componentModel.GetService<IVsEditorAdaptersFactoryService>();
 
             
-            return new TestMargin(textViewHost.TextView, dte, _htm, adapterFactoryService);
+            ////System.Diagnostics.Trace.WriteLine(":" + _textBufferFactoryService.TextContentType.ToString());
+            //_curTextBuf = _textBufferFactoryService.CreateTextBuffer("test", _textBufferFactoryService.PlaintextContentType);
+
+           
+            return new TestMargin(textViewHost.TextView);
         }
 
 

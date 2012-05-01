@@ -47,7 +47,7 @@ namespace TestMargin.Utils
             ScrollDirection direction = lineNumbers > 0 ? ScrollDirection.Down : ScrollDirection.Up;
             this.Scroller.ScrollViewportVerticallyByLines(direction, Math.Abs(lineNumbers));
 
-            System.Diagnostics.Trace.WriteLine("^^^                 CENTRAL: " + this.CentralLine);
+            //System.Diagnostics.Trace.WriteLine("^^^                 CENTRAL: " + this.CentralLine);
 
             if (this.GetCentralLine() != targetLineNumber && !IsEdge(0) && IsEdge(View.TextSnapshot.LineCount - 1))
             {

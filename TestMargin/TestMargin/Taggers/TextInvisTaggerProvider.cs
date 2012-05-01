@@ -15,7 +15,7 @@ namespace TestMargin.Taggers
     [Export(typeof(IViewTaggerProvider))]
     [ContentType("C/C++")]
     [TagType(typeof(ClassificationTag))]
-    internal class TextInvisTaggerProvider : IViewTaggerProvider
+    class TextInvisTaggerProvider : IViewTaggerProvider
     {
         //[Import]
         //internal ITextSearchService TextSearchService { get; set; }
@@ -25,6 +25,7 @@ namespace TestMargin.Taggers
 
         [Import]
         internal IClassificationTypeRegistryService registry { set; get; }
+
 
         TextInvisTagger _val;
 

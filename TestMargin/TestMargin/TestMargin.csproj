@@ -90,6 +90,7 @@
     <Reference Include="WindowsBase" />
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="Adorn\FocusArea.cs" />
     <Compile Include="ovCode.xaml.cs">
       <DependentUpon>ovCode.xaml</DependentUpon>
     </Compile>

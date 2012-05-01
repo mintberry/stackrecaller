@@ -9,6 +9,7 @@ using System.Windows.Media;
 using System.Windows.Shapes;
 using System.Text.RegularExpressions;
 using Microsoft.VisualStudio.Text;
+using TestMargin.Utils;
 
 namespace TestMargin.OverViews
 {
@@ -27,12 +28,18 @@ namespace TestMargin.OverViews
 
         public int SelectedLine { get; set; }
 
+        //maybe a work around for inter-mef call
+        private EditorActor OutActor;
+
         public OvCollection(TestMargin host) 
         {
             this.Host = host;
             _ovlc = new List<OvLine>();
             IsRedraw = true;
             SelectedLine = -1;
+
+            //try share the same view
+            OutActor = new EditorActor(host._textView);
         }
 
         public void DrawOverview()
@@ -79,15 +86,19 @@ namespace TestMargin.OverViews
 
         public void OneSeleted(int lnnumber)
         {
-            if(SelectedLine != -1)
+            if(this.SelectedLine != -1)
                 _ovlc[SelectedLine].SelectedChanged(true);
-            
+
+            int lastSel = this.SelectedLine;
             this.SelectedLine = lnnumber;
 
+            int diff = this.SelectedLine - lastSel;
+
+            OutActor.ScrollLines(this.SelectedLine, diff);
             //trigger an event
         }
 
-        public void DrawBezier() 
+        public void DrawBezier(int x) 
         {
 
         }
