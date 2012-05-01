@@ -43,8 +43,16 @@ namespace TestMargin.OverViews
 
             this.Host._textView.Caret.PositionChanged += new EventHandler<Microsoft.VisualStudio.Text.Editor.CaretPositionChangedEventArgs>(Caret_PositionChanged);
 
+            this.Host._textView.LayoutChanged += new EventHandler<TextViewLayoutChangedEventArgs>(_textView_LayoutChanged);
+
             //try share the same view
             //OutActor = new EditorActor(host._textView);
+        }
+
+        void _textView_LayoutChanged(object sender, TextViewLayoutChangedEventArgs e)
+        {
+            //throw new NotImplementedException();
+
         }
 
         void Caret_PositionChanged(object sender, Microsoft.VisualStudio.Text.Editor.CaretPositionChangedEventArgs e)
