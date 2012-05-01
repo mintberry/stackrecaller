@@ -11,6 +11,7 @@ using Microsoft.VisualStudio.Text.Operations;
 using Microsoft.VisualStudio.Text.Tagging;
 using Microsoft.VisualStudio.Utilities;
 using TestMargin.Utils;
+using TestMargin.OverViews;
 
 namespace TestMargin.Taggers
 {
@@ -32,6 +33,8 @@ namespace TestMargin.Taggers
 
         EditorActor Actor { get; set; }
         emuParser Parser { get; set; }
+
+        //OvCollection overView { get; set; }
 
         object updateLock = new object();
 
@@ -58,10 +61,27 @@ namespace TestMargin.Taggers
             this.Actor = new EditorActor(View);
             this.Parser = new emuParser(View.TextSnapshot, Actor);
 
+            //this.overView = ovc;
+            //ovc.OvLineSelected += new EventHandler<OvCollectionEventArgs>(ovc_OvLineSelected);
+
             //not known whether here is okay
             Parser.BuildTrees();
 
             this._ctrs = ctrs;
+        }
+
+
+        void ovc_OvLineSelected(object sender, OvCollectionEventArgs e)
+        {
+            //throw new NotImplementedException();
+            int lineSel = e.LineSelected;
+            int lastSel = e.LastLineSelected;
+
+            int diff = lineSel - lastSel;
+            this.Actor.ScrollLines(lineSel, diff);
+            //trigger a event or call ViewLayoutChanged directly
+            //this ia a brute force bug fix
+            this.ScrollNumberFixed(this, null);
         }
 
         void TextInvisTagger_ScrollNumberFixed(object sender, TextViewLayoutChangedEventArgs e)
@@ -127,7 +147,7 @@ namespace TestMargin.Taggers
             if (e.VerticalTranslation == true)                //scroll vertically
             {
                 int centralLine = Actor.GetCentralLine();
-                System.Diagnostics.Trace.WriteLine("%%%                 CENTRAL: " + Actor.CentralLine);
+                //System.Diagnostics.Trace.WriteLine("%%%                 CENTRAL: " + Actor.CentralLine);
                 if (centralLine == -1) return;
                 Parser.GenDispType(centralLine);
 
@@ -217,6 +237,19 @@ namespace TestMargin.Taggers
             {
                 return null;
             }
+        }
+
+        public void Scroll4OverView(int lnSel, int lastlnSel) 
+        {
+            //throw new NotImplementedException();
+            int lineSel = lnSel;
+            int lastSel = lastlnSel;
+
+            int diff = lineSel - lastSel;
+            this.Actor.ScrollLines(lineSel, diff);
+            //trigger a event or call ViewLayoutChanged directly
+            //this ia a brute force bug fix
+            this.ScrollNumberFixed(this, null);
         }
 
 

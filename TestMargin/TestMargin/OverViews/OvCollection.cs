@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.ComponentModel.Composition;
 //using System.Drawing;
 using System.Linq;
 using System.Text;
@@ -9,14 +10,16 @@ using System.Windows.Media;
 using System.Windows.Shapes;
 using System.Text.RegularExpressions;
 using Microsoft.VisualStudio.Text;
+using Microsoft.VisualStudio.Text.Editor;
 using TestMargin.Utils;
 
 namespace TestMargin.OverViews
 {
+    [Export(typeof(OvCollection))]
     class OvCollection
     {
-        public event EventHandler<EventArgs> OvLineHovered;
-        public event EventHandler<EventArgs> OvLineSelected; 
+        public event EventHandler<OvCollectionEventArgs> OvLineHovered;
+        public event EventHandler<OvCollectionEventArgs> OvLineSelected; 
 
         public static float divHeight;      //the height of each line
         public static float widRatio;        //rate between ov and real editor
@@ -29,8 +32,8 @@ namespace TestMargin.OverViews
         public int SelectedLine { get; set; }
 
         //maybe a work around for inter-mef call
-        private EditorActor OutActor;
-
+        
+        [ImportingConstructor]
         public OvCollection(TestMargin host) 
         {
             this.Host = host;
@@ -38,8 +41,30 @@ namespace TestMargin.OverViews
             IsRedraw = true;
             SelectedLine = -1;
 
+            this.Host._textView.Caret.PositionChanged += new EventHandler<Microsoft.VisualStudio.Text.Editor.CaretPositionChangedEventArgs>(Caret_PositionChanged);
+
             //try share the same view
-            OutActor = new EditorActor(host._textView);
+            //OutActor = new EditorActor(host._textView);
+        }
+
+        void Caret_PositionChanged(object sender, Microsoft.VisualStudio.Text.Editor.CaretPositionChangedEventArgs e)
+        {
+            //throw new NotImplementedException();
+            CaretPosition cp = e.NewPosition;
+            SnapshotPoint? ssp = cp.Point.GetPoint(Host._textView.TextBuffer, cp.Affinity);
+            if (!ssp.HasValue) return;
+
+            ITextSnapshotLine selectedLine = ssp.Value.GetContainingLine();
+
+            int selectedLineNumber = selectedLine.LineNumber;
+
+            if (this.SelectedLine != -1)
+            {
+                _ovlc[SelectedLine].SelectedChanged(true);
+
+                this.SelectedLine = selectedLineNumber;
+                _ovlc[this.SelectedLine].DrawSelfCmz(OvCollection.widperchar, OvCollection.divHeight, OvCollection.widRatio, OvLine.lnStrokeTh, Brushes.DarkBlue);
+            }
         }
 
         public void DrawOverview()
@@ -66,7 +91,7 @@ namespace TestMargin.OverViews
                 _ovlc = new List<OvLine>();
             }
             else _ovlc.Clear();
-
+            System.Diagnostics.Trace.WriteLine("-------------------------PARSELINEFOROV                ");
             foreach (ITextSnapshotLine tvl in Host._textView.TextSnapshot.Lines)
             {
                 _ovlc.Add(new OvLine(Host, tvl, (float)(Host.ActualWidth / 4.0f),this));
@@ -86,7 +111,7 @@ namespace TestMargin.OverViews
 
         public void OneSeleted(int lnnumber)
         {
-            if(this.SelectedLine != -1)
+            if(this.SelectedLine != -1)//selectedline == -1 -> not ready
                 _ovlc[SelectedLine].SelectedChanged(true);
 
             int lastSel = this.SelectedLine;
@@ -94,13 +119,26 @@ namespace TestMargin.OverViews
 
             int diff = this.SelectedLine - lastSel;
 
-            OutActor.ScrollLines(this.SelectedLine, diff);
             //trigger an event
+            Host._tit.Scroll4OverView(this.SelectedLine, lastSel);
         }
 
         public void DrawBezier(int x) 
         {
 
+        }
+
+    }
+
+    class OvCollectionEventArgs : EventArgs 
+    {
+        public int LineSelected { get; set; }
+        public int LastLineSelected { get; set; }
+
+        public OvCollectionEventArgs(int linesel, int lastlinesel) : base() 
+        {
+            LineSelected = linesel;
+            LastLineSelected = lastlinesel;
         }
     }
 }

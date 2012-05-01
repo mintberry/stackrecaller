@@ -8,6 +8,7 @@ using Microsoft.VisualStudio.Text.Editor;
 using Microsoft.VisualStudio.Text.Tagging;
 using Microsoft.VisualStudio.Text.Classification;
 using Microsoft.VisualStudio.Utilities;
+using TestMargin.OverViews;
 
 
 namespace TestMargin.Taggers
@@ -26,9 +27,7 @@ namespace TestMargin.Taggers
         [Import]
         internal IClassificationTypeRegistryService registry { set; get; }
 
-
         TextInvisTagger _val;
-
 
         #region IViewTaggerProvider Members
 

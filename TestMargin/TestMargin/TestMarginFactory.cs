@@ -1,6 +1,7 @@
 ﻿//nf4Ec2yx2kg4 
 //https:// QiXiaochen@code.google.com/p/stack-recaller/
 //https:// littne@bitbucket.org/littne/stackrecaller
+using System.Collections.Generic;
 using System.Runtime.InteropServices;
 using System.ComponentModel;
 using System.ComponentModel.Composition;
@@ -46,8 +47,8 @@ namespace TestMargin
         //internal SVsServiceProvider serviceProvider = null;
 
         // consume the tagger provider
-        //[Import]
-        //internal IViewTaggerProvider textInvisTaggerProvider { get; set; }
+        [ImportMany]
+        internal IEnumerable<IViewTaggerProvider> viewTaggerProviderCollection { get; set; }
 
 
         public IWpfTextViewMargin CreateMargin(IWpfTextViewHost textViewHost, IWpfTextViewMargin containerMargin)
@@ -69,8 +70,20 @@ namespace TestMargin
             ////System.Diagnostics.Trace.WriteLine(":" + _textBufferFactoryService.TextContentType.ToString());
             //_curTextBuf = _textBufferFactoryService.CreateTextBuffer("test", _textBufferFactoryService.PlaintextContentType);
 
-           
-            return new TestMargin(textViewHost.TextView);
+            foreach (IViewTaggerProvider vtp in viewTaggerProviderCollection)
+            {
+                if (vtp is TextInvisTaggerProvider)
+                {
+                    _titp = vtp as TextInvisTaggerProvider;
+                    break;
+                }
+            }
+            if (_titp == null)
+            {
+                System.Diagnostics.Trace.WriteLine("no valid tagger, exit");
+                return null;
+            }
+            return new TestMargin(textViewHost.TextView, _titp.GetThyTagger());
         }
 
 
@@ -95,6 +108,8 @@ namespace TestMargin
         private ITextBufferFactoryService _textBufferFactoryService;
         private ITextBuffer _curTextBuf;
         private IVsHiddenTextManager _htm;
+
+        private TextInvisTaggerProvider _titp;
     
     }
     #endregion

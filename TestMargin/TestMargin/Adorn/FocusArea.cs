@@ -22,8 +22,8 @@ namespace TestMargin.Adorn
         /// after the selection layer in the Z-order
         /// </summary>
         [Export(typeof(AdornmentLayerDefinition))]
-        [Name("TestAdorn")]
-        [Order(After = PredefinedAdornmentLayers.Caret)]
+        [Name("FocusArea")]
+        [Order(Before = PredefinedAdornmentLayers.Text)]
         [TextViewRole(PredefinedTextViewRoles.Document)]
         public AdornmentLayerDefinition editorAdornmentLayer = null;
 
@@ -62,7 +62,7 @@ namespace TestMargin.Adorn
             Pen pen = new Pen(penBrush, 0.5);
             pen.Freeze();
 
-            //draw a square with the created brush and pen
+            //draw a square with the created brush and pen, specify the start point and width, length of the rect
             System.Windows.Rect r = new System.Windows.Rect(0, 0, 30, 30);
             Geometry g = new RectangleGeometry(r);
             GeometryDrawing drawing = new GeometryDrawing(brush, pen, g);
@@ -75,7 +75,7 @@ namespace TestMargin.Adorn
             _image.Source = drawingImage;
 
             //Grab a reference to the adornment layer that this adornment should be added to
-            _adornmentLayer = view.GetAdornmentLayer("TestAdorn");
+            _adornmentLayer = view.GetAdornmentLayer("FocusArea");
 
             _view.ViewportHeightChanged += delegate { this.onSizeChange(); };
             _view.ViewportWidthChanged += delegate { this.onSizeChange(); };

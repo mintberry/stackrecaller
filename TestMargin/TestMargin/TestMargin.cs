@@ -42,20 +42,18 @@ namespace TestMargin
 
         //private List<OvLine> _ovlc;
         private OvCollection _ovc;
-        private J4I j4i;
-        private TextInvisTaggerProvider _tit_provider;
+        public TextInvisTagger _tit { get; set; }
 
         private ovCode _overviewport = null;                                 //the wpf control to display the overview
 
 
-        public TestMargin(IWpfTextView textView)
+        public TestMargin(IWpfTextView textView, TextInvisTagger tit)
         {
             _textView = textView;
             this.ClipToBounds = true;
-            this.Background = new SolidColorBrush(Colors.LightGreen);
+            this.Background = new SolidColorBrush(Colors.LightCyan);
 
-            this.j4i = new J4I();
-
+            _tit = tit;                                    //currently not use this, instead refence the ovcollection in tagger
             _ovc = new OvCollection(this);
 
             _textView.LayoutChanged += new EventHandler<TextViewLayoutChangedEventArgs>(_textView_LayoutChanged);
@@ -84,8 +82,6 @@ namespace TestMargin
             //this.Width = _textView.ViewportWidth / 4;
             this.ClipToBounds = true;
             this.Background = new SolidColorBrush(Colors.LightGreen);
-
-            this.j4i = new J4I();
 
             _ovc = new OvCollection(this);
 
