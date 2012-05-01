@@ -252,6 +252,10 @@ namespace TestMargin.Taggers
             this.ScrollNumberFixed(this, null);
         }
 
+        public int Scroll4OvLine()
+        {
+            return Actor.GetCentralLine();
+        }
 
         #endregion
     }

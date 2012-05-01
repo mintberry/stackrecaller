@@ -31,6 +31,8 @@ namespace TestMargin.OverViews
 
         public int SelectedLine { get; set; }
 
+        int AuxCanvasIndexStart { get; set; }
+
         //maybe a work around for inter-mef call
         
         [ImportingConstructor]
@@ -45,6 +47,7 @@ namespace TestMargin.OverViews
 
             this.Host._textView.LayoutChanged += new EventHandler<TextViewLayoutChangedEventArgs>(_textView_LayoutChanged);
 
+            AuxCanvasIndexStart = 0;
             //try share the same view
             //OutActor = new EditorActor(host._textView);
         }
@@ -52,7 +55,14 @@ namespace TestMargin.OverViews
         void _textView_LayoutChanged(object sender, TextViewLayoutChangedEventArgs e)
         {
             //throw new NotImplementedException();
-
+            if (e.VerticalTranslation == true && this._ovlc.Count != 0)                //scroll vertically
+            {
+                int lastSel = this.SelectedLine;
+                if (lastSel != -1)
+                    _ovlc[SelectedLine].SelectedChanged(true);
+                this.SelectedLine = this.Host._tit.Scroll4OvLine();
+                _ovlc[this.SelectedLine].DrawSelfCmz(OvCollection.widperchar, OvCollection.divHeight, OvCollection.widRatio, OvLine.lnStrokeTh, Brushes.DarkBlue);
+            }
         }
 
         void Caret_PositionChanged(object sender, Microsoft.VisualStudio.Text.Editor.CaretPositionChangedEventArgs e)
@@ -99,16 +109,18 @@ namespace TestMargin.OverViews
                 _ovlc = new List<OvLine>();
             }
             else _ovlc.Clear();
-            System.Diagnostics.Trace.WriteLine("-------------------------PARSELINEFOROV                ");
+            System.Diagnostics.Trace.WriteLine("-------------------------PARSELINEFOROV");
             foreach (ITextSnapshotLine tvl in Host._textView.TextSnapshot.Lines)
             {
                 _ovlc.Add(new OvLine(Host, tvl, (float)(Host.ActualWidth / 4.0f),this));
             }
+            AuxCanvasIndexStart = _ovlc.Count;
             //System.Diagnostics.Trace.WriteLine("###         PARSE:" + _ovlc.Count);
         }
 
         public void ReGenOv() 
         {
+            //when to redraw the ov, when text changed or saved
             if (IsRedraw)
             {
                 Parse2OvLines();

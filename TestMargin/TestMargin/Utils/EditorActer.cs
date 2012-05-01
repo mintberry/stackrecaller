@@ -7,6 +7,7 @@ using System.Windows.Media;
 using Microsoft.VisualStudio.Text;
 using Microsoft.VisualStudio.Text.Classification;
 using Microsoft.VisualStudio.Text.Editor;
+using Microsoft.VisualStudio.Text.Formatting;
 using Microsoft.VisualStudio.Text.Operations;
 using Microsoft.VisualStudio.Text.Tagging;
 using Microsoft.VisualStudio.Utilities;
@@ -98,6 +99,32 @@ namespace TestMargin.Utils
         {
             this.Scroller.ScrollViewportVerticallyByPixels(0.1);
             this.Scroller.ScrollViewportVerticallyByPixels(-0.1);
+        }
+
+        /// <summary>
+        /// another version of getcentralline, for outsider use
+        /// </summary>
+        /// <param name="tv"></param>
+        /// <returns></returns>
+        public static ITextViewLine GetCentralLine(ITextView tv, int offset)
+        {
+            if (tv == null)
+            {
+                return null;
+            }
+            ITextViewLineCollection tvlc;
+            try
+            {
+                tvlc = tv.TextViewLines;
+            }
+            catch (InvalidOperationException)
+            {
+                return null;
+            }
+            if (tvlc == null) return null;                         //quite important, not applicable now
+            int colSize = tvlc.Count;
+            offset -= 1;                         //strange here
+            return tvlc[colSize / 2 - offset];
         }
         #endregion
     }

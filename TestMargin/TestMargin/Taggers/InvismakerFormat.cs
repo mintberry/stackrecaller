@@ -81,8 +81,8 @@ namespace TestMargin.Taggers
     {
         public InvisHoverFormat()
         {
-
-            this.BackgroundColor = Colors.Gold;
+            //maybe link this with an adorn
+            this.BackgroundColor = Colors.LimeGreen;
             //this.ForegroundColor = Colors.Crimson;
             //this.FontRenderingSize = 12;
             //this.FontTypeface = new Typeface("Courier New");

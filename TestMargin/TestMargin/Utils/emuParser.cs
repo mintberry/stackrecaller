@@ -37,7 +37,8 @@ namespace TestMargin.Utils
         private int tab_count = 4;   //how many space a tab
         private int threshold = -3;  //DOI threshold
         private const int const_threshold = -2;
-        private int central_offset = 5;
+
+        public static int central_offset = 5;                                //for focus area to use. should larger than 0
 
         ITextSnapshot _ts { get; set; }
 
