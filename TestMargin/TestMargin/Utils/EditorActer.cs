@@ -12,6 +12,8 @@ using Microsoft.VisualStudio.Text.Operations;
 using Microsoft.VisualStudio.Text.Tagging;
 using Microsoft.VisualStudio.Utilities;
 
+using TestMargin.OverViews;
+
 namespace TestMargin.Utils
 {
     /// <summary>
@@ -125,6 +127,28 @@ namespace TestMargin.Utils
             int colSize = tvlc.Count;
             offset -= 1;                         //strange here
             return tvlc[colSize / 2 - offset];
+        }
+
+        public static ITextViewLine GetSpecViewLine(ITextView tv, int offset, TriBezierLines tbl)
+        {
+            if (tv == null)
+            {
+                return null;
+            }
+            ITextViewLineCollection tvlc;
+            try
+            {
+                tvlc = tv.TextViewLines;
+            }
+            catch (InvalidOperationException)
+            {
+                return null;
+            }
+            if (tvlc == null) return null;                         //quite important, not applicable now
+            int colSize = tvlc.Count;
+            offset -= 1;                         //strange here, a bug
+            int retindex = colSize / 2 - offset * (TriBezierLines.Mid - tbl);
+            return tvlc[retindex];
         }
         #endregion
     }

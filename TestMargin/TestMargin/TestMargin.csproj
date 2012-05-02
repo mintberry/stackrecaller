@@ -94,6 +94,7 @@
     <Compile Include="ovCode.xaml.cs">
       <DependentUpon>ovCode.xaml</DependentUpon>
     </Compile>
+    <Compile Include="OverViews\BezierLine.cs" />
     <Compile Include="OverViews\OvCollection.cs" />
     <Compile Include="OverViews\OvLine.cs" />
     <Compile Include="Taggers\ClassiTypes.cs" />
