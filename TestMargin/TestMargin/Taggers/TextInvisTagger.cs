@@ -58,6 +58,7 @@ namespace TestMargin.Taggers
             this.View.MouseHover += new EventHandler<MouseHoverEventArgs>(View_MouseHover);
             this.ScrollNumberFixed += new EventHandler<TextViewLayoutChangedEventArgs>(TextInvisTagger_ScrollNumberFixed);
 
+
             this.Actor = new EditorActor(View);
             this.Parser = new emuParser(View.TextSnapshot, Actor);
 
@@ -139,6 +140,7 @@ namespace TestMargin.Taggers
             //this ia a brute force bug fix
             this.ScrollNumberFixed(this, null);
 
+            //ensure that this called ahead of the overview
             //Actor.ValidateScroll();
             //SyncText(TextSyncType.Central);           //not trigger the event, just change vertical layout
         }
@@ -255,6 +257,11 @@ namespace TestMargin.Taggers
         public int Scroll4OvLine()
         {
             return Actor.GetCentralLine();
+        }
+
+        public int GetCentralLine4Ov() 
+        {
+            return this.Actor.CentralLine;
         }
 
         #endregion

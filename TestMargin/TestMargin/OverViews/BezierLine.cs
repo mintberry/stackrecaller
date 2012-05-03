@@ -22,6 +22,8 @@ namespace TestMargin.OverViews
         //Point CtrlPoint { get; set; }
         double offset { get; set; }  //there should be an offset between the editor geo and ov geo
 
+        public double leftPointY = -1.0;
+
         TriBezierLines tblType { get; set; }
 
         Path myPath { get; set; }
@@ -42,26 +44,26 @@ namespace TestMargin.OverViews
         public void DrawSelf(Canvas c, bool IsFirstdraw = false)
         {
             double rightY = RightOvLine.lnNumber * OvCollection.divHeight;
-            double leftY = LeftTvLine.Top;
+            leftPointY = LeftTvLine.Top;
             switch (this.tblType)
             {
                 case TriBezierLines.Bot:
-                    leftY = LeftTvLine.Bottom;
+                    leftPointY = LeftTvLine.Bottom;
                     break;
                 case TriBezierLines.Mid:
-                    leftY = (LeftTvLine.Bottom + LeftTvLine.Top) / 2.0;
+                    leftPointY = LeftTvLine.Bottom - LeftTvLine.Height / 2.0;
                     break;
                 case TriBezierLines.Top:
-                    leftY = LeftTvLine.Top;
+                    leftPointY = LeftTvLine.Top;
                     break;
                 default:
                     break;
             }
 
-            Point LeftPoint = new Point(0.0, LeftTvLine.Top);
+            Point LeftPoint = new Point(0.0, leftPointY);
             Point RightPoint = new Point(RightOvLine._bzCurvArea, rightY);
             Point MidPoint = new Point(RightOvLine._bzCurvArea / 2.0, (LeftTvLine.Top + rightY) / 2.0);
-            Point CtrlPoint1 = new Point(RightOvLine._bzCurvArea / 2.0, LeftTvLine.Top);
+            Point CtrlPoint1 = new Point(RightOvLine._bzCurvArea / 2.0, leftPointY);
             Point CtrlPoint2 = new Point(RightOvLine._bzCurvArea / 2.0, rightY);
 
             PathFigure pf = new PathFigure();

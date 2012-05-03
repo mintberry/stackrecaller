@@ -8,6 +8,7 @@ using Microsoft.VisualStudio.Text.Editor;
 using Microsoft.VisualStudio.Text.Formatting;
 using Microsoft.VisualStudio.Text;
 using Microsoft.VisualStudio.VCCodeModel;
+using System.Threading;
 
 namespace TestMargin.Utils
 {
@@ -39,6 +40,8 @@ namespace TestMargin.Utils
         private const int const_threshold = -2;
 
         public static int central_offset = 5;                                //for focus area to use. should larger than 0
+
+        public static Semaphore ViewSem = new Semaphore(1, 1);
 
         ITextSnapshot _ts { get; set; }
 

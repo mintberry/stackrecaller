@@ -15,6 +15,9 @@ namespace TestMargin.Taggers
     [ContentType("C/C++")]
     class OutlnTaggerProvider : ITaggerProvider
     {
+        [ImportMany]
+        internal IEnumerable<IViewTaggerProvider> viewTaggerProviderCollection { get; set; }
+
         public ITagger<T> CreateTagger<T>(ITextBuffer buffer) where T : ITag
         {
             //create a single tagger for each buffer.

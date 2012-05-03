@@ -31,8 +31,9 @@ namespace TestMargin
     [Export(typeof(IWpfTextViewMarginProvider))]
     [Name(TestMargin.MarginName)]
     [Order(Before = /*"Wpf Vertical Scrollbar"*/PredefinedMarginNames.VerticalScrollBar)] //Ensure that the margin occurs below the horizontal scrollbar
-    [MarginContainer(PredefinedMarginNames.VerticalScrollBarContainer)] //Set the container to the bottom of the editor window
+    //[MarginContainer(PredefinedMarginNames.VerticalScrollBarContainer)] //Set the container to the bottom of the editor window
     //before RightControl in Right or before Scrollbar in Scrollbar Container
+    [MarginContainer(PredefinedMarginNames.Right)]
     [ContentType("C/C++")] //Show this margin for all text-based types
     [TextViewRole(PredefinedTextViewRoles.Interactive)]
     internal sealed class MarginFactory : IWpfTextViewMarginProvider

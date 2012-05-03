@@ -53,6 +53,7 @@ namespace TestMargin.OverViews
             SelectedLine = -1;
 
             this.Host._textView.Caret.PositionChanged += new EventHandler<Microsoft.VisualStudio.Text.Editor.CaretPositionChangedEventArgs>(Caret_PositionChanged);
+            this.Host._tit.ScrollNumberFixed += new EventHandler<TextViewLayoutChangedEventArgs>(_tit_ScrollNumberFixed);
 
             this.Host._textView.LayoutChanged += new EventHandler<TextViewLayoutChangedEventArgs>(_textView_LayoutChanged);
 
@@ -65,6 +66,25 @@ namespace TestMargin.OverViews
             bzLines[TriBezierLines.Bot - TriBezierLines.Top] = new BezierLine(TriBezierLines.Bot);
             //try share the same view
             //OutActor = new EditorActor(host._textView);
+        }
+
+        void _tit_ScrollNumberFixed(object sender, TextViewLayoutChangedEventArgs e)
+        {
+            //throw new NotImplementedException();
+            if (e == null)
+            {
+                int selectedLineNumber = Host._tit.GetCentralLine4Ov();
+
+                if (this.SelectedLine != -1 && selectedLineNumber != this.SelectedLine)
+                {
+                    _ovlc[SelectedLine].SelectedChanged(true);
+
+                    this.SelectedLine = selectedLineNumber;
+                    _ovlc[this.SelectedLine].DrawSelfCmz(OvCollection.widperchar, OvCollection.divHeight, OvCollection.widRatio, OvLine.lnStrokeTh, Brushes.DarkBlue);
+
+                    ReGenBezier();
+                }
+            }
         }
 
         void _textView_LayoutChanged(object sender, TextViewLayoutChangedEventArgs e)
@@ -166,13 +186,17 @@ namespace TestMargin.OverViews
             Host._tit.Scroll4OverView(this.SelectedLine, lastSel);
         }
 
-        public void GenBezierLine()
+        public bool GenBezierLine()
         {
             if (_ovlc.Count > 0)
             {
                 ITextViewLine topline = EditorActor.GetSpecViewLine(Host._textView, emuParser.central_offset, TriBezierLines.Top);
                 ITextViewLine midline = EditorActor.GetSpecViewLine(Host._textView, emuParser.central_offset, TriBezierLines.Mid);
                 ITextViewLine botline = EditorActor.GetSpecViewLine(Host._textView, emuParser.central_offset, TriBezierLines.Bot);
+                if (topline == null || midline == null || botline == null)
+                {
+                    return false;
+                }
 
                 bzLines[TriBezierLines.Top - TriBezierLines.Top].LeftTvLine = topline;
                 bzLines[TriBezierLines.Mid - TriBezierLines.Top].LeftTvLine = midline;
@@ -181,8 +205,10 @@ namespace TestMargin.OverViews
                 bzLines[TriBezierLines.Top - TriBezierLines.Top].RightOvLine = _ovlc[TestMargin.GetViewLineNumber(topline)];
                 bzLines[TriBezierLines.Mid - TriBezierLines.Top].RightOvLine = _ovlc[TestMargin.GetViewLineNumber(midline)];
                 bzLines[TriBezierLines.Bot - TriBezierLines.Top].RightOvLine = _ovlc[TestMargin.GetViewLineNumber(botline)];
+                return true;
                 //System.Diagnostics.Trace.WriteLine("------POS:" + bzLines[TriBezierLines.Top - TriBezierLines.Top].LeftTvLine.Top);
             }
+            return false;
         }
 
         public void DrawBezier(bool IsFirstdraw, int x = 0) 
@@ -197,7 +223,7 @@ namespace TestMargin.OverViews
         }
         void ReGenBezier(bool IsFirstdraw = false) 
         {
-            GenBezierLine();
+            if(GenBezierLine())
             DrawBezier(IsFirstdraw);
         }
 

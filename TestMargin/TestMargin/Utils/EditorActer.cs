@@ -126,6 +126,10 @@ namespace TestMargin.Utils
             if (tvlc == null) return null;                         //quite important, not applicable now
             int colSize = tvlc.Count;
             offset -= 1;                         //strange here
+            if (offset > colSize / 2)
+            {
+                return null;
+            }
             return tvlc[colSize / 2 - offset];
         }
 
@@ -148,6 +152,10 @@ namespace TestMargin.Utils
             int colSize = tvlc.Count;
             offset -= 1;                         //strange here, a bug
             int retindex = colSize / 2 - offset * (TriBezierLines.Mid - tbl);
+            if (retindex < 0 || retindex >= colSize)
+            {
+                return null;
+            }
             return tvlc[retindex];
         }
         #endregion

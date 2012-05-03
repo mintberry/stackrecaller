@@ -6,10 +6,12 @@ using System.ComponentModel.Composition;
 using Microsoft.VisualStudio.Text.Editor;
 using Microsoft.VisualStudio.Text.Formatting;
 using Microsoft.VisualStudio.Utilities;
+using Microsoft.VisualStudio.Text.Tagging;
 
 using System.Windows.Controls;
 using System.Windows.Media;
 using TestMargin.Utils;
+using TestMargin.Taggers;
 
 namespace TestMargin.Adorn
 {
@@ -19,6 +21,8 @@ namespace TestMargin.Adorn
     [TextViewRole(PredefinedTextViewRoles.Document)]
     class FocusArea : IWpfTextViewCreationListener
     {
+        [ImportMany]
+        internal IEnumerable<IViewTaggerProvider> viewTaggerProviderCollection { get; set; }
         /// <summary>
         /// Defines the adornment layer for the scarlet adornment. This layer is ordered 
         /// after the selection layer in the Z-order
@@ -35,8 +39,22 @@ namespace TestMargin.Adorn
         /// <param name="textView">The <see cref="IWpfTextView"/> upon which the adornment should be placed</param>
         public void TextViewCreated(IWpfTextView textView)
         {
-            new TestAdorn(textView);
+            foreach (IViewTaggerProvider vtp in viewTaggerProviderCollection)
+            {
+                if (vtp is TextInvisTaggerProvider)
+                {
+                    _titp = vtp as TextInvisTaggerProvider;
+                    break;
+                }
+            }
+            if (_titp == null)
+            {
+                System.Diagnostics.Trace.WriteLine("no valid tagger, exit");
+                return;
+            }
+            new TestAdorn(textView, _titp.GetThyTagger());
         }
+        private TextInvisTaggerProvider _titp;
     }
 
     /// <summary>
@@ -47,6 +65,7 @@ namespace TestMargin.Adorn
         private Image _image;
         private IWpfTextView _view;
         private IAdornmentLayer _adornmentLayer;
+        private TextInvisTagger _tit;
 
         int CentralLine { get; set; }
         System.Windows.Point TopLeft { get; set; }
@@ -57,16 +76,19 @@ namespace TestMargin.Adorn
         /// adds the the square in the upper right-hand corner of the TextView via the adornment layer
         /// </summary>
         /// <param name="view">The <see cref="IWpfTextView"/> upon which the adornment will be drawn</param>
-        public TestAdorn(IWpfTextView view)
+        public TestAdorn(IWpfTextView view, TextInvisTagger tit)
         {
             _view = view;
-
+            _tit = tit;
 
             //Grab a reference to the adornment layer that this adornment should be added to
             _adornmentLayer = view.GetAdornmentLayer("FocusArea");
 
             _view.ViewportHeightChanged += delegate { this.onSizeChange(); };
             _view.ViewportWidthChanged += delegate { this.onSizeChange(); };
+
+            _tit.ScrollNumberFixed += delegate { this.onSizeChange(); };
+            _view.LayoutChanged += delegate { this.onSizeChange(); };            //may have problems
         }
 
         public void onSizeChange()
