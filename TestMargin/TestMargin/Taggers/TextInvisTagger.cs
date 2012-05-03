@@ -23,7 +23,7 @@ namespace TestMargin.Taggers
 
     class TextInvisTagger : ITagger<TextInvisTag>
     {
-        IWpfTextView View { get; set; }                                      //iwpftextview
+        public IWpfTextView View { get; set; }                                      //iwpftextview
         ITextBuffer SourceBuffer { get; set; }
         //ITextSearchService TextSearchService { get; set; }
         //ITextStructureNavigator TextStructureNavigator { get; set; }
@@ -43,6 +43,8 @@ namespace TestMargin.Taggers
         public event EventHandler<SnapshotSpanEventArgs> TagsChanged;       //
 
         public event EventHandler<TextViewLayoutChangedEventArgs> ScrollNumberFixed;
+
+        public event EventHandler<OutlineRegionAggregatedEventArgs> OutlineRegionAggregated;
 
         public TextInvisTagger(ITextView view, ITextBuffer sourceBuffer/*, ITextSearchService textSearchService,
             ITextStructureNavigator textStructureNavigator*/, IClassificationTypeRegistryService ctrs)
@@ -94,6 +96,8 @@ namespace TestMargin.Taggers
                 if (centralLine == -1) return;
                 Parser.GenDispType(centralLine);
 
+                this.OutlineRegionAggregated(this, new OutlineRegionAggregatedEventArgs(
+                    Parser.AggregateRegions(DisplayType.Dismiss), Actor.CentralLine));
                 SyncText(TextSyncType.AllText);
             }
         }
@@ -146,6 +150,7 @@ namespace TestMargin.Taggers
         }
         private void ViewLayoutChanged(object sender, TextViewLayoutChangedEventArgs e)
         {
+            
             if (e.VerticalTranslation == true)                //scroll vertically
             {
                 int centralLine = Actor.GetCentralLine();
@@ -153,7 +158,10 @@ namespace TestMargin.Taggers
                 if (centralLine == -1) return;
                 Parser.GenDispType(centralLine);
 
+                //this.OutlineRegionAggregated(this, new OutlineRegionAggregatedEventArgs(
+                //    Parser.AggregateRegions(DisplayType.Dismiss), Actor.CentralLine));
                 SyncText(TextSyncType.AllText);
+
             }
         }
 
@@ -259,11 +267,39 @@ namespace TestMargin.Taggers
             return Actor.GetCentralLine();
         }
 
+        public void Scroll4Outline(int endmeet)
+        {
+            this.Actor.Scroller.ScrollViewportVerticallyByLines(ScrollDirection.Down, endmeet);
+        }
+
         public int GetCentralLine4Ov() 
         {
             return this.Actor.CentralLine;
         }
 
         #endregion
+    }
+
+    /// <summary>
+    /// it says that the longer the name is, the better it'll work
+    /// </summary>
+    class OutlineRegionAggregatedEventArgs: EventArgs
+    {
+        public IEnumerable<Region> regions_aggregated;
+        public int EndsMeetLines = 0;
+        public int Central = -1;
+        public OutlineRegionAggregatedEventArgs(IEnumerable<Region> arg, int centralln)
+        {
+            regions_aggregated = arg;
+            Central = centralln;
+            foreach(Region r in regions_aggregated)
+            {
+                if (r.EndLine < centralln)
+                {
+                    EndsMeetLines += r.EliminatedLines();
+                }
+                else break;
+            }
+        }
     }
 }

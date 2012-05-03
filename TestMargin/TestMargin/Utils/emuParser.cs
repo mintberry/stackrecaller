@@ -9,6 +9,7 @@ using Microsoft.VisualStudio.Text.Formatting;
 using Microsoft.VisualStudio.Text;
 using Microsoft.VisualStudio.VCCodeModel;
 using System.Threading;
+using TestMargin.Taggers;
 
 namespace TestMargin.Utils
 {
@@ -303,6 +304,35 @@ namespace TestMargin.Utils
             else
                 return null;
             
+        }
+
+        public IEnumerable<Region> AggregateRegions(DisplayType aggType) 
+        {
+            List<Region> dismissRegions = new List<Region>();
+            
+            LineEntity dismissStart = null;
+            LineEntity dismissLast = null;
+            foreach (LineEntity le in consLineEntity )
+            {
+                if (le.DisT == aggType)
+                {
+                    if (dismissStart == null)
+                        dismissStart = le;
+                    dismissLast = le;
+                }
+                else
+                {
+                    if (dismissStart != null)
+                    {
+                        Region dismissCont = new Region(dismissStart.LineNumber, dismissLast.LineNumber);
+                        dismissRegions.Add(dismissCont);
+                        dismissLast = null;
+                        dismissStart = null;
+                    }
+
+                }
+            }
+            return dismissRegions;
         }
         #endregion
     }

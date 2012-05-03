@@ -224,7 +224,7 @@ namespace TestMargin.OverViews
         void ReGenBezier(bool IsFirstdraw = false) 
         {
             if(GenBezierLine())
-            DrawBezier(IsFirstdraw);
+                DrawBezier(IsFirstdraw);
         }
 
     }
