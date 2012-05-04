@@ -16,7 +16,7 @@ namespace TestMargin.Utils
         public int LineNumber { set; get; }
         public int LineDepth { set; get; }                   //root depth is 0
 
-        CodeLineType Type { set; get; }
+        public CodeLineType Type { set; get; }
         public DisplayType DisT { set; get; }
         public LineEntity Parent { set; get; }               //a tree structure
 

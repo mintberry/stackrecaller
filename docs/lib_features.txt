@@ -1,0 +1,15 @@
+-- open another file, bezierline doesn't show up: regen the overview together on some event? 
+-- sometimes the overview doesn't show up
+-- another more doc issue, the line height doesn't adjust properly
+
+-- blank line to dismiss
+-- brackets to dismiss
+-- ovselect defect appear again?
+------------
+larger features:
+-- multi-doc handle is a big issue
+-- associate the tag with adornments
+-- outlining encounters bug, need a workaround
+-- edit handle
+-- long files, ongoing
+-- begin/end handle

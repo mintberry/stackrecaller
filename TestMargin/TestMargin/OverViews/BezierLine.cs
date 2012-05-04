@@ -62,7 +62,7 @@ namespace TestMargin.OverViews
 
             Point LeftPoint = new Point(0.0, leftPointY);
             Point RightPoint = new Point(RightOvLine._bzCurvArea, rightY);
-            Point MidPoint = new Point(RightOvLine._bzCurvArea / 2.0, (LeftTvLine.Top + rightY) / 2.0);
+            
             Point CtrlPoint1 = new Point(RightOvLine._bzCurvArea / 2.0, leftPointY);
             Point CtrlPoint2 = new Point(RightOvLine._bzCurvArea / 2.0, rightY);
 

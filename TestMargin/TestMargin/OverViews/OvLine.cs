@@ -18,7 +18,7 @@ namespace TestMargin.OverViews
     {
         //these variables are for global use, thus may be moved to new classes(collection)
         public static double lnInterval = 3.0;
-        public static double lnStrokeTh = 1.6;
+        public static double lnStrokeTh = 1.6;                 //strokes should compare with divheight
         public static double lnHoverStrokeTh = 2.0;
 
         
@@ -114,6 +114,8 @@ namespace TestMargin.OverViews
         /// <param name="widRate"></param>
         public void DrawSelf(Canvas c, float widperchar, float height, float widRate)
         {
+            height = (float)GetDivHeight(height);
+
             LineGeometry myLineGeometry = new LineGeometry();
             myLineGeometry.StartPoint = new Point(_bzCurvArea + lnTextStart * widperchar * widRate, (double)(lnNumber * height));
             myLineGeometry.EndPoint = new Point(_bzCurvArea + lnLength * widperchar * widRate, (double)(lnNumber * height));
@@ -169,7 +171,11 @@ namespace TestMargin.OverViews
                 DrawSelfCmz(OvCollection.widperchar, OvCollection.divHeight, OvCollection.widRatio, lnStrokeTh, Brushes.Crimson);
             //throw new NotImplementedException();
         }
-        
+
+        double GetDivHeight(double divheight) 
+        {
+            return divheight > OvCollection.dh_threshold ? OvCollection.dh_threshold : divheight;
+        }
     }
 
 }

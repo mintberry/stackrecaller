@@ -236,6 +236,9 @@ namespace TestMargin.Utils
             //a simple approach to FOCUS area, better add color background
             if (Math.Abs(_ea.CentralLine - root.LineNumber) < central_offset)
                 root.DisT = DisplayType.Origin;
+            //for the blank line
+            if (root.Type == CodeLineType.Blank)
+                root.DisT = DisplayType.Dismiss;
 
             //if not leaf
             if(root.Children.Count != 0)

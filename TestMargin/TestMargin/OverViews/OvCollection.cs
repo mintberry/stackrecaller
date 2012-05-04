@@ -31,6 +31,9 @@ namespace TestMargin.OverViews
         public static float divHeight;      //the height of each line
         public static float widRatio;        //rate between ov and real editor
         public static float widperchar;     //width per char of real editor
+        public static int  ipartial = 1;     //width per char of real editor
+
+        public static float dh_threshold = 1.8f;   //maximum divheight
 
         TestMargin Host { get; set; }
         public List<OvLine> _ovlc { get; set; }
@@ -133,9 +136,23 @@ namespace TestMargin.OverViews
             widRatio = (float)(Host.ActualWidth / 2.0f / Host._textView.ViewportWidth);
             widperchar = TestMargin.WidthPerChar(Host._textView);
             //System.Diagnostics.Trace.WriteLine("###         DRAW:" + this.ActualWidth + " : " + widperchar);
+            float partial = 0.0f;
+            if(divHeight < 1.0)
+                partial = (float)(1.0 / divHeight);
+            ipartial = (int) Math.Ceiling(partial);
+
+
             foreach (OvLine ovl in _ovlc)
             {
-                ovl.DrawSelf(Host, widperchar, divHeight, widRatio);
+                //for those too many lines, only draw one for several
+                if (ipartial > 1)
+                {
+                    if (ovl.lnNumber % ipartial == 0)
+                        ovl.DrawSelf(Host, widperchar, divHeight * ipartial, widRatio);
+                    continue;
+                }
+                else 
+                    ovl.DrawSelf(Host, widperchar, divHeight, widRatio);
 
             }
         }
@@ -163,6 +180,7 @@ namespace TestMargin.OverViews
             //when to redraw the ov, when text changed or saved
             if (IsRedraw)
             {
+                ipartial = 1;
                 Parse2OvLines();
                 DrawOverview();
 

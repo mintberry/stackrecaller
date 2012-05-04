@@ -95,7 +95,7 @@ namespace TestMargin.Taggers
                 int centralLine = Actor.GetCentralLine();
                 if (centralLine == -1) return;
                 Parser.GenDispType(centralLine);
-
+                //outlining totally sucked now
                 this.OutlineRegionAggregated(this, new OutlineRegionAggregatedEventArgs(
                     Parser.AggregateRegions(DisplayType.Dismiss), Actor.CentralLine));
                 SyncText(TextSyncType.AllText);
