@@ -38,5 +38,10 @@ namespace TestMargin.Taggers
         [Name("invisclass.lower.hover")]
         [BaseDefinition("invisclass.lower")]
         internal static ClassificationTypeDefinition InvisClassHoverDefinition = null;
+
+        [Export]
+        [Name("invisclass.lower.focus")]
+        [BaseDefinition("invisclass.lower")]
+        internal static ClassificationTypeDefinition InvisClassFocusDefinition = null;
     }
 }

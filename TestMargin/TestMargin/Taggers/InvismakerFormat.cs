@@ -82,12 +82,25 @@ namespace TestMargin.Taggers
         public InvisHoverFormat()
         {
             //maybe link this with an adorn
-            this.BackgroundColor = Colors.LimeGreen;
+            this.BackgroundColor = Colors.LightSteelBlue;
             //this.ForegroundColor = Colors.Crimson;
             //this.FontRenderingSize = 12;
             //this.FontTypeface = new Typeface("Courier New");
             this.DisplayName = "hover Line";
             //this.ZOrder = 5;
+        }
+    }
+
+    [Export(typeof(EditorFormatDefinition))]
+    [ClassificationType(ClassificationTypeNames = "invisclass.lower.focus")]
+    [Name("ClassificationFormatDefinition/InvisFocus")]
+    [UserVisible(true)]                                           //try invisible later
+    [Order(Before = Priority.Low)]
+    internal sealed class InvisFocusFormat : ClassificationFormatDefinition  //used to be markerformat
+    {
+        public InvisFocusFormat()
+        {
+            
         }
     }
 

@@ -14,13 +14,13 @@ using TestMargin.Taggers;
 namespace TestMargin.Utils
 {
     enum CodeLineType{
-        Normal,
+        Normal,                        //0
         Blank,
         PreCompile,
         Comment,                       //maybe later use
         BlockStart,                    //
         BlockEnd,                      //
-        Special                        //may fo the questioning indentation code lines
+        Special,                        //may fo the questioning indentation code lines
     }
 
     internal sealed class emuParser
@@ -222,7 +222,7 @@ namespace TestMargin.Utils
 
         void Traverse2SetDispType(LineEntity root) 
         {
-            int thisDOI = makeDOI(consLineEntity[_ea.GetCentralLine()], root);
+            int thisDOI = makeDOI(consLineEntity[_ea.CentralLine], root);                        //marked for reducing GetCentralLine
             //experiment adjustive threshold
             threshold = -consLineEntity[_ea.CentralLine].LineDepth + const_threshold ;
             if (thisDOI < threshold)
@@ -235,7 +235,7 @@ namespace TestMargin.Utils
             }
             //a simple approach to FOCUS area, better add color background
             if (Math.Abs(_ea.CentralLine - root.LineNumber) < central_offset)
-                root.DisT = DisplayType.Origin;
+                root.DisT = DisplayType.Focus;
             //for the blank line
             if (root.Type == CodeLineType.Blank)
                 root.DisT = DisplayType.Dismiss;

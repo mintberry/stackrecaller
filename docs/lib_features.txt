@@ -5,6 +5,7 @@
 -- blank line to dismiss
 -- brackets to dismiss
 -- ovselect defect appear again?
+-- focus area width
 ------------
 larger features:
 -- multi-doc handle is a big issue
@@ -12,4 +13,4 @@ larger features:
 -- outlining encounters bug, need a workaround
 -- edit handle
 -- long files, ongoing
--- begin/end handle
+-- begin/end handle, scroll down, then focus area disapprear

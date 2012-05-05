@@ -36,6 +36,7 @@ namespace TestMargin.Taggers
             this.view = this._tit.View;
             //this.ReParse();
             this.buffer.Changed += BufferChanged;
+            //this.outliningManager = ioMgr.GetOutliningManager(view);
 
             this._tit.OutlineRegionAggregated += new EventHandler<OutlineRegionAggregatedEventArgs>(_tit_OutlineRegionAggregated);
             
@@ -47,11 +48,12 @@ namespace TestMargin.Taggers
             regions = tobeOLed;
 
             int central = e.Central;
-            int endsmeet = e.EndsMeetLines;
-
-            //_tit.Scroll4Outline(endsmeet);
-
+            
             this.ReParse();
+
+            _tit.EnsureCentral4Outline(central);
+            
+            _tit.IsOutlineFinished = true;    
         }
 
         void BufferChanged(object sender, TextContentChangedEventArgs e)

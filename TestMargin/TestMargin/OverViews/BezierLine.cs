@@ -43,7 +43,8 @@ namespace TestMargin.OverViews
 
         public void DrawSelf(Canvas c, bool IsFirstdraw = false)
         {
-            double rightY = RightOvLine.lnNumber * OvCollection.divHeight;
+            
+            double rightY = RightOvLine.lnNumber *  OvCollection.divHeight / OvCollection.ipartial;
             leftPointY = LeftTvLine.Top;
             switch (this.tblType)
             {

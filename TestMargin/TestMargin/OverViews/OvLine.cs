@@ -114,7 +114,6 @@ namespace TestMargin.OverViews
         /// <param name="widRate"></param>
         public void DrawSelf(Canvas c, float widperchar, float height, float widRate)
         {
-            height = (float)GetDivHeight(height);
 
             LineGeometry myLineGeometry = new LineGeometry();
             myLineGeometry.StartPoint = new Point(_bzCurvArea + lnTextStart * widperchar * widRate, (double)(lnNumber * height));
@@ -172,7 +171,7 @@ namespace TestMargin.OverViews
             //throw new NotImplementedException();
         }
 
-        double GetDivHeight(double divheight) 
+        public static double GetDivHeight(double divheight) 
         {
             return divheight > OvCollection.dh_threshold ? OvCollection.dh_threshold : divheight;
         }

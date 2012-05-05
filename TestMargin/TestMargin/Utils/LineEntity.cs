@@ -10,6 +10,7 @@ namespace TestMargin.Utils
         Dismiss,
         Minimum,
         HighLit,
+        Focus
     }
     class LineEntity: ICloneable
     {

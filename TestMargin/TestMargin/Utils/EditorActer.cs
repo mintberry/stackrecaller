@@ -23,6 +23,7 @@ namespace TestMargin.Utils
     {
         ITextView View { get; set; }                                      //iwpftextview
         public int CentralLine { get; set; }
+        public int SelectedLine { get; set; }                             //
         public int HoverLine { get; set; }
         public IViewScroller Scroller { get; set; }
 
@@ -85,7 +86,15 @@ namespace TestMargin.Utils
             }
             if (tvlc == null) return -1;                         //quite important, not applicable now
             int colSize = tvlc.Count;
-            return CentralLine = TestMargin.GetViewLineNumber(tvlc[colSize / 2]);
+            //return CentralLine = TestMargin.GetViewLineNumber(tvlc[colSize / 2]);
+            try
+            {
+                return CentralLine = TestMargin.GetViewLineNumber(tvlc.GetTextViewLineContainingYCoordinate(View.ViewportHeight / 2));
+            }
+            catch
+            {
+                return -1;
+            }
         }
 
         bool IsEdge(int toporbot)
@@ -97,10 +106,13 @@ namespace TestMargin.Utils
             return TestMargin.GetViewLineNumber(tvlc.FirstVisibleLine) == toporbot;
         }
 
-        public void ValidateScroll() 
+        public void EnsureLineCentral(int targetLineNumber)
         {
-            this.Scroller.ScrollViewportVerticallyByPixels(0.1);
-            this.Scroller.ScrollViewportVerticallyByPixels(-0.1);
+            this.SelectedLine = targetLineNumber;
+            this.CentralLine = this.SelectedLine;
+            ITextSnapshotLine ssLine = View.TextSnapshot.GetLineFromLineNumber(targetLineNumber);
+            SnapshotSpan ssSpan = new SnapshotSpan(ssLine.Start, ssLine.End);
+            this.Scroller.EnsureSpanVisible(ssSpan, EnsureSpanVisibleOptions.AlwaysCenter);
         }
 
         /// <summary>
@@ -108,7 +120,7 @@ namespace TestMargin.Utils
         /// </summary>
         /// <param name="tv"></param>
         /// <returns></returns>
-        public static ITextViewLine GetCentralLine(ITextView tv, int offset)
+        public static ITextViewLine GetTopLine(ITextView tv, int offset)
         {
             if (tv == null)
             {
@@ -130,7 +142,16 @@ namespace TestMargin.Utils
             {
                 return null;
             }
-            return tvlc[colSize / 2 - offset];
+            try
+            {
+                double theight = tv.ViewportHeight / 2.0;
+                double lineHeight = tvlc.GetTextViewLineContainingYCoordinate(theight).Height;
+                return tvlc.GetTextViewLineContainingYCoordinate(theight - offset * lineHeight);
+            }
+            catch (System.Exception)
+            {
+                return null;
+            }
         }
 
         public static ITextViewLine GetSpecViewLine(ITextView tv, int offset, TriBezierLines tbl)
@@ -151,12 +172,17 @@ namespace TestMargin.Utils
             if (tvlc == null) return null;                         //quite important, not applicable now
             int colSize = tvlc.Count;
             offset -= 1;                         //strange here, a bug
-            int retindex = colSize / 2 - offset * (TriBezierLines.Mid - tbl);
-            if (retindex < 0 || retindex >= colSize)
+            double theight = tv.ViewportHeight / 2.0;
+            try
+            {
+                double lineHeight = tvlc.GetTextViewLineContainingYCoordinate(theight).Height;
+                double midoffset = lineHeight * offset * (TriBezierLines.Mid - tbl);
+                return tvlc.GetTextViewLineContainingYCoordinate(theight - midoffset);
+            }
+            catch (System.Exception)
             {
                 return null;
             }
-            return tvlc[retindex];
         }
         #endregion
     }

@@ -24,6 +24,7 @@ namespace TestMargin.Taggers
     class TextInvisTagger : ITagger<TextInvisTag>
     {
         public IWpfTextView View { get; set; }                                      //iwpftextview
+        public bool IsOutlineFinished = true;                                 // !maybe a very important property
         ITextBuffer SourceBuffer { get; set; }
         //ITextSearchService TextSearchService { get; set; }
         //ITextStructureNavigator TextStructureNavigator { get; set; }
@@ -46,8 +47,7 @@ namespace TestMargin.Taggers
 
         public event EventHandler<OutlineRegionAggregatedEventArgs> OutlineRegionAggregated;
 
-        public TextInvisTagger(ITextView view, ITextBuffer sourceBuffer/*, ITextSearchService textSearchService,
-            ITextStructureNavigator textStructureNavigator*/, IClassificationTypeRegistryService ctrs)
+        public TextInvisTagger(ITextView view, ITextBuffer sourceBuffer, IClassificationTypeRegistryService ctrs)
         {
             this.View = view as IWpfTextView;
             this.SourceBuffer = sourceBuffer;
@@ -113,7 +113,7 @@ namespace TestMargin.Taggers
                 ITextSnapshotLine hoverLine = ssp.GetContainingLine();
                 Actor.HoverLine = hoverLine.LineNumber;
 
-                if(Actor.GetCentralLine() != Actor.HoverLine)
+                if (Actor.CentralLine != Actor.HoverLine)                  //marked for reducing GetCentralLine
                 {
                     SyncText(TextSyncType.Hover);
                 }
@@ -139,10 +139,11 @@ namespace TestMargin.Taggers
             int selectedLineNumber = selectedLine.LineNumber;
             int diff = selectedLineNumber - Actor.CentralLine;
 
-            this.Actor.ScrollLines(selectedLineNumber, diff);
+            //this.Actor.ScrollLines(selectedLineNumber, diff);
             //trigger a event or call ViewLayoutChanged directly
             //this ia a brute force bug fix
-            this.ScrollNumberFixed(this, null);
+            //this.ScrollNumberFixed(this, null);
+            this.Actor.EnsureLineCentral(selectedLineNumber);
 
             //ensure that this called ahead of the overview
             //Actor.ValidateScroll();
@@ -156,12 +157,15 @@ namespace TestMargin.Taggers
                 int centralLine = Actor.GetCentralLine();
                 //System.Diagnostics.Trace.WriteLine("%%%                 CENTRAL: " + Actor.CentralLine);
                 if (centralLine == -1) return;
-                Parser.GenDispType(centralLine);
-
-                //this.OutlineRegionAggregated(this, new OutlineRegionAggregatedEventArgs(
-                //    Parser.AggregateRegions(DisplayType.Dismiss), Actor.CentralLine));
-                SyncText(TextSyncType.AllText);
-
+                //if(IsOutlineFinished)
+                //{
+                    Parser.GenDispType(centralLine);
+                    SyncText(TextSyncType.AllText);
+                    //this.OutlineRegionAggregated(this, new OutlineRegionAggregatedEventArgs(
+                    //Parser.AggregateRegions(DisplayType.Dismiss), Actor.CentralLine));
+                //}
+                IsOutlineFinished = false;
+                
             }
         }
 
@@ -198,7 +202,9 @@ namespace TestMargin.Taggers
                     //hard code here
                     if (le != null && le.DisT == DisplayType.Dismiss)
                         yield return GetTagSpanFromLineNumber(le.LineNumber, "invisclass.invis", spans);
-                    //
+                    if (le != null && le.DisT == DisplayType.Focus)
+                        yield return GetTagSpanFromLineNumber(le.LineNumber, "invisclass.lower.focus", spans);
+                    
                 }
             }
             //throw new NotImplementedException();
@@ -262,19 +268,31 @@ namespace TestMargin.Taggers
             this.ScrollNumberFixed(this, null);
         }
 
-        public int Scroll4OvLine()
+        public int GetCentralLine4OvLine()
         {
-            return Actor.GetCentralLine();
+            return Actor.GetCentralLine();         //marked for reducing GetCentralLine
         }
 
-        public void Scroll4Outline(int endmeet)
+        public void EnsureCentral4Outline(int endmeet)
         {
-            this.Actor.Scroller.ScrollViewportVerticallyByLines(ScrollDirection.Down, endmeet);
+            this.Actor.EnsureLineCentral(Actor.CentralLine);
         }
 
         public int GetCentralLine4Ov() 
         {
             return this.Actor.CentralLine;
+        }
+
+        public IClassificationType GetICT4FocusArea(string classification) 
+        {
+            return _ctrs.GetClassificationType(classification);
+        }
+
+        public SnapshotSpan GetSpan4FocusArea() 
+        {
+            SnapshotPoint startFocus = View.TextSnapshot.GetLineFromLineNumber(Actor.CentralLine - emuParser.central_offset + 1).Start;
+            SnapshotPoint endFocus = View.TextSnapshot.GetLineFromLineNumber(Actor.CentralLine + emuParser.central_offset - 1).End;
+            return new SnapshotSpan(startFocus, endFocus);
         }
 
         #endregion

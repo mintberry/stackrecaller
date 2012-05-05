@@ -98,7 +98,9 @@ namespace TestMargin.OverViews
                 int lastSel = this.SelectedLine;
                 if (lastSel != -1)
                     _ovlc[SelectedLine].SelectedChanged(true);
-                this.SelectedLine = this.Host._tit.Scroll4OvLine();
+                this.SelectedLine = this.Host._tit.GetCentralLine4OvLine();
+                if (this.SelectedLine == -1)
+                    return;
                 _ovlc[this.SelectedLine].DrawSelfCmz(OvCollection.widperchar, OvCollection.divHeight, OvCollection.widRatio, OvLine.lnStrokeTh, Brushes.DarkBlue);
 
                 ReGenBezier();
@@ -137,10 +139,13 @@ namespace TestMargin.OverViews
             widperchar = TestMargin.WidthPerChar(Host._textView);
             //System.Diagnostics.Trace.WriteLine("###         DRAW:" + this.ActualWidth + " : " + widperchar);
             float partial = 0.0f;
-            if(divHeight < 1.0)
+            if (divHeight < 1.0)
+            {
                 partial = (float)(1.0 / divHeight);
-            ipartial = (int) Math.Ceiling(partial);
-
+                ipartial = (int)Math.Ceiling(partial);
+            }
+            else
+                divHeight = (float)OvLine.GetDivHeight(divHeight);
 
             foreach (OvLine ovl in _ovlc)
             {
