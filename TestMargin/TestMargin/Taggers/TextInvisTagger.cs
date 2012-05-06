@@ -161,8 +161,8 @@ namespace TestMargin.Taggers
                 //{
                     Parser.GenDispType(centralLine);
                     SyncText(TextSyncType.AllText);
-                    //this.OutlineRegionAggregated(this, new OutlineRegionAggregatedEventArgs(
-                    //Parser.AggregateRegions(DisplayType.Dismiss), Actor.CentralLine));
+                    this.OutlineRegionAggregated(this, new OutlineRegionAggregatedEventArgs(
+                        Parser.AggregateRegions(DisplayType.Dismiss), Actor.CentralLine));
                 //}
                 IsOutlineFinished = false;
                 

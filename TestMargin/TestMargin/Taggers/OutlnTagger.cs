@@ -51,7 +51,7 @@ namespace TestMargin.Taggers
             
             this.ReParse();
 
-            _tit.EnsureCentral4Outline(central);
+            //_tit.EnsureCentral4Outline(central);
             
             _tit.IsOutlineFinished = true;    
         }
