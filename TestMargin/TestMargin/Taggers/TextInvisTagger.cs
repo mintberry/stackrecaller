@@ -10,6 +10,7 @@ using Microsoft.VisualStudio.Text.Editor;
 using Microsoft.VisualStudio.Text.Operations;
 using Microsoft.VisualStudio.Text.Tagging;
 using Microsoft.VisualStudio.Utilities;
+using Microsoft.VisualStudio.Text.Outlining;
 using TestMargin.Utils;
 using TestMargin.OverViews;
 
@@ -40,6 +41,7 @@ namespace TestMargin.Taggers
         object updateLock = new object();
 
         IClassificationTypeRegistryService _ctrs { set; get; }
+        //IOutliningManager _om { get; set; }
 
         public event EventHandler<SnapshotSpanEventArgs> TagsChanged;       //
 
@@ -71,6 +73,7 @@ namespace TestMargin.Taggers
             Parser.BuildTrees();
 
             this._ctrs = ctrs;
+            
         }
 
 
@@ -96,8 +99,8 @@ namespace TestMargin.Taggers
                 if (centralLine == -1) return;
                 Parser.GenDispType(centralLine);
                 //outlining totally sucked now
-                this.OutlineRegionAggregated(this, new OutlineRegionAggregatedEventArgs(
-                    Parser.AggregateRegions(DisplayType.Dismiss), Actor.CentralLine));
+                //this.OutlineRegionAggregated(this, new OutlineRegionAggregatedEventArgs(
+                //    Parser.AggregateRegions(DisplayType.Dismiss), Actor.CentralLine));
                 SyncText(TextSyncType.AllText);
             }
         }
@@ -136,7 +139,7 @@ namespace TestMargin.Taggers
             WordSpans = col;
 
 
-            int selectedLineNumber = selectedLine.LineNumber;
+            int selectedLineNumber = selectedLine.LineNumber;                             //what if select a central line
             int diff = selectedLineNumber - Actor.CentralLine;
 
             //this.Actor.ScrollLines(selectedLineNumber, diff);
@@ -144,6 +147,8 @@ namespace TestMargin.Taggers
             //this ia a brute force bug fix
             //this.ScrollNumberFixed(this, null);
             this.Actor.EnsureLineCentral(selectedLineNumber);
+            //this.OutlineRegionAggregated(this, new OutlineRegionAggregatedEventArgs(
+            //            Parser.AggregateRegions(DisplayType.Dismiss), Actor.CentralLine));
 
             //ensure that this called ahead of the overview
             //Actor.ValidateScroll();
@@ -151,21 +156,23 @@ namespace TestMargin.Taggers
         }
         private void ViewLayoutChanged(object sender, TextViewLayoutChangedEventArgs e)
         {
-            
+
             if (e.VerticalTranslation == true)                //scroll vertically
             {
                 int centralLine = Actor.GetCentralLine();
+
                 //System.Diagnostics.Trace.WriteLine("%%%                 CENTRAL: " + Actor.CentralLine);
                 if (centralLine == -1) return;
                 //if(IsOutlineFinished)
                 //{
-                    Parser.GenDispType(centralLine);
-                    SyncText(TextSyncType.AllText);
-                    this.OutlineRegionAggregated(this, new OutlineRegionAggregatedEventArgs(
-                        Parser.AggregateRegions(DisplayType.Dismiss), Actor.CentralLine));
+                Parser.GenDispType(centralLine);
+                SyncText(TextSyncType.AllText);
+                this.OutlineRegionAggregated(this, new OutlineRegionAggregatedEventArgs(
+                    Parser.AggregateRegions(DisplayType.Dismiss), Actor.CentralLine));
                 //}
+                //Actor.EnsureLineCentral(centralLine);
                 IsOutlineFinished = false;
-                
+
             }
         }
 
@@ -265,7 +272,7 @@ namespace TestMargin.Taggers
             this.Actor.ScrollLines(lineSel, diff);
             //trigger a event or call ViewLayoutChanged directly
             //this ia a brute force bug fix
-            this.ScrollNumberFixed(this, null);
+            this.Actor.EnsureLineCentral(lnSel);
         }
 
         public int GetCentralLine4OvLine()
@@ -286,6 +293,11 @@ namespace TestMargin.Taggers
         public IClassificationType GetICT4FocusArea(string classification) 
         {
             return _ctrs.GetClassificationType(classification);
+        }
+
+        public IEnumerable<Region> AggregateRegions4Outline()
+        {
+            return Parser.AggregateRegions(DisplayType.Dismiss);
         }
 
         public SnapshotSpan GetSpan4FocusArea() 

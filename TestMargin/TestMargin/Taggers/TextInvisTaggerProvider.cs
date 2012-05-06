@@ -8,6 +8,7 @@ using Microsoft.VisualStudio.Text.Editor;
 using Microsoft.VisualStudio.Text.Tagging;
 using Microsoft.VisualStudio.Text.Classification;
 using Microsoft.VisualStudio.Utilities;
+using Microsoft.VisualStudio.Text.Outlining;
 using TestMargin.OverViews;
 
 
@@ -26,6 +27,9 @@ namespace TestMargin.Taggers
 
         [Import]
         internal IClassificationTypeRegistryService registry { set; get; }
+
+        //[Import]
+        //internal IOutliningManagerService outlinemgrservice { get; set; }
 
         TextInvisTagger _val;
 
