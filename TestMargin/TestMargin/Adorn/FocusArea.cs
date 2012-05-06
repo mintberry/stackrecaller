@@ -133,7 +133,7 @@ namespace TestMargin.Adorn
             ReGenImage(totalheight);
 
             //Place the image in the top right hand corner of the Viewport
-            Canvas.SetLeft(_image, CentralViewLine.Left);
+            Canvas.SetLeft(_image, _view.ViewportLeft);
             Canvas.SetTop(_image, CentralViewLine.Top);
 
             //add the image to the adornment layer and make it relative to the viewport
@@ -150,7 +150,7 @@ namespace TestMargin.Adorn
             pen.Freeze();
 
             //draw a square with the created brush and pen, specify the start point and width, length of the rect
-            System.Windows.Rect r = new System.Windows.Rect(0, 0, _view.MaxTextRightCoordinate, theight);
+            System.Windows.Rect r = new System.Windows.Rect(0, 0, _view.ViewportWidth, theight);
             Geometry g = new RectangleGeometry(r);
             GeometryDrawing drawing = new GeometryDrawing(brush, pen, g);
             drawing.Freeze();

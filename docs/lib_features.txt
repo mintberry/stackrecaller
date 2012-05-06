@@ -14,3 +14,4 @@ larger features:
 -- edit handle
 -- long files, ongoing
 -- begin/end handle, scroll down, then focus area disapprear
+-- display code when hover on ovline?

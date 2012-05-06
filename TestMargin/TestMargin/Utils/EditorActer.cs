@@ -37,6 +37,7 @@ namespace TestMargin.Utils
 
             GetCentralLine();
             HoverLine = -1;
+            SelectedLine = -1;
         }
 
 
@@ -71,6 +72,14 @@ namespace TestMargin.Utils
         /// <returns>central viewline number</returns>
         public int GetCentralLine()
         {
+                return CentralLine = this.subGetCentralLine();
+        }
+
+        /// <summary>subject to change
+        /// </summary>
+        /// <returns>central viewline number</returns>
+        public int subGetCentralLine()
+        {
             if (View == null)
             {
                 return -1;
@@ -89,7 +98,7 @@ namespace TestMargin.Utils
             //return CentralLine = TestMargin.GetViewLineNumber(tvlc[colSize / 2]);
             try
             {
-                return CentralLine = TestMargin.GetViewLineNumber(tvlc.GetTextViewLineContainingYCoordinate(View.ViewportHeight / 2));
+                return TestMargin.GetViewLineNumber(tvlc.GetTextViewLineContainingYCoordinate(View.ViewportHeight / 2));
             }
             catch
             {
@@ -108,8 +117,10 @@ namespace TestMargin.Utils
 
         public void EnsureLineCentral(int targetLineNumber)
         {
+            if(targetLineNumber == -1)
+                return;
             this.SelectedLine = targetLineNumber;
-            this.CentralLine = this.SelectedLine;
+            //this.CentralLine = this.SelectedLine;
             ITextSnapshotLine ssLine = View.TextSnapshot.GetLineFromLineNumber(targetLineNumber);
             SnapshotSpan ssSpan = new SnapshotSpan(ssLine.Start, ssLine.End);
             this.Scroller.EnsureSpanVisible(ssSpan, EnsureSpanVisibleOptions.AlwaysCenter);

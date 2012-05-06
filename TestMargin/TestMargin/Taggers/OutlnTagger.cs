@@ -15,7 +15,7 @@ namespace TestMargin.Taggers
     {
         string startHide = "[";     //the characters that start the outlining region
         string endHide = "]";       //the characters that end the outlining region
-        string ellipsis = "    ...";    //the characters that are displayed when the region is collapsed
+        string ellipsis = "";    //the characters that are displayed when the region is collapsed
         string hoverText = "check it out dumbass"; //the contents of the tooltip for the collapsed span
         ITextBuffer buffer;
         ITextSnapshot snapshot;
@@ -42,16 +42,14 @@ namespace TestMargin.Taggers
             
         }
 
+
         void _tit_OutlineRegionAggregated(object sender, OutlineRegionAggregatedEventArgs e)
         {
             List<Region> tobeOLed = new List<Region>(e.regions_aggregated);
             regions = tobeOLed;
-
             int central = e.Central;
             
             this.ReParse();
-
-            //_tit.EnsureCentral4Outline(central);
             
             _tit.IsOutlineFinished = true;    
         }
@@ -66,7 +64,6 @@ namespace TestMargin.Taggers
 
         void ReParse()
         {
-            ITextSnapshot snap = this.snapshot;
             if (this.TagsChanged != null)
                 this.TagsChanged(this, new SnapshotSpanEventArgs(
                     new SnapshotSpan(this.snapshot, Span.FromBounds(0, snapshot.Length))));
@@ -104,12 +101,13 @@ namespace TestMargin.Taggers
                     var endLine = currentSnapshot.GetLineFromLineNumber(region.EndLine);
 
                     hoverText = snapshot.GetText(startLine.Start, endLine.End - startLine.Start);
+                    ellipsis = snapshot.GetText(startLine.Start,startLine.Length);
 
                     //the region starts at the beginning of the "[", and goes until the *end* of the line that contains the "]".
                     yield return new TagSpan<IOutliningRegionTag>(
                         new SnapshotSpan(startLine.Start,
                         endLine.End),
-                        new OutliningRegionTag(true, false, ellipsis, hoverText));
+                        new OutliningRegionTag(true, true, ellipsis, hoverText));
                 }
             }
         }
