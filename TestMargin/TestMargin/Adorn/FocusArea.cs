@@ -73,7 +73,7 @@ namespace TestMargin.Adorn
 
         int CentralLine { get; set; }
         System.Windows.Point TopLeft { get; set; }
-        ITextViewLine CentralViewLine { get; set; }
+        ITextViewLine TopViewLine { get; set; }
         ITagAggregator<TextInvisTag> tagAggregator { get; set; }
 
         /// <summary>
@@ -102,7 +102,7 @@ namespace TestMargin.Adorn
         void _view_LayoutChanged(object sender, TextViewLayoutChangedEventArgs e)
         {
             SnapshotSpan focusarea = _tit.GetSpan4FocusArea();
-            double height = CentralViewLine.Height;
+            double height = TopViewLine.Height;
             //throw new NotImplementedException();
             foreach (ITextViewLine itv in e.NewOrReformattedLines)
             {
@@ -122,22 +122,23 @@ namespace TestMargin.Adorn
             //clear the adornment layer of previous adornments
             _adornmentLayer.RemoveAllAdornments();
 
-            CentralViewLine = EditorActor.GetTopLine(_view, emuParser.central_offset);
-            if (CentralViewLine == null)
+            TopViewLine = EditorActor.GetTopLine(_view, _tit.GetCentralLine4Ov(), emuParser.central_offset);
+            if (TopViewLine == null)
             {
                 //System.Diagnostics.Trace.WriteLine("--------------------CENTRALLINE NOT AVAILABLE NOW");
                 return;
             }
 
-            double totalheight = (emuParser.central_offset * 2 - 1) * CentralViewLine.Height;
+            double totalheight = (emuParser.central_offset * 2 - 1) * TopViewLine.Height;
             ReGenImage(totalheight);
 
             //Place the image in the top right hand corner of the Viewport
             Canvas.SetLeft(_image, _view.ViewportLeft);
-            Canvas.SetTop(_image, CentralViewLine.Top);
+            Canvas.SetTop(_image, TopViewLine.Top);
 
             //add the image to the adornment layer and make it relative to the viewport
             _adornmentLayer.AddAdornment(AdornmentPositioningBehavior.ViewportRelative, null, null, _image, null);
+            _tit.TriggerBezier();
         }
 
         public void ReGenImage(double theight)

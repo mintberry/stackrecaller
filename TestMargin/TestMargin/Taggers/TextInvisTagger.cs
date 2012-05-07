@@ -49,6 +49,8 @@ namespace TestMargin.Taggers
 
         public event EventHandler<OutlineRegionAggregatedEventArgs> OutlineRegionAggregated;
 
+        public event EventHandler<EventArgs> FocusAreaTriggerBezier;
+
         public TextInvisTagger(ITextView view, ITextBuffer sourceBuffer, IClassificationTypeRegistryService ctrs)
         {
             this.View = view as IWpfTextView;
@@ -147,6 +149,8 @@ namespace TestMargin.Taggers
             //this ia a brute force bug fix
             //this.ScrollNumberFixed(this, null);
             this.Actor.EnsureLineCentral(selectedLineNumber);
+
+            GenSelected();
             //this.OutlineRegionAggregated(this, new OutlineRegionAggregatedEventArgs(
             //            Parser.AggregateRegions(DisplayType.Dismiss), Actor.CentralLine));
 
@@ -160,12 +164,21 @@ namespace TestMargin.Taggers
             if (e.VerticalTranslation == true)                //scroll vertically
             {
                 int centralLine = Actor.GetCentralLine();
+                //if the view is at edge
+                if (Actor.SelectedLine != -1 && Actor.IsScrollerAtEdge(true))
+                {
+                    Actor.CentralLine = Actor.SelectedLine;
+                }
+                else 
+                {
+                    Actor.SelectedLine = Actor.CentralLine;
+                }
 
                 //System.Diagnostics.Trace.WriteLine("%%%                 CENTRAL: " + Actor.CentralLine);
                 if (centralLine == -1) return;
                 //if(IsOutlineFinished)
                 //{
-                Parser.GenDispType(centralLine);
+                Parser.GenDispType(Actor.CentralLine);
                 SyncText(TextSyncType.AllText);
                 this.OutlineRegionAggregated(this, new OutlineRegionAggregatedEventArgs(
                     Parser.AggregateRegions(DisplayType.Dismiss), Actor.CentralLine));
@@ -305,6 +318,23 @@ namespace TestMargin.Taggers
             SnapshotPoint startFocus = View.TextSnapshot.GetLineFromLineNumber(Actor.CentralLine - emuParser.central_offset + 1).Start;
             SnapshotPoint endFocus = View.TextSnapshot.GetLineFromLineNumber(Actor.CentralLine + emuParser.central_offset - 1).End;
             return new SnapshotSpan(startFocus, endFocus);
+        }
+
+        public void GenSelected() 
+        {
+            if (Actor.IsScrollerAtEdge(true) || Actor.IsScrollerAtEdge(false))
+            {
+                this.Actor.CentralLine = this.Actor.SelectedLine;
+                Parser.GenDispType(Actor.CentralLine);
+                SyncText(TextSyncType.AllText);
+                this.OutlineRegionAggregated(this, new OutlineRegionAggregatedEventArgs(
+                    Parser.AggregateRegions(DisplayType.Dismiss), Actor.CentralLine));
+            }
+        }
+
+        public void TriggerBezier() 
+        {
+            this.FocusAreaTriggerBezier(this, null);
         }
 
         #endregion

@@ -98,7 +98,9 @@ namespace TestMargin.Utils
             //return CentralLine = TestMargin.GetViewLineNumber(tvlc[colSize / 2]);
             try
             {
-                return TestMargin.GetViewLineNumber(tvlc.GetTextViewLineContainingYCoordinate(View.ViewportHeight / 2));
+                double vpCentral = View.ViewportHeight / 2.0;
+                double llCentral = tvlc.LastVisibleLine.Bottom / 2.0;
+                return TestMargin.GetViewLineNumber(tvlc.GetTextViewLineContainingYCoordinate(Math.Min(vpCentral,llCentral)));
             }
             catch
             {
@@ -123,6 +125,7 @@ namespace TestMargin.Utils
             //this.CentralLine = this.SelectedLine;
             ITextSnapshotLine ssLine = View.TextSnapshot.GetLineFromLineNumber(targetLineNumber);
             SnapshotSpan ssSpan = new SnapshotSpan(ssLine.Start, ssLine.End);
+
             this.Scroller.EnsureSpanVisible(ssSpan, EnsureSpanVisibleOptions.AlwaysCenter);
         }
 
@@ -131,7 +134,7 @@ namespace TestMargin.Utils
         /// </summary>
         /// <param name="tv"></param>
         /// <returns></returns>
-        public static ITextViewLine GetTopLine(ITextView tv, int offset)
+        public static ITextViewLine GetTopLine(ITextView tv,int centralLine, int offset)
         {
             if (tv == null)
             {
@@ -155,9 +158,11 @@ namespace TestMargin.Utils
             }
             try
             {
-                double theight = tv.ViewportHeight / 2.0;
-                double lineHeight = tvlc.GetTextViewLineContainingYCoordinate(theight).Height;
-                return tvlc.GetTextViewLineContainingYCoordinate(theight - offset * lineHeight);
+                centralLine -= centralLine >= offset ? offset : centralLine;
+                return tvlc.First(itv => TestMargin.GetViewLineNumber(itv) == centralLine);
+                //double theight = tv.ViewportHeight / 2.0;
+                //double lineHeight = tvlc.GetTextViewLineContainingYCoordinate(theight).Height;
+                //return tvlc.GetTextViewLineContainingYCoordinate(theight - offset * lineHeight);
             }
             catch (System.Exception)
             {
@@ -194,6 +199,29 @@ namespace TestMargin.Utils
             {
                 return null;
             }
+        }
+
+        public int GetVisibleLineEdge(bool IsFirstLine) 
+        {
+            if (View == null)
+            {
+                return -1;
+            }
+            ITextViewLineCollection tvlc;
+            try
+            {
+                tvlc = View.TextViewLines;
+                return TestMargin.GetViewLineNumber(IsFirstLine?tvlc.FirstVisibleLine:tvlc.LastVisibleLine);
+            }
+            catch
+            {
+                return -1;
+            }
+        }
+
+        public bool IsScrollerAtEdge(bool IsFirstLine) 
+        {
+            return this.GetVisibleLineEdge(IsFirstLine) == (IsFirstLine?0:(View.TextSnapshot.LineCount - 1));
         }
         #endregion
     }

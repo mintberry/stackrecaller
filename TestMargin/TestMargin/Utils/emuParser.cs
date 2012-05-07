@@ -137,6 +137,14 @@ namespace TestMargin.Utils
             }
         }
 
+        /// <summary>
+        /// build tree based on brackets
+        /// </summary>
+        public void BuildBracketsTree() 
+        {
+
+        }
+
         int GetIndentation(ITextSnapshotLine tsl)                  //find how many tabs are there
         {
             if(tsl == null)

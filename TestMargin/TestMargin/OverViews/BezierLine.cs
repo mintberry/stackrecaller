@@ -20,9 +20,10 @@ namespace TestMargin.OverViews
         //Point LeftPoint { get; set; }
         //Point RightPoint { get; set; }
         //Point CtrlPoint { get; set; }
-        double offset { get; set; }  //there should be an offset between the editor geo and ov geo
+        public double height { get; set; }  //there should be an offset between the editor geo and ov geo
+                                     //
 
-        public double leftPointY = -1.0;
+        public double leftPointY = -1.0;    //this should be bottom of the textviewline
 
         TriBezierLines tblType { get; set; }
 
@@ -44,22 +45,22 @@ namespace TestMargin.OverViews
         public void DrawSelf(Canvas c, bool IsFirstdraw = false)
         {
             
-            double rightY = RightOvLine.lnNumber *  OvCollection.divHeight / OvCollection.ipartial;
-            leftPointY = LeftTvLine.Top;
-            switch (this.tblType)
-            {
-                case TriBezierLines.Bot:
-                    leftPointY = LeftTvLine.Bottom;
-                    break;
-                case TriBezierLines.Mid:
-                    leftPointY = LeftTvLine.Bottom - LeftTvLine.Height / 2.0;
-                    break;
-                case TriBezierLines.Top:
-                    leftPointY = LeftTvLine.Top;
-                    break;
-                default:
-                    break;
-            }
+            double rightY = RightOvLine.lnNumber *  OvCollection.divHeight;
+            //leftPointY = LeftTvLine.Top;
+            //switch (this.tblType)
+            //{
+            //    case TriBezierLines.Bot:
+            //        leftPointY = LeftTvLine.Bottom;
+            //        break;
+            //    case TriBezierLines.Mid:
+            //        leftPointY = LeftTvLine.Bottom - LeftTvLine.Height / 2.0;
+            //        break;
+            //    case TriBezierLines.Top:
+            //        leftPointY = LeftTvLine.Top;
+            //        break;
+            //    default:
+            //        break;
+            //}
 
             Point LeftPoint = new Point(0.0, leftPointY);
             Point RightPoint = new Point(RightOvLine._bzCurvArea, rightY);

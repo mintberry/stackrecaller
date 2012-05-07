@@ -5,7 +5,8 @@
 -- blank line to dismiss
 -- brackets to dismiss
 -- ovselect defect appear again?
--- focus area width
+-- sync bezier with focus area
+-- select from ov
 ------------
 larger features:
 -- multi-doc handle is a big issue
