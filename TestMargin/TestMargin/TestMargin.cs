@@ -126,6 +126,8 @@ namespace TestMargin
             this.Width = _textView.ViewportWidth / 5;
             this.Height = _textView.ViewportHeight;
 
+            
+
             _ovc.IsRedraw = true;
             _ovc.ReGenOv();
         }

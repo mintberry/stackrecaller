@@ -193,6 +193,8 @@ namespace TestMargin.OverViews
             //when to redraw the ov, when text changed or saved
             if (IsRedraw)
             {
+                //emuParser.ReCalFocusAreaHeight(Host._textView);
+
                 ipartial = 1;
                 Parse2OvLines();
                 DrawOverview();

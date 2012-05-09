@@ -7,6 +7,10 @@
 -- ovselect defect appear again?
 -- sync bezier with focus area
 -- select from ov
+
+-- add a bezier
+-- edit file,then rebuild tree
+-- refine algorithm 
 ------------
 larger features:
 -- multi-doc handle is a big issue

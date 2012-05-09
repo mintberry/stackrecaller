@@ -22,6 +22,8 @@ namespace TestMargin.Utils
         public LineEntity Parent { set; get; }               //a tree structure
 
         public List<LineEntity> Children { get; set; }
+
+        public int DOI { get; set; }
         
         public LineEntity(int lineNumber, LineEntity parent, CodeLineType type)
         {
@@ -39,6 +41,7 @@ namespace TestMargin.Utils
             this.Type = type;
             this.DisT = DisplayType.Origin;
             this.Children = new List<LineEntity>();
+            this.DOI = 0;
         }
 
         //use this

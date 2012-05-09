@@ -52,11 +52,14 @@ namespace TestMargin.Utils
         public LineEntity [] consLineEntity { get; set; }                                      //for consecutive access
         int LineCount { get; set; }
 
+        int LastFocus { get; set; }                           //last focus line
+
         public emuParser(ITextSnapshot ts, EditorActor ea) 
         {
             this._ts = ts;
             this._ea = ea;
             this.LineCount = _ts.LineCount;
+            this.LastFocus = -1;                       //init with -1
 
             Roots = new List<LineEntity>();
             consLineEntity = new LineEntity[this.LineCount];
@@ -169,10 +172,14 @@ namespace TestMargin.Utils
         /// <param name="focusPoint">the central point of textview</param>
         public void GenDispType(int focusPoint) 
         {
-            foreach(LineEntity le in Roots)
+            if(LastFocus == -1)                  //first time gen
             {
-                Traverse2SetDispType(le);
+                foreach (LineEntity le in Roots)
+                {
+                    Traverse2SetDispType(le);
+                }
             }
+            
         }
 
         CodeLineType CurrentLineType(ITextSnapshotLine tsl)
@@ -344,6 +351,28 @@ namespace TestMargin.Utils
                 }
             }
             return dismissRegions;
+        }
+
+        public static int ReCalFocusAreaHeight(ITextView tv) 
+        {
+            if (tv == null)
+            {
+                return central_offset;
+            }
+            ITextViewLineCollection tvlc;
+            try
+            {
+                tvlc = tv.TextViewLines;
+            }
+            catch (InvalidOperationException)
+            {
+                return central_offset;
+            }
+            if(tvlc.Count != 0)
+            {
+                central_offset = tvlc.Count / 4;
+            }
+            return central_offset;
         }
         #endregion
     }
