@@ -49,7 +49,7 @@ namespace TestMargin.Taggers
 
         public event EventHandler<OutlineRegionAggregatedEventArgs> OutlineRegionAggregated;
 
-        public event EventHandler<EventArgs> FocusAreaTriggerBezier;
+        public event EventHandler<TriggerBezierEventArgs> FocusAreaTriggerBezier;
 
         public TextInvisTagger(ITextView view, ITextBuffer sourceBuffer, IClassificationTypeRegistryService ctrs)
         {
@@ -110,20 +110,24 @@ namespace TestMargin.Taggers
         void View_MouseHover(object sender, MouseHoverEventArgs e)
         {
             //throw new NotImplementedException();
-            SnapshotPoint? sspq = e.TextPosition.GetPoint(View.TextSnapshot,PositionAffinity.Predecessor);
+            //SnapshotPoint? sspq = e.TextPosition.GetPoint(View.TextSnapshot,PositionAffinity.Predecessor);
+            int hlNumber = View.TextSnapshot.GetLineNumberFromPosition(e.Position);
             
-            if(sspq.HasValue)
-            {
-                SnapshotPoint ssp = new SnapshotPoint(SourceBuffer.CurrentSnapshot, e.Position);
-                ITextSnapshotLine hoverLine = ssp.GetContainingLine();
-                Actor.HoverLine = hoverLine.LineNumber;
+            //if(sspq.HasValue)
+            ////{
+            //    SnapshotPoint ssp = new SnapshotPoint(SourceBuffer.CurrentSnapshot, e.Position);
+            //    ITextSnapshotLine hoverLine = ssp.GetContainingLine();
+            Actor.HoverLine = hlNumber;
 
                 if (Actor.CentralLine != Actor.HoverLine)                  //marked for reducing GetCentralLine
                 {
                     SyncText(TextSyncType.Hover);
+                    EventArgs earg = new EventArgs();
+                    
+                    TriggerBezier(new TriggerBezierEventArgs(Actor.HoverLine));
                 }
                 
-            }
+            //}
         }
 
         private void CaretPositionChanged(object sender, CaretPositionChangedEventArgs e)
@@ -332,9 +336,9 @@ namespace TestMargin.Taggers
             }
         }
 
-        public void TriggerBezier() 
+        public void TriggerBezier(TriggerBezierEventArgs earg = null) 
         {
-            this.FocusAreaTriggerBezier(this, null);
+            this.FocusAreaTriggerBezier(this, earg);
         }
 
         #endregion
@@ -360,6 +364,15 @@ namespace TestMargin.Taggers
                 }
                 else break;
             }
+        }
+    }
+
+    class TriggerBezierEventArgs : EventArgs
+    {
+        public int HoveredLine { get; set; }
+        public TriggerBezierEventArgs(int hl) 
+        {
+            HoveredLine = hl;
         }
     }
 }

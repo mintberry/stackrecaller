@@ -81,13 +81,17 @@ namespace TestMargin.OverViews
 
 
             //myPath = new Path();
-            myPath.Stroke = Brushes.LightGray;
+            if (this.tblType == TriBezierLines.Hover)
+            {
+                myPath.Stroke = Brushes.LightGray;
+            }
+            else
+                myPath.Stroke = Brushes.CornflowerBlue;
             myPath.StrokeThickness = OvLine.lnStrokeTh;
             myPath.Data = pg;
 
-            if (IsFirstdraw)
+            if (/*IsFirstdraw && */!c.Children.Contains(myPath))
                 c.Children.Add(myPath);
-            
         }
 
 

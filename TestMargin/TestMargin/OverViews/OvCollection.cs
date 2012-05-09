@@ -13,13 +13,15 @@ using Microsoft.VisualStudio.Text;
 using Microsoft.VisualStudio.Text.Editor;
 using Microsoft.VisualStudio.Text.Formatting;
 using TestMargin.Utils;
+using TestMargin.Taggers;
 
 namespace TestMargin.OverViews
 {
     enum TriBezierLines {//three bezier lines
         Top,
         Mid,
-        Bot
+        Bot,
+        Hover
     };
 
     [Export(typeof(OvCollection))]
@@ -45,6 +47,8 @@ namespace TestMargin.OverViews
 
         public BezierLine [] bzLines;
 
+        public BezierLine HoverBezier;
+
         //maybe a work around for inter-mef call
         
         [ImportingConstructor]
@@ -59,7 +63,7 @@ namespace TestMargin.OverViews
             this.Host._tit.ScrollNumberFixed += new EventHandler<TextViewLayoutChangedEventArgs>(_tit_ScrollNumberFixed);
 
             this.Host._textView.LayoutChanged += new EventHandler<TextViewLayoutChangedEventArgs>(_textView_LayoutChanged);
-            this.Host._tit.FocusAreaTriggerBezier += new EventHandler<EventArgs>(_tit_FocusAreaTriggerBezier);
+            this.Host._tit.FocusAreaTriggerBezier += new EventHandler<TriggerBezierEventArgs>(_tit_FocusAreaTriggerBezier);
 
             AuxCanvasIndexStart = 0;
 
@@ -68,14 +72,22 @@ namespace TestMargin.OverViews
             bzLines[TriBezierLines.Top - TriBezierLines.Top] = new BezierLine(TriBezierLines.Top);
             bzLines[TriBezierLines.Mid - TriBezierLines.Top] = new BezierLine(TriBezierLines.Mid);
             bzLines[TriBezierLines.Bot - TriBezierLines.Top] = new BezierLine(TriBezierLines.Bot);
+
+            HoverBezier = new BezierLine(TriBezierLines.Hover);
             //try share the same view
             //OutActor = new EditorActor(host._textView);
         }
 
-        void _tit_FocusAreaTriggerBezier(object sender, EventArgs e)
+        void _tit_FocusAreaTriggerBezier(object sender, TriggerBezierEventArgs e)
         {
+            if (e != null)
+            {
+                int hl = e.HoveredLine;
+                DrawHoverBezier(hl);
+            }
             //do bezier redraw only
-            ReGenBezier();
+            else
+                ReGenBezier();
         }
 
         void _tit_ScrollNumberFixed(object sender, TextViewLayoutChangedEventArgs e)
@@ -246,6 +258,10 @@ namespace TestMargin.OverViews
                 bzLines[TriBezierLines.Top - TriBezierLines.Top].RightOvLine = _ovlc[topindex >= 0?topindex:0];
                 bzLines[TriBezierLines.Mid - TriBezierLines.Top].RightOvLine = _ovlc[centralLine];
                 bzLines[TriBezierLines.Bot - TriBezierLines.Top].RightOvLine = _ovlc[botindex >= _ovlc.Count ? _ovlc.Count - 1 : botindex];
+
+                HoverBezier.leftPointY = bzLines[TriBezierLines.Mid - TriBezierLines.Top].leftPointY;
+                HoverBezier.RightOvLine = _ovlc[centralLine]; ;
+
                 return true;
                 //System.Diagnostics.Trace.WriteLine("------POS:" + bzLines[TriBezierLines.Top - TriBezierLines.Top].LeftTvLine.Top);
             }
@@ -260,12 +276,26 @@ namespace TestMargin.OverViews
                 {
                     bzLine.DrawSelf(Host, IsFirstdraw);
                 }
+                //HoverBezier.DrawSelf(Host, true);
             }
         }
         void ReGenBezier(bool IsFirstdraw = false) 
         {
             if(GenBezierLine())
                 DrawBezier(IsFirstdraw);
+        }
+
+        public void DrawHoverBezier(int hoverline)
+        {
+            ITextViewLine hline = EditorActor.GetTopLine(Host._textView, hoverline, 1);
+            if (hline == null)
+            {
+                return;
+            }
+            double lineHeight = hline.Height;
+            HoverBezier.leftPointY = hline.Top + lineHeight / 2.0;
+            HoverBezier.RightOvLine = _ovlc[hoverline];
+            HoverBezier.DrawSelf(Host, true);
         }
 
     }
