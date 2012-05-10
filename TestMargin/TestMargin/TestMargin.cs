@@ -306,7 +306,6 @@ namespace TestMargin
             int iTabCount = Regex.Matches(s, @"\t").Count;
             int iCharCount = iTabCount * 4 + s.Length - iTabCount;
             float widthpch = (float)(textView.TextViewLines.FirstVisibleLine.TextWidth / iCharCount);
-            //System.Diagnostics.Trace.WriteLine("###         WIDTH:" + iCharCount + " : " + _textView.TextViewLines.FirstVisibleLine.TextWidth);
             return widthpch;
         }
 

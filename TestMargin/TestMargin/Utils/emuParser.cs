@@ -148,7 +148,12 @@ namespace TestMargin.Utils
 
         }
 
-        int GetIndentation(ITextSnapshotLine tsl)                  //find how many tabs are there
+        /// <summary>
+        /// find how many tabs are there
+        /// </summary>
+        /// <param name="tsl"></param>
+        /// <returns></returns>
+        int GetIndentation(ITextSnapshotLine tsl)
         {
             if(tsl == null)
             {
@@ -215,9 +220,8 @@ namespace TestMargin.Utils
             {
                 return cur.LineDepth;
             }
-
             //if neither is root
-            LineEntity curAnc = cur;                         //!may use deep clone
+            LineEntity curAnc = cur;
             LineEntity destAnc = dest;
             int dist = 0;
             while(curAnc.Parent != null && destAnc != null)
