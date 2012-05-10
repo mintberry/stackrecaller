@@ -11,6 +11,7 @@
 -- add a bezier
 -- edit file,then rebuild tree
 -- refine algorithm 
+-- fix ov selected line display
 ------------
 larger features:
 -- multi-doc handle is a big issue

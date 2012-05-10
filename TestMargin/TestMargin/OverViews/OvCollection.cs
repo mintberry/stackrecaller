@@ -87,7 +87,9 @@ namespace TestMargin.OverViews
             }
             //do bezier redraw only
             else
-                ReGenBezier();
+            {
+                    ReGenBezier();
+            }
         }
 
         void _tit_ScrollNumberFixed(object sender, TextViewLayoutChangedEventArgs e)

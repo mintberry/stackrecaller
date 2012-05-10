@@ -173,9 +173,9 @@ namespace TestMargin.Taggers
                 {
                     Actor.CentralLine = Actor.SelectedLine;
                 }
-                else 
+                else
                 {
-                    Actor.SelectedLine = Actor.CentralLine;
+                    Actor.SelectedLine = Actor.CentralLine == -1 ? Actor.SelectedLine : Actor.CentralLine;
                 }
 
                 //System.Diagnostics.Trace.WriteLine("%%%                 CENTRAL: " + Actor.CentralLine);
@@ -286,7 +286,7 @@ namespace TestMargin.Taggers
             int lastSel = lastlnSel;
 
             int diff = lineSel - lastSel;
-            this.Actor.ScrollLines(lineSel, diff);
+            //this.Actor.ScrollLines(lineSel, diff);
             //trigger a event or call ViewLayoutChanged directly
             //this ia a brute force bug fix
             this.Actor.EnsureLineCentral(lnSel);
@@ -326,13 +326,17 @@ namespace TestMargin.Taggers
 
         public void GenSelected() 
         {
-            if (Actor.IsScrollerAtEdge(true) || Actor.IsScrollerAtEdge(false))
+            if (Actor.IsScrollerAtEdge(true) || Actor.IsScrollerAtEdge(false) || Actor.SelectedLine != -1)
             {
                 this.Actor.CentralLine = this.Actor.SelectedLine;
                 Parser.GenDispType(Actor.CentralLine);
                 SyncText(TextSyncType.AllText);
                 this.OutlineRegionAggregated(this, new OutlineRegionAggregatedEventArgs(
-                    Parser.AggregateRegions(DisplayType.Dismiss), Actor.CentralLine));
+                    Parser.AggregateRegions(DisplayType.Dismiss), Actor.SelectedLine));
+            }
+            else 
+            {
+                System.Diagnostics.Trace.WriteLine("^^^^^^^^^^^          SEL:" + Actor.SelectedLine);
             }
         }
 
