@@ -12,6 +12,7 @@
 -- edit file,then rebuild tree
 -- refine algorithm 
 -- fix ov selected line display
+-- edit file
 ------------
 larger features:
 -- multi-doc handle is a big issue

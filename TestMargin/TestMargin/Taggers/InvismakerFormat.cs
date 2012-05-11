@@ -56,19 +56,14 @@ namespace TestMargin.Taggers
     [Export(typeof(EditorFormatDefinition))]
     [ClassificationType(ClassificationTypeNames = "invisclass.central")]
     [Name("ClassificationFormatDefinition/InvisCentral")]
-    [UserVisible(true)]                                           //try invisible later
+    [UserVisible(true)]
     [Order(Before = Priority.Default)]
-    internal sealed class InvisCentralFormat : ClassificationFormatDefinition  //used to be markerformat
+    internal sealed class InvisCentralFormat : ClassificationFormatDefinition 
     {
         public InvisCentralFormat()
         {
-
             this.BackgroundColor = Colors.LightCoral;
-            //this.ForegroundColor = Colors.Crimson;
-            //this.FontRenderingSize = 12;
-            //this.FontTypeface = new Typeface("Courier New");
             this.DisplayName = "Central Line";
-            //this.ZOrder = 5;
         }
     }
 
