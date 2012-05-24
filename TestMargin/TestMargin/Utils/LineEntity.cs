@@ -23,7 +23,7 @@ namespace TestMargin.Utils
 
         public List<LineEntity> Children { get; set; }
 
-        public int DOI { get; set; }
+        public int DOI { get; set; }                         //to store doi
         
         public LineEntity(int lineNumber, LineEntity parent, CodeLineType type)
         {

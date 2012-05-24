@@ -175,13 +175,41 @@ namespace TestMargin.Utils
         /// generate display type for each code line
         /// </summary>
         /// <param name="focusPoint">the central point of textview</param>
-        public void GenDispType(int focusPoint) 
+        public void GenDispType(int focusPoint, bool bSimplyAgthm = false)  //is not simply method by default
         {
             if(LastFocus == -1)                  //first time gen
             {
+                if (bSimplyAgthm)
+                    LastFocus = focusPoint;                   //record lastfocus point
                 foreach (LineEntity le in Roots)
                 {
                     Traverse2SetDispType(le);
+                }
+            }
+            else// for a better performance
+            {
+                LineEntity commonac = GetCommonAncestor(focusPoint);
+                if (commonac != null)
+                {
+                    int distChange = consLineEntity[focusPoint].LineDepth - consLineEntity[LastFocus].LineDepth;
+                    foreach (LineEntity le in consLineEntity)
+                    {
+                        le.DOI += distChange;
+                        // set disptype here also
+                        SetDispT(le);
+                    }
+                    //only need to traverse one 'root' now!
+                    Traverse2SetDispType(commonac);
+                }
+                else //
+                {
+                    int distChange = consLineEntity[focusPoint].LineDepth - consLineEntity[LastFocus].LineDepth;
+                    foreach (LineEntity le in consLineEntity)
+                    {
+                        le.DOI += distChange;               //the root level nodes dist is unable to be applied
+                        // set disptype here also
+                        SetDispT(le);
+                    }
                 }
             }
             
@@ -210,29 +238,42 @@ namespace TestMargin.Utils
         /// <param name="cur">focus line</param>
         /// <param name="dest">dest line</param>
         /// <returns></returns>
-        int GetDistInAST(LineEntity cur, LineEntity dest) 
+        int GetDistInAST(LineEntity cur, LineEntity dest, bool rootdist = false)//root level nodes dist is 0 for default 
         {
+            bool curDeeper = cur.LineDepth > dest.LineDepth;
+            int depthdiff = Math.Abs(cur.LineDepth - dest.LineDepth);
+            LineEntity curAnc = cur;
+            LineEntity destAnc = dest;
+            if (curDeeper)
+            {
+                for (int i = depthdiff; i > 0; --i)
+                    curAnc = curAnc.Parent;
+            }
+            else
+            {
+                for (int i = depthdiff; i > 0; --i)
+                    destAnc = destAnc.Parent;
+            }
             if(cur.LineDepth == 0)
             {
-                return dest.LineDepth;
+                return dest.LineDepth + (rootdist ? 2 : 0);
             }
             else if(dest.LineDepth == 0)
             {
-                return cur.LineDepth;
+                return cur.LineDepth + (rootdist ? 2 : 0);
             }
             //if neither is root
-            LineEntity curAnc = cur;
-            LineEntity destAnc = dest;
             int dist = 0;
-            while(curAnc.Parent != null && destAnc != null)
+            //may leave a condition here that two nodes are in a path
+            while(curAnc != null && destAnc != null)
             {
-                curAnc = curAnc.Parent;
-                destAnc = destAnc.Parent;
                 if (curAnc.Equals(destAnc))
                 {
-                    dist = 2 * (cur.LineDepth - curAnc.LineDepth);
+                    dist = cur.LineDepth - curAnc.LineDepth + dest.LineDepth - destAnc.LineDepth;
                     return dist;
                 }
+                curAnc = curAnc.Parent;
+                destAnc = destAnc.Parent;
             }
             dist = cur.LineDepth + dest.LineDepth;
             return dist;
@@ -242,16 +283,18 @@ namespace TestMargin.Utils
         void Traverse2SetDispType(LineEntity root) 
         {
             int thisDOI = makeDOI(consLineEntity[_ea.CentralLine], root);                        //marked for reducing GetCentralLine
+            root.DOI = thisDOI;                                                //store root DOI
             //experiment adjustive threshold
-            threshold = -consLineEntity[_ea.CentralLine].LineDepth + const_threshold ;
-            if (thisDOI < threshold)
-            {
-                root.DisT = DisplayType.Dismiss;
-            }
-            else 
-            {
-                root.DisT = DisplayType.Origin;
-            }
+            SetDispT(root);
+            //threshold = -consLineEntity[_ea.CentralLine].LineDepth + const_threshold ;
+            //if (thisDOI < threshold)
+            //{
+            //    root.DisT = DisplayType.Dismiss;
+            //}
+            //else 
+            //{
+            //    root.DisT = DisplayType.Origin;
+            //}
             //a simple approach to FOCUS area, better add color background
             if (Math.Abs(_ea.CentralLine - root.LineNumber) < central_offset)
                 root.DisT = DisplayType.Focus;
@@ -295,18 +338,37 @@ namespace TestMargin.Utils
         }
 
         /// <summary>
-        /// currently deprecated
+        /// renewed method
         /// </summary>
         /// <param name="successor"></param>
         /// <returns></returns>
-        LineEntity GetAncestor(LineEntity successor) 
+        LineEntity GetCommonAncestor(int curFocus) 
         {
-            LineEntity ancestor = successor;                              //deep clone
-            while(ancestor.Parent != null)
+            LineEntity curfocus = consLineEntity[curFocus];                              //deep clone
+            LineEntity lastfocus = consLineEntity[LastFocus];
+            // eliminate the situation that two nodes are same
+            bool curDeeper = curfocus.LineDepth > lastfocus.LineDepth;
+            int depthdiff = Math.Abs(curfocus.LineDepth - lastfocus.LineDepth);
+            if (curDeeper)
             {
-                ancestor = ancestor.Parent;
+                for (int i = depthdiff; i > 0; --i)
+                    curfocus = curfocus.Parent;
             }
-            return ancestor;
+            else 
+            {
+                for (int i = depthdiff; i > 0; --i)
+                    lastfocus = lastfocus.Parent;
+            }
+            while (lastfocus != null && curfocus != null)
+            {
+                if (curfocus.Equals(lastfocus))
+                {
+                    return curfocus;
+                }
+                lastfocus = lastfocus.Parent;
+                curfocus = curfocus.Parent;
+            }
+            return null; //stands for the virtual root
         }
 
         /// <summary>
@@ -326,6 +388,41 @@ namespace TestMargin.Utils
             else
                 return null;
             
+        }
+
+        LineEntity IsAncestor(LineEntity subject, LineEntity ac) 
+        {
+            if (subject == null)
+            {
+                return null;
+            }
+            else 
+            {
+                if (subject.LineNumber == ac.LineNumber)
+                    return subject;
+                return IsAncestor(subject.Parent, ac);
+            }
+        }
+
+        void SetDispT(LineEntity sub) 
+        {
+            threshold = -consLineEntity[_ea.CentralLine].LineDepth + const_threshold;
+            if (sub.DOI < threshold)
+            {
+                sub.DisT = DisplayType.Dismiss;
+            }
+            else
+            {
+                sub.DisT = DisplayType.Origin;
+            }
+        }
+
+        /// <summary>
+        /// reset the parser, for edit support
+        /// </summary>
+        void ResetParser() 
+        {
+
         }
 
         public IEnumerable<Region> AggregateRegions(DisplayType aggType) 

@@ -182,7 +182,7 @@ namespace TestMargin.Taggers
                 if (centralLine == -1) return;
                 //if(IsOutlineFinished)
                 //{
-                Parser.GenDispType(Actor.CentralLine);
+                Parser.GenDispType(Actor.CentralLine, true);
                 SyncText(TextSyncType.AllText);
                 this.OutlineRegionAggregated(this, new OutlineRegionAggregatedEventArgs(
                     Parser.AggregateRegions(DisplayType.Dismiss), Actor.CentralLine));
@@ -329,7 +329,7 @@ namespace TestMargin.Taggers
             if (Actor.IsScrollerAtEdge(true) || Actor.IsScrollerAtEdge(false) || Actor.SelectedLine != -1)
             {
                 this.Actor.CentralLine = this.Actor.SelectedLine;
-                Parser.GenDispType(Actor.CentralLine);
+                Parser.GenDispType(Actor.CentralLine, true);
                 SyncText(TextSyncType.AllText);
                 this.OutlineRegionAggregated(this, new OutlineRegionAggregatedEventArgs(
                     Parser.AggregateRegions(DisplayType.Dismiss), Actor.SelectedLine));
