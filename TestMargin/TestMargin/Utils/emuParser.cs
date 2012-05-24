@@ -179,12 +179,12 @@ namespace TestMargin.Utils
         {
             if(LastFocus == -1)                  //first time gen
             {
-                if (bSimplyAgthm)
-                    LastFocus = focusPoint;                   //record lastfocus point
                 foreach (LineEntity le in Roots)
                 {
                     Traverse2SetDispType(le);
                 }
+                if (bSimplyAgthm)
+                    LastFocus = focusPoint;                   //record lastfocus point
             }
             else// for a better performance
             {
@@ -211,6 +211,8 @@ namespace TestMargin.Utils
                         SetDispT(le);
                     }
                 }
+                if (bSimplyAgthm)
+                    LastFocus = focusPoint;                   //record lastfocus point
             }
             
         }
@@ -415,6 +417,8 @@ namespace TestMargin.Utils
             {
                 sub.DisT = DisplayType.Origin;
             }
+            if (Math.Abs(_ea.CentralLine - sub.LineNumber) < central_offset)
+                sub.DisT = DisplayType.Focus;
         }
 
         /// <summary>
