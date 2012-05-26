@@ -188,7 +188,9 @@ namespace TestMargin.Utils
             }
             else// for a better performance
             {
-                LineEntity commonac = GetCommonAncestor(focusPoint);
+                if (LastFocus == focusPoint) return;
+                LineEntity inlastRoot = null;
+                LineEntity commonac = GetCommonAncestor(focusPoint, out inlastRoot);
                 if (commonac != null)
                 {
                     int distChange = consLineEntity[focusPoint].LineDepth - consLineEntity[LastFocus].LineDepth;
@@ -201,8 +203,9 @@ namespace TestMargin.Utils
                     //only need to traverse one 'root' now!
                     Traverse2SetDispType(commonac);
                 }
-                else //
+                else 
                 {
+                    //not working if jump from child node to non-ancestor
                     int distChange = consLineEntity[focusPoint].LineDepth - consLineEntity[LastFocus].LineDepth;
                     foreach (LineEntity le in consLineEntity)
                     {
@@ -210,6 +213,8 @@ namespace TestMargin.Utils
                         // set disptype here also
                         SetDispT(le);
                     }
+                    //a fix to regen doi
+                    Traverse2SetDispType(inlastRoot);
                 }
                 if (bSimplyAgthm)
                     LastFocus = focusPoint;                   //record lastfocus point
@@ -344,7 +349,7 @@ namespace TestMargin.Utils
         /// </summary>
         /// <param name="successor"></param>
         /// <returns></returns>
-        LineEntity GetCommonAncestor(int curFocus) 
+        LineEntity GetCommonAncestor(int curFocus, out LineEntity lastroot) 
         {
             LineEntity curfocus = consLineEntity[curFocus];                              //deep clone
             LineEntity lastfocus = consLineEntity[LastFocus];
@@ -361,8 +366,10 @@ namespace TestMargin.Utils
                 for (int i = depthdiff; i > 0; --i)
                     lastfocus = lastfocus.Parent;
             }
+            lastroot = lastfocus;                                 //init
             while (lastfocus != null && curfocus != null)
             {
+                lastroot = lastfocus;
                 if (curfocus.Equals(lastfocus))
                 {
                     return curfocus;
