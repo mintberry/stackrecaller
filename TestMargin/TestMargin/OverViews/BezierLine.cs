@@ -83,7 +83,7 @@ namespace TestMargin.OverViews
             //myPath = new Path();
             if (this.tblType == TriBezierLines.Hover)
             {
-                myPath.Stroke = Brushes.LightGray;
+                myPath.Stroke = Brushes.DarkGray;
             }
             else
                 myPath.Stroke = Brushes.CornflowerBlue;

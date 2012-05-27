@@ -197,7 +197,7 @@ namespace TestMargin.Utils
                     int distChange = consLineEntity[focusPoint].LineDepth - consLineEntity[LastFocus].LineDepth;
                     foreach (LineEntity le in consLineEntity)
                     {
-                        le.DOI += distChange;
+                        le.DOI -= distChange;//should be minus
                         // set disptype here also
                         SetDispT(le);
                     }
@@ -210,7 +210,7 @@ namespace TestMargin.Utils
                     int distChange = consLineEntity[focusPoint].LineDepth - consLineEntity[LastFocus].LineDepth;
                     foreach (LineEntity le in consLineEntity)
                     {
-                        le.DOI += distChange;               //the root level nodes dist is unable to be applied
+                        le.DOI -= distChange;               //the root level nodes dist is unable to be applied
                         // set disptype here also
                         SetDispT(le);
                     }
@@ -487,7 +487,7 @@ namespace TestMargin.Utils
             {
                 return central_offset;
             }
-            if(tvlc.Count != 0)
+            if(tvlc.Count != 0 && tv.ViewportHeight > 0.0)
             {
                 central_offset = (int)Math.Ceiling(tv.ViewportHeight / tv.LineHeight / 5);                //how large is suitable?
             }

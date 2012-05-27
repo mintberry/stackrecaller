@@ -144,35 +144,37 @@ namespace TestMargin.Taggers
 
         private void CaretPositionChanged(object sender, CaretPositionChangedEventArgs e)
         {
-            CaretPosition cp = e.NewPosition;
-            SnapshotPoint? ssp = cp.Point.GetPoint(SourceBuffer, cp.Affinity);
-            if (!ssp.HasValue) return;
-            RequestedPoint = ssp.Value;
+            //if (!this.View.Caret.OverwriteMode)//not working as expected, still need to find a mouse status
+            {
+                CaretPosition cp = e.NewPosition;
+                SnapshotPoint? ssp = cp.Point.GetPoint(SourceBuffer, cp.Affinity);
+                if (!ssp.HasValue) return;
+                RequestedPoint = ssp.Value;
 
-            ITextSnapshotLine selectedLine = RequestedPoint.GetContainingLine();
-            SnapshotSpan span = selectedLine.Extent;                          // the line containing the position
-            NormalizedSnapshotSpanCollection col = new NormalizedSnapshotSpanCollection(span);
+                ITextSnapshotLine selectedLine = RequestedPoint.GetContainingLine();
+                SnapshotSpan span = selectedLine.Extent;                          // the line containing the position
+                NormalizedSnapshotSpanCollection col = new NormalizedSnapshotSpanCollection(span);
 
-            CurrentWord = span;
-            WordSpans = col;
+                CurrentWord = span;
+                WordSpans = col;
 
+                int selectedLineNumber = selectedLine.LineNumber;                             //what if select a central line
+                int diff = selectedLineNumber - Actor.CentralLine;
 
-            int selectedLineNumber = selectedLine.LineNumber;                             //what if select a central line
-            int diff = selectedLineNumber - Actor.CentralLine;
+                //this.Actor.ScrollLines(selectedLineNumber, diff);
+                //trigger a event or call ViewLayoutChanged directly
+                //this ia a brute force bug fix
+                //this.ScrollNumberFixed(this, null);
+                this.Actor.EnsureLineCentral(selectedLineNumber);
 
-            //this.Actor.ScrollLines(selectedLineNumber, diff);
-            //trigger a event or call ViewLayoutChanged directly
-            //this ia a brute force bug fix
-            //this.ScrollNumberFixed(this, null);
-            this.Actor.EnsureLineCentral(selectedLineNumber);
+                GenSelected();
+                //this.OutlineRegionAggregated(this, new OutlineRegionAggregatedEventArgs(
+                //            Parser.AggregateRegions(DisplayType.Dismiss), Actor.CentralLine));
 
-            GenSelected();
-            //this.OutlineRegionAggregated(this, new OutlineRegionAggregatedEventArgs(
-            //            Parser.AggregateRegions(DisplayType.Dismiss), Actor.CentralLine));
-
-            //ensure that this called ahead of the overview
-            //Actor.ValidateScroll();
-            //SyncText(TextSyncType.Central);           //not trigger the event, just change vertical layout
+                //ensure that this called ahead of the overview
+                //Actor.ValidateScroll();
+                //SyncText(TextSyncType.Central);           //not trigger the event, just change vertical layout
+            }
         }
         private void ViewLayoutChanged(object sender, TextViewLayoutChangedEventArgs e)
         {

@@ -12,9 +12,11 @@
 -- edit file,then rebuild tree
 -- refine algorithm 
 -- fix ov selected line display
+-------------------------------------
 -- edit file
 -- file tail
 -- doi issue
+-- select action? a big problem
 ------------
 larger features:
 -- multi-doc handle is a big issue
@@ -24,3 +26,4 @@ larger features:
 -- long files, ongoing
 -- begin/end handle, scroll down, then focus area disapprear
 -- display code when hover on ovline?
+-- idealest algorithm?
