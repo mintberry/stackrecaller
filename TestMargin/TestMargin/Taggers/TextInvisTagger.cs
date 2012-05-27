@@ -144,7 +144,7 @@ namespace TestMargin.Taggers
 
         private void CaretPositionChanged(object sender, CaretPositionChangedEventArgs e)
         {
-            //if (!this.View.Caret.OverwriteMode)//not working as expected, still need to find a mouse status
+            if (this.View.Selection.IsEmpty)//not working as expected, still need to find a mouse status
             {
                 CaretPosition cp = e.NewPosition;
                 SnapshotPoint? ssp = cp.Point.GetPoint(SourceBuffer, cp.Affinity);
