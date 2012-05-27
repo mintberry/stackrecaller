@@ -51,6 +51,8 @@ namespace TestMargin.Taggers
 
         public event EventHandler<TriggerBezierEventArgs> FocusAreaTriggerBezier;
 
+        public event EventHandler<TextSnapshotUpadtedEventArgs> TextSnapshotUpdated;
+
         public TextInvisTagger(ITextView view, ITextBuffer sourceBuffer, IClassificationTypeRegistryService ctrs)
         {
             this.View = view as IWpfTextView;
@@ -63,7 +65,7 @@ namespace TestMargin.Taggers
             this.View.LayoutChanged += ViewLayoutChanged;
             this.View.MouseHover += new EventHandler<MouseHoverEventArgs>(View_MouseHover);
             this.ScrollNumberFixed += new EventHandler<TextViewLayoutChangedEventArgs>(TextInvisTagger_ScrollNumberFixed);
-
+            this.View.TextBuffer.Changed += new EventHandler<TextContentChangedEventArgs>(TextBuffer_Changed);
 
             this.Actor = new EditorActor(View);
             this.Parser = new emuParser(View.TextSnapshot, Actor);
@@ -76,6 +78,16 @@ namespace TestMargin.Taggers
 
             this._ctrs = ctrs;
             
+        }
+
+        void TextBuffer_Changed(object sender, TextContentChangedEventArgs e)
+        {
+            if (e.After.LineCount != Parser.LineCount)
+            {
+                Parser.ResetParser(e.After);
+                this.TextSnapshotUpdated(this, new TextSnapshotUpadtedEventArgs(e.After));
+            }
+            //throw new NotImplementedException();
         }
 
 
@@ -348,6 +360,7 @@ namespace TestMargin.Taggers
         #endregion
     }
 
+    #region EventArgs
     /// <summary>
     /// it says that the longer the name is, the better it'll work
     /// </summary>
@@ -379,4 +392,13 @@ namespace TestMargin.Taggers
             HoveredLine = hl;
         }
     }
+    class TextSnapshotUpadtedEventArgs : EventArgs
+    {
+        public ITextSnapshot newsshot { get; set; }
+        public TextSnapshotUpadtedEventArgs(ITextSnapshot updatedsshot) 
+        {
+            newsshot = updatedsshot;
+        }
+    }
+    #endregion
 }

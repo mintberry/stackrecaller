@@ -39,7 +39,13 @@ namespace TestMargin.Taggers
             //this.outliningManager = ioMgr.GetOutliningManager(view);
 
             this._tit.OutlineRegionAggregated += new EventHandler<OutlineRegionAggregatedEventArgs>(_tit_OutlineRegionAggregated);
-            
+
+            this._tit.TextSnapshotUpdated += new EventHandler<TextSnapshotUpadtedEventArgs>(_tit_TextSnapshotUpdated);
+        }
+
+        void _tit_TextSnapshotUpdated(object sender, TextSnapshotUpadtedEventArgs e)
+        {
+            this.snapshot = e.newsshot;
         }
 
 

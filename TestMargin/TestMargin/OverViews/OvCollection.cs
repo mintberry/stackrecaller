@@ -64,6 +64,7 @@ namespace TestMargin.OverViews
 
             this.Host._textView.LayoutChanged += new EventHandler<TextViewLayoutChangedEventArgs>(_textView_LayoutChanged);
             this.Host._tit.FocusAreaTriggerBezier += new EventHandler<TriggerBezierEventArgs>(_tit_FocusAreaTriggerBezier);
+            this.Host._textView.TextBuffer.Changed += new EventHandler<TextContentChangedEventArgs>(TextBuffer_Changed);
 
             AuxCanvasIndexStart = 0;
 
@@ -77,6 +78,16 @@ namespace TestMargin.OverViews
             //try share the same view
             //OutActor = new EditorActor(host._textView);
         }
+
+        void TextBuffer_Changed(object sender, TextContentChangedEventArgs e)
+        {
+            if (e.After.LineCount != _ovlc.Count)
+            {
+                IsRedraw = true;
+                this.ReGenOv(e.After);
+            }
+        }
+
 
         void _tit_FocusAreaTriggerBezier(object sender, TriggerBezierEventArgs e)
         {
@@ -185,15 +196,16 @@ namespace TestMargin.OverViews
         }
 
 
-        public void Parse2OvLines()
+        public void Parse2OvLines(ITextSnapshot tsshot)
         {
             if (_ovlc == null)
             {
                 _ovlc = new List<OvLine>();
             }
             else _ovlc.Clear();
+            if (tsshot == null) tsshot = Host._textView.TextSnapshot;
             //System.Diagnostics.Trace.WriteLine("-------------------------PARSELINEFOROV");
-            foreach (ITextSnapshotLine tvl in Host._textView.TextSnapshot.Lines)
+            foreach (ITextSnapshotLine tvl in tsshot.Lines)
             {
                 _ovlc.Add(new OvLine(Host, tvl, (float)(Host.ActualWidth / 4.0f),this));
             }
@@ -202,7 +214,7 @@ namespace TestMargin.OverViews
             //System.Diagnostics.Trace.WriteLine("###         PARSE:" + _ovlc.Count);
         }
 
-        public void ReGenOv() 
+        public void ReGenOv(ITextSnapshot tsshot = null) 
         {
             //when to redraw the ov, when text changed or saved
             if (IsRedraw)
@@ -210,7 +222,7 @@ namespace TestMargin.OverViews
                 //emuParser.ReCalFocusAreaHeight(Host._textView);
 
                 ipartial = 1;
-                Parse2OvLines();
+                Parse2OvLines(tsshot);
                 DrawOverview();
 
                 ReGenBezier(true);

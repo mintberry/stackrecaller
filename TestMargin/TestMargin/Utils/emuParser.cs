@@ -50,7 +50,7 @@ namespace TestMargin.Utils
 
         List<LineEntity> Roots { set; get; }                  //a tree
         public LineEntity [] consLineEntity { get; set; }                                      //for consecutive access
-        int LineCount { get; set; }
+        public int LineCount { get; set; }
 
         int LastFocus { get; set; }                           //last focus line
 
@@ -188,6 +188,7 @@ namespace TestMargin.Utils
             }
             else// for a better performance
             {
+                System.Diagnostics.Trace.WriteLine("||" + consLineEntity[4].DOI + "||" + consLineEntity[5].DOI + "||" + consLineEntity[6].DOI);
                 if (LastFocus == focusPoint) return;
                 LineEntity inlastRoot = null;
                 LineEntity commonac = GetCommonAncestor(focusPoint, out inlastRoot);
@@ -303,12 +304,11 @@ namespace TestMargin.Utils
             //    root.DisT = DisplayType.Origin;
             //}
             //a simple approach to FOCUS area, better add color background
-            if (Math.Abs(_ea.CentralLine - root.LineNumber) < central_offset)
-                root.DisT = DisplayType.Focus;
             //for the blank line
             if (root.Type == CodeLineType.Blank)
                 root.DisT = DisplayType.Dismiss;
-
+            if (Math.Abs(_ea.CentralLine - root.LineNumber) < central_offset)
+                root.DisT = DisplayType.Focus;
             //if not leaf
             if(root.Children.Count != 0)
             {
@@ -431,9 +431,16 @@ namespace TestMargin.Utils
         /// <summary>
         /// reset the parser, for edit support
         /// </summary>
-        void ResetParser() 
+        public void ResetParser(ITextSnapshot newsshot) 
         {
+            this._ts = newsshot;
+            this.LineCount = newsshot.LineCount;
+            this.LastFocus = -1;                       //init with -1
 
+            Roots.Clear();
+            consLineEntity = new LineEntity[this.LineCount];
+            //rebuild tree
+            BuildTrees();
         }
 
         public IEnumerable<Region> AggregateRegions(DisplayType aggType) 
@@ -482,9 +489,9 @@ namespace TestMargin.Utils
             }
             if(tvlc.Count != 0)
             {
-                central_offset = tvlc.Count / 4;
+                central_offset = (int)Math.Ceiling(tv.ViewportHeight / tv.LineHeight / 5);                //how large is suitable?
             }
-            return central_offset;
+            return central_offset <= 0?5:central_offset;
         }
         #endregion
     }

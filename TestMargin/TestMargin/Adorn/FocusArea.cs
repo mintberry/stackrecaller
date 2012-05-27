@@ -119,6 +119,7 @@ namespace TestMargin.Adorn
 
         public void onSizeChange()
         {
+            emuParser.ReCalFocusAreaHeight(this._view);
             //clear the adornment layer of previous adornments
             _adornmentLayer.RemoveAllAdornments();
 

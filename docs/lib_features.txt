@@ -13,6 +13,8 @@
 -- refine algorithm 
 -- fix ov selected line display
 -- edit file
+-- file tail
+-- doi issue
 ------------
 larger features:
 -- multi-doc handle is a big issue
