@@ -18,6 +18,7 @@
 -- doi issue
 -- select action? a big problem
 -- performance, how to release resources
+-- issues: blank line not aggregate, select jump
 ------------
 larger features:
 -- multi-doc handle is a big issue
