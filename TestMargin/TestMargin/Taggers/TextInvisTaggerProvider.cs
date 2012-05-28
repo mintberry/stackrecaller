@@ -40,6 +40,7 @@ namespace TestMargin.Taggers
             //throw new NotImplementedException();
             if (textView.TextBuffer != buffer)
                 return null;
+            //IOutliningManager om = outlinemgrservice.GetOutliningManager(textView);
             _val = new TextInvisTagger(textView, buffer, registry);
             return _val as ITagger<T>;
         }

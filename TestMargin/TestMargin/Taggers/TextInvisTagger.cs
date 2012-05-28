@@ -41,7 +41,7 @@ namespace TestMargin.Taggers
         object updateLock = new object();
 
         IClassificationTypeRegistryService _ctrs { set; get; }
-        //IOutliningManager _om { get; set; }
+        public IOutliningManager _om { get; set; }
 
         public event EventHandler<SnapshotSpanEventArgs> TagsChanged;       //
 
@@ -53,7 +53,7 @@ namespace TestMargin.Taggers
 
         public event EventHandler<TextSnapshotUpadtedEventArgs> TextSnapshotUpdated;
 
-        public TextInvisTagger(ITextView view, ITextBuffer sourceBuffer, IClassificationTypeRegistryService ctrs)
+        public TextInvisTagger(ITextView view, ITextBuffer sourceBuffer, IClassificationTypeRegistryService ctrs/*, IOutliningManager om*/)
         {
             this.View = view as IWpfTextView;
             this.SourceBuffer = sourceBuffer;
@@ -73,6 +73,7 @@ namespace TestMargin.Taggers
             //this.overView = ovc;
             //ovc.OvLineSelected += new EventHandler<OvCollectionEventArgs>(ovc_OvLineSelected);
 
+            //this._om = om;
             //not known whether here is okay
             Parser.BuildTrees();
 

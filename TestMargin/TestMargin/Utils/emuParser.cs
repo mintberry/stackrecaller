@@ -188,7 +188,7 @@ namespace TestMargin.Utils
             }
             else// for a better performance
             {
-                System.Diagnostics.Trace.WriteLine("||" + consLineEntity[4].DOI + "||" + consLineEntity[5].DOI + "||" + consLineEntity[6].DOI);
+                //System.Diagnostics.Trace.WriteLine("||" + consLineEntity[4].DOI + "||" + consLineEntity[5].DOI + "||" + consLineEntity[6].DOI);
                 if (LastFocus == focusPoint) return;
                 LineEntity inlastRoot = null;
                 LineEntity commonac = GetCommonAncestor(focusPoint, out inlastRoot);
@@ -305,6 +305,7 @@ namespace TestMargin.Utils
             //}
             //a simple approach to FOCUS area, better add color background
             //for the blank line
+
             if (root.Type == CodeLineType.Blank)
                 root.DisT = DisplayType.Dismiss;
             if (Math.Abs(_ea.CentralLine - root.LineNumber) < central_offset)
@@ -425,6 +426,9 @@ namespace TestMargin.Utils
             {
                 sub.DisT = DisplayType.Origin;
             }
+
+            if (sub.Type == CodeLineType.Blank)
+                sub.DisT = DisplayType.Dismiss;
             if (Math.Abs(_ea.CentralLine - sub.LineNumber) < central_offset)
                 sub.DisT = DisplayType.Focus;
         }

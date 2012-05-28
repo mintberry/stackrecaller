@@ -18,9 +18,6 @@ namespace TestMargin.Taggers
         [ImportMany]
         internal IEnumerable<IViewTaggerProvider> viewTaggerProviderCollection { get; set; }
 
-        //[Import]
-        //internal IOutliningManagerService OutliningManagerService { get; set; }
-
         public ITagger<T> CreateTagger<T>(ITextBuffer buffer) where T : ITag
         {
             foreach (IViewTaggerProvider vtp in viewTaggerProviderCollection)

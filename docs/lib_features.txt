@@ -18,7 +18,7 @@
 -- doi issue
 -- select action? a big problem
 -- performance, how to release resources
--- issues: blank line not aggregate, select jump
+-- issues: blank line not aggregate, select jump(better force fold!), hardcode assert
 ------------
 larger features:
 -- multi-doc handle is a big issue
