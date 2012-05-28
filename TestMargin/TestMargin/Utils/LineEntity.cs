@@ -51,6 +51,13 @@ namespace TestMargin.Utils
                 Parent.Children.Add(this);
         }
 
+        public void DisposeMembers() 
+        {
+            this.Parent = null;
+            this.Children.Clear();
+            this.Children = null;
+        }
+
         #region ICloneable Members
 
 

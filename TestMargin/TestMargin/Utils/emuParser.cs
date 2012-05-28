@@ -388,6 +388,7 @@ namespace TestMargin.Utils
         /// <returns></returns>
         public static SnapshotSpan? GetTextSpanFromLineNumber(ITextView view, int lineNumber)
         {
+            //might need a hard code here...
             SnapshotSpan? originSpan = view.TextSnapshot.GetLineFromLineNumber(lineNumber).Extent;
             if (originSpan.HasValue)
             {
@@ -437,7 +438,12 @@ namespace TestMargin.Utils
             this.LineCount = newsshot.LineCount;
             this.LastFocus = -1;                       //init with -1
 
-            Roots.Clear();
+            Roots.Clear();                  //these are not enough...
+            Roots = null;
+            foreach (LineEntity le in consLineEntity)
+                le.DisposeMembers();
+            System.GC.Collect();
+            Roots = new List<LineEntity>();
             consLineEntity = new LineEntity[this.LineCount];
             //rebuild tree
             BuildTrees();
