@@ -17,7 +17,6 @@
 -- file tail
 -- doi issue
 -- select action? a big problem
--- performance, how to release resources
 ------------
 larger features:
 -- multi-doc handle is a big issue
