@@ -18,6 +18,9 @@ namespace TestMargin.Taggers
         [ImportMany]
         internal IEnumerable<IViewTaggerProvider> viewTaggerProviderCollection { get; set; }
 
+        [Import]
+        internal IOutliningManagerService outlinemgrservice { get; set; }
+
         public ITagger<T> CreateTagger<T>(ITextBuffer buffer) where T : ITag
         {
             foreach (IViewTaggerProvider vtp in viewTaggerProviderCollection)
@@ -33,9 +36,8 @@ namespace TestMargin.Taggers
                 System.Diagnostics.Trace.WriteLine("no valid tagger, exit");
                 return null;
             }
-
             //create a single tagger for each buffer.
-            Func<ITagger<T>> sc = delegate() { return new OutlnTagger(buffer, _titp.GetThyTagger()) as ITagger<T>; };
+            Func<ITagger<T>> sc = delegate() { return new OutlnTagger(buffer, _titp.GetThyTagger(), outlinemgrservice) as ITagger<T>; };
             return buffer.Properties.GetOrCreateSingletonProperty<ITagger<T>>(sc);
             //return null;
         }

@@ -24,9 +24,11 @@ namespace TestMargin.Taggers
 
         TextInvisTagger _tit;
 
+        IOutliningManagerService _oms;
+
         public event EventHandler<SnapshotSpanEventArgs> TagsChanged;
 
-        public OutlnTagger(ITextBuffer buffer, TextInvisTagger tit)
+        public OutlnTagger(ITextBuffer buffer, TextInvisTagger tit, IOutliningManagerService om)
         {
             this.buffer = buffer;
             this.snapshot = buffer.CurrentSnapshot;
@@ -36,7 +38,7 @@ namespace TestMargin.Taggers
             this.view = this._tit.View;
             //this.ReParse();
             this.buffer.Changed += BufferChanged;
-            //this.outliningManager = ioMgr.GetOutliningManager(view);
+            this._oms = om;
 
             this._tit.OutlineRegionAggregated += new EventHandler<OutlineRegionAggregatedEventArgs>(_tit_OutlineRegionAggregated);
 
@@ -51,13 +53,28 @@ namespace TestMargin.Taggers
 
         void _tit_OutlineRegionAggregated(object sender, OutlineRegionAggregatedEventArgs e)
         {
+            //IOutliningManager om = _oms.GetOutliningManager(this.view);
             List<Region> tobeOLed = new List<Region>(e.regions_aggregated);
             regions = tobeOLed;
+            
             int central = e.Central;
             
             this.ReParse();
-            
+
+            //om.CollapseAll(new SnapshotSpan(snapshot,0,snapshot.Length), collapsible => IsToCollapse(collapsible));
             _tit.IsOutlineFinished = true;    
+        }
+
+        bool IsToCollapse(ICollapsible ic) 
+        {
+           SnapshotPoint ssp = ic.Extent.GetStartPoint(snapshot);
+           int linenumber =  snapshot.GetLineNumberFromPosition(ssp);
+            foreach(Region r in regions )
+            {
+                if (linenumber == r.StartLine)
+                    return true;
+            }
+            return false;
         }
 
         void BufferChanged(object sender, TextContentChangedEventArgs e)
